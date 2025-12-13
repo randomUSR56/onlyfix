@@ -50,4 +50,28 @@ class User extends Authenticatable
             'two_factor_confirmed_at' => 'datetime',
         ];
     }
+
+    /**
+     * Get the cars owned by the user.
+     */
+    public function cars(): \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(Car::class);
+    }
+
+    /**
+     * Get the tickets created by the user.
+     */
+    public function tickets(): \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(Ticket::class, 'user_id');
+    }
+
+    /**
+     * Get the tickets assigned to the user (as mechanic).
+     */
+    public function assignedTickets(): \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(Ticket::class, 'mechanic_id');
+    }
 }
