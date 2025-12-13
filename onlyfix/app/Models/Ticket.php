@@ -137,4 +137,59 @@ class Ticket extends Model
     {
         return $this->status === 'closed';
     }
+
+    /**
+     * Check if the ticket is open or unassigned.
+     */
+    public function isOpen(): bool
+    {
+        return $this->status === 'open';
+    }
+
+    /**
+     * Check if the ticket is in progress.
+     */
+    public function isInProgress(): bool
+    {
+        return $this->status === 'in_progress';
+    }
+
+    /**
+     * Assign the ticket to a mechanic.
+     */
+    public function assignToMechanic(int $mechanicId): void
+    {
+        $this->update([
+            'mechanic_id' => $mechanicId,
+            'status' => 'assigned',
+            'accepted_at' => now(),
+        ]);
+    }
+
+    /**
+     * Mark the ticket as in progress.
+     */
+    public function markInProgress(): void
+    {
+        $this->update(['status' => 'in_progress']);
+    }
+
+    /**
+     * Mark the ticket as completed.
+     */
+    public function markCompleted(): void
+    {
+        $this->update([
+            'status' => 'completed',
+            'completed_at' => now(),
+        ]);
+    }
+
+    /**
+     * Close the ticket.
+     */
+    public function close(): void
+    {
+        $this->update(['status' => 'closed']);
+    }
 }

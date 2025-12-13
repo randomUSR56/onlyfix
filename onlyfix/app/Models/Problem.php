@@ -45,13 +45,16 @@ class Problem extends Model
     }
 
     /**
-     * Get the cars that have had this problem.
+     * Get all cars that have experienced this problem.
+     * Access path: Problem → Tickets → Cars
      */
-    public function cars(): BelongsToMany
+    public function cars()
     {
-        return $this->belongsToMany(Car::class, 'car_problems')
-            ->withPivot(['ticket_id', 'detected_at', 'resolved_at', 'severity', 'notes'])
-            ->withTimestamps();
+        return Car::query()
+            ->whereHas('tickets.problems', fn($q) =>
+                $q->where('problems.id', $this->id)
+            )
+            ->distinct();
     }
 
     /**
