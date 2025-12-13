@@ -30,7 +30,7 @@ class ProblemFactory extends Factory
         ];
 
         $category = $this->faker->randomElement($categories);
-        $problemName = $this->faker->randomElement($problems[$category]);
+        $problemName = $this->faker->unique()->randomElement($problems[$category]);
 
         return [
             'name' => $problemName,
