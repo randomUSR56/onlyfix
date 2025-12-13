@@ -69,6 +69,105 @@ paths:
                                         type: string
                                         example: ok
 
+    /api/register:
+        post:
+            tags:
+                - Authentication
+            summary: Register new user
+            description: Create a new user account
+            security: []
+            requestBody:
+                required: true
+                content:
+                    application/json:
+                        schema:
+                            type: object
+                            required:
+                                - name
+                                - email
+                                - password
+                                - password_confirmation
+                            properties:
+                                name:
+                                    type: string
+                                email:
+                                    type: string
+                                    format: email
+                                password:
+                                    type: string
+                                    minLength: 8
+                                password_confirmation:
+                                    type: string
+                                    minLength: 8
+            responses:
+                '201':
+                    description: User registered successfully
+                    content:
+                        application/json:
+                            schema:
+                                type: object
+                                properties:
+                                    message:
+                                        type: string
+                                    user:
+                                        $ref: '#/components/schemas/User'
+                                    token:
+                                        type: string
+
+    /api/login:
+        post:
+            tags:
+                - Authentication
+            summary: Login user
+            description: Authenticate user and get access token
+            security: []
+            requestBody:
+                required: true
+                content:
+                    application/json:
+                        schema:
+                            type: object
+                            required:
+                                - email
+                                - password
+                            properties:
+                                email:
+                                    type: string
+                                    format: email
+                                password:
+                                    type: string
+            responses:
+                '200':
+                    description: Login successful
+                    content:
+                        application/json:
+                            schema:
+                                type: object
+                                properties:
+                                    message:
+                                        type: string
+                                    user:
+                                        $ref: '#/components/schemas/User'
+                                    token:
+                                        type: string
+
+    /api/logout:
+        post:
+            tags:
+                - Authentication
+            summary: Logout user
+            description: Revoke current access token
+            responses:
+                '200':
+                    description: Logged out successfully
+                    content:
+                        application/json:
+                            schema:
+                                type: object
+                                properties:
+                                    message:
+                                        type: string
+
     /api/users/me:
         get:
             tags:
