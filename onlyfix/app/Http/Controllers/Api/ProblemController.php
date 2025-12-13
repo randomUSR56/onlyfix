@@ -51,7 +51,7 @@ class ProblemController extends Controller
 
         $validated = $request->validate([
             'name' => 'required|string|max:255|unique:problems',
-            'category' => 'required|string|max:255',
+            'category' => 'required|in:engine,transmission,electrical,brakes,suspension,steering,body,other',
             'description' => 'nullable|string',
             'is_active' => 'boolean',
         ]);

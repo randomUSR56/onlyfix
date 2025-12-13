@@ -37,6 +37,10 @@ class TicketController extends Controller
             if ($request->has('user_id')) {
                 $query->where('user_id', $request->user_id);
             }
+
+            if ($request->has('car_id')) {
+                $query->where('car_id', $request->car_id);
+            }
         } else {
             // Regular users can only view their own tickets
             $query->where('user_id', $user->id);
@@ -52,7 +56,8 @@ class TicketController extends Controller
             ELSE 5 END")
             ->orderBy('created_at', 'desc');
 
-        $tickets = $query->paginate(15);
+        $perPage = $request->get('per_page', 15);
+        $tickets = $query->paginate($perPage);
 
         return response()->json($tickets);
     }

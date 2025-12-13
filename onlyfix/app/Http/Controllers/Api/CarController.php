@@ -23,11 +23,27 @@ class CarController extends Controller
                 ->when($request->user_id, function ($query, $userId) {
                     $query->where('user_id', $userId);
                 })
+                ->when($request->search, function ($query, $search) {
+                    $query->where(function ($q) use ($search) {
+                        $q->where('make', 'like', "%{$search}%")
+                          ->orWhere('model', 'like', "%{$search}%")
+                          ->orWhere('license_plate', 'like', "%{$search}%")
+                          ->orWhere('vin', 'like', "%{$search}%");
+                    });
+                })
                 ->paginate(15);
         } else {
             // Regular users can only view their own cars
             $cars = Car::with(['user', 'tickets'])
                 ->where('user_id', $user->id)
+                ->when($request->search, function ($query, $search) {
+                    $query->where(function ($q) use ($search) {
+                        $q->where('make', 'like', "%{$search}%")
+                          ->orWhere('model', 'like', "%{$search}%")
+                          ->orWhere('license_plate', 'like', "%{$search}%")
+                          ->orWhere('vin', 'like', "%{$search}%");
+                    });
+                })
                 ->paginate(15);
         }
 
