@@ -40,6 +40,14 @@ class ProblemController extends Controller
     }
 
     /**
+     * Show the form for creating a new problem.
+     */
+    public function create()
+    {
+        return inertia('Problems/Create');
+    }
+
+    /**
      * Store a newly created problem.
      * Only admins and mechanics can create problems.
      */
@@ -74,6 +82,16 @@ class ProblemController extends Controller
         $problem->load('tickets');
 
         return response()->json($problem);
+    }
+
+    /**
+     * Show the form for editing the specified problem.
+     */
+    public function edit(Problem $problem)
+    {
+        return inertia('Problems/Edit', [
+            'problem' => $problem
+        ]);
     }
 
     /**

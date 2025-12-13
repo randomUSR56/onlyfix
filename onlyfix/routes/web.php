@@ -1,10 +1,9 @@
 <?php
 
-use App\Http\Controllers\CarController;
-use App\Http\Controllers\ProblemController;
-use App\Http\Controllers\TicketController;
-use App\Http\Controllers\UserController;
-use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\Api\CarController;
+use App\Http\Controllers\Api\ProblemController;
+use App\Http\Controllers\Api\TicketController;
+use App\Http\Controllers\Api\UserController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 

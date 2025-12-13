@@ -63,6 +63,14 @@ class TicketController extends Controller
     }
 
     /**
+     * Show the form for creating a new ticket.
+     */
+    public function create()
+    {
+        return inertia('Tickets/Create');
+    }
+
+    /**
      * Store a newly created ticket.
      */
     public function store(Request $request)
@@ -126,6 +134,16 @@ class TicketController extends Controller
         $ticket->load(['user', 'mechanic', 'car', 'problems']);
 
         return response()->json($ticket);
+    }
+
+    /**
+     * Show the form for editing the specified ticket.
+     */
+    public function edit(Ticket $ticket)
+    {
+        return inertia('Tickets/Edit', [
+            'ticket' => $ticket->load(['user', 'mechanic', 'car', 'problems'])
+        ]);
     }
 
     /**
@@ -232,6 +250,10 @@ class TicketController extends Controller
 
         $ticket->load(['user', 'mechanic', 'car', 'problems']);
 
+        if (!request()->wantsJson()) {
+            return redirect()->route('tickets.show', $ticket);
+        }
+
         return response()->json([
             'message' => 'Ticket accepted successfully',
             'data' => $ticket
@@ -266,6 +288,10 @@ class TicketController extends Controller
         ]);
 
         $ticket->load(['user', 'mechanic', 'car', 'problems']);
+
+        if (!request()->wantsJson()) {
+            return redirect()->route('tickets.show', $ticket);
+        }
 
         return response()->json([
             'message' => 'Work started on ticket',
@@ -303,6 +329,10 @@ class TicketController extends Controller
 
         $ticket->load(['user', 'mechanic', 'car', 'problems']);
 
+        if (!request()->wantsJson()) {
+            return redirect()->route('tickets.show', $ticket);
+        }
+
         return response()->json([
             'message' => 'Ticket marked as completed',
             'data' => $ticket
@@ -332,6 +362,10 @@ class TicketController extends Controller
         ]);
 
         $ticket->load(['user', 'mechanic', 'car', 'problems']);
+
+        if (!request()->wantsJson()) {
+            return redirect()->route('tickets.show', $ticket);
+        }
 
         return response()->json([
             'message' => 'Ticket closed',

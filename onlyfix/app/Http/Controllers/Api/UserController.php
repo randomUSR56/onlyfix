@@ -42,6 +42,14 @@ class UserController extends Controller
     }
 
     /**
+     * Show the form for creating a new user.
+     */
+    public function create()
+    {
+        return inertia('Users/Create');
+    }
+
+    /**
      * Store a newly created user.
      * Only admins can create users.
      */
@@ -88,6 +96,16 @@ class UserController extends Controller
         $user->load(['roles', 'cars', 'tickets']);
 
         return response()->json($user);
+    }
+
+    /**
+     * Show the form for editing the specified user.
+     */
+    public function edit(User $user)
+    {
+        return inertia('Users/Edit', [
+            'user' => $user->load('roles')
+        ]);
     }
 
     /**

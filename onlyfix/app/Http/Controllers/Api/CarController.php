@@ -51,6 +51,14 @@ class CarController extends Controller
     }
 
     /**
+     * Show the form for creating a new car.
+     */
+    public function create()
+    {
+        return inertia('Cars/Create');
+    }
+
+    /**
      * Store a newly created car.
      */
     public function store(Request $request)
@@ -101,6 +109,16 @@ class CarController extends Controller
         $car->load(['user', 'tickets.problems']);
 
         return response()->json($car);
+    }
+
+    /**
+     * Show the form for editing the specified car.
+     */
+    public function edit(Car $car)
+    {
+        return inertia('Cars/Edit', [
+            'car' => $car->load('user')
+        ]);
     }
 
     /**
