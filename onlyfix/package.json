@@ -7,7 +7,8 @@
         "dev": "vite",
         "format": "prettier --write resources/",
         "format:check": "prettier --check resources/",
-        "lint": "eslint . --fix"
+        "lint": "eslint . --fix",
+        "postinstall": "cp -r node_modules/swagger-ui-dist/* public/swagger-ui/"
     },
     "devDependencies": {
         "@eslint/js": "^9.19.0",

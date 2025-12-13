@@ -73,7 +73,23 @@ php artisan migrate
 php artisan db:seed --class=RolePermissionSeeder
 ```
 
-### 5. Create Test Users (Optional)
+### 5. Set Up Swagger UI
+
+After running `npm install`, copy the Swagger UI assets to the public directory:
+
+```bash
+cp -r node_modules/swagger-ui-dist/* public/swagger-ui/
+```
+
+You can now access the interactive API documentation at:
+
+```
+http://localhost:8000/swagger.html
+```
+
+> **Note:** The `public/swagger-ui/` directory is git-ignored. You must re-copy these files after each fresh clone or `npm install`. This is handled automatically via the `postinstall` npm script.
+
+### 6. Create Test Users (Optional)
 
 ```bash
 php artisan tinker
