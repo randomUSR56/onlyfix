@@ -24,6 +24,14 @@ Route::get('/health', function () {
     return response()->json(['status' => 'ok']);
 });
 
+// Serve OpenAPI spec
+Route::get('/openapi.yaml', function () {
+    return response()->file(base_path('openapi.yaml'), [
+        'Content-Type' => 'application/yaml',
+        'Content-Disposition' => 'inline; filename="openapi.yaml"',
+    ]);
+});
+
 // Authentication routes
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
