@@ -1,0 +1,978 @@
+openapi: 3.0.3
+info:
+    title: OnlyFix API
+    description: |
+        # OnlyFix - Car Service Management System API
+
+        Complete REST API for managing car service tickets, problems, and user management.
+
+        ## Authentication
+        All endpoints (except /api/health) require Bearer token authentication.
+
+        ## Roles & Permissions
+        - **User**: Can manage their own cars and tickets
+        - **Mechanic**: Can view all tickets, accept and work on tickets
+        - **Admin**: Full system access
+
+        ## Workflow
+        1. User creates a car
+        2. User creates a ticket for their car with problems
+        3. Mechanic accepts the ticket
+        4. Mechanic starts work on the ticket
+        5. Mechanic completes the ticket
+        6. User closes the ticket
+    version: 1.0.0
+    contact:
+        name: OnlyFix Support
+        email: support@onlyfix.com
+
+servers:
+    - url: http://localhost:8000
+      description: Local development server
+    - url: https://api.onlyfix.com
+      description: Production server
+
+tags:
+    - name: Authentication
+      description: User authentication endpoints
+    - name: Users
+      description: User management
+    - name: Cars
+      description: Car management
+    - name: Problems
+      description: Problem catalog management
+    - name: Tickets
+      description: Service ticket management
+    - name: Health
+      description: API health check
+
+security:
+    - bearerAuth: []
+
+paths:
+    /api/health:
+        get:
+            tags:
+                - Health
+            summary: API Health Check
+            description: Check if the API is running
+            security: []
+            responses:
+                '200':
+                    description: API is healthy
+                    content:
+                        application/json:
+                            schema:
+                                type: object
+                                properties:
+                                    status:
+                                        type: string
+                                        example: ok
+
+    /api/register:
+        post:
+            tags:
+                - Authentication
+            summary: Register new user
+            description: Create a new user account
+            security: []
+            requestBody:
+                required: true
+                content:
+                    application/json:
+                        schema:
+                            type: object
+                            required:
+                                - name
+                                - email
+                                - password
+                                - password_confirmation
+                            properties:
+                                name:
+                                    type: string
+                                email:
+                                    type: string
+                                    format: email
+                                password:
+                                    type: string
+                                    minLength: 8
+                                password_confirmation:
+                                    type: string
+                                    minLength: 8
+            responses:
+                '201':
+                    description: User registered successfully
+                    content:
+                        application/json:
+                            schema:
+                                type: object
+                                properties:
+                                    message:
+                                        type: string
+                                    user:
+                                        $ref: '#/components/schemas/User'
+                                    token:
+                                        type: string
+
+    /api/login:
+        post:
+            tags:
+                - Authentication
+            summary: Login user
+            description: Authenticate user and get access token
+            security: []
+            requestBody:
+                required: true
+                content:
+                    application/json:
+                        schema:
+                            type: object
+                            required:
+                                - email
+                                - password
+                            properties:
+                                email:
+                                    type: string
+                                    format: email
+                                password:
+                                    type: string
+            responses:
+                '200':
+                    description: Login successful
+                    content:
+                        application/json:
+                            schema:
+                                type: object
+                                properties:
+                                    message:
+                                        type: string
+                                    user:
+                                        $ref: '#/components/schemas/User'
+                                    token:
+                                        type: string
+
+    /api/logout:
+        post:
+            tags:
+                - Authentication
+            summary: Logout user
+            description: Revoke current access token
+            responses:
+                '200':
+                    description: Logged out successfully
+                    content:
+                        application/json:
+                            schema:
+                                type: object
+                                properties:
+                                    message:
+                                        type: string
+
+    /api/users/me:
+        get:
+            tags:
+                - Users
+            summary: Get current user
+            description: Get authenticated user's profile with roles, cars, and tickets
+            responses:
+                '200':
+                    description: User profile
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/UserWithRelations'
+
+    /api/users:
+        get:
+            tags:
+                - Users
+            summary: List users
+            description: List all users (Admin only). Supports filtering and search.
+            parameters:
+                - name: role
+                  in: query
+                  schema:
+                      type: string
+                      enum: [user, mechanic, admin]
+                - name: search
+                  in: query
+                  schema:
+                      type: string
+            responses:
+                '200':
+                    description: Paginated list of users
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/PaginatedUsers'
+                '403':
+                    $ref: '#/components/responses/Forbidden'
+
+        post:
+            tags:
+                - Users
+            summary: Create user
+            description: Create a new user (Admin only)
+            requestBody:
+                required: true
+                content:
+                    application/json:
+                        schema:
+                            type: object
+                            required:
+                                - name
+                                - email
+                                - password
+                                - role
+                            properties:
+                                name:
+                                    type: string
+                                email:
+                                    type: string
+                                    format: email
+                                password:
+                                    type: string
+                                    minLength: 8
+                                role:
+                                    type: string
+                                    enum: [user, mechanic, admin]
+            responses:
+                '201':
+                    description: User created
+                    content:
+                        application/json:
+                            schema:
+                                type: object
+                                properties:
+                                    message:
+                                        type: string
+                                    data:
+                                        $ref: '#/components/schemas/User'
+
+    /api/users/{id}:
+        get:
+            tags:
+                - Users
+            summary: Get user
+            parameters:
+                - $ref: '#/components/parameters/UserId'
+            responses:
+                '200':
+                    description: User details
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/UserWithRelations'
+
+        put:
+            tags:
+                - Users
+            summary: Update user
+            parameters:
+                - $ref: '#/components/parameters/UserId'
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            type: object
+                            properties:
+                                name:
+                                    type: string
+                                email:
+                                    type: string
+                                password:
+                                    type: string
+                                role:
+                                    type: string
+            responses:
+                '200':
+                    description: User updated
+
+        delete:
+            tags:
+                - Users
+            summary: Delete user
+            description: Delete user (Admin only, cannot delete self)
+            parameters:
+                - $ref: '#/components/parameters/UserId'
+            responses:
+                '200':
+                    description: User deleted
+
+    /api/users/mechanics:
+        get:
+            tags:
+                - Users
+            summary: Get mechanics list
+            description: Get all mechanics with their current workload
+            responses:
+                '200':
+                    description: List of mechanics
+                    content:
+                        application/json:
+                            schema:
+                                type: array
+                                items:
+                                    $ref: '#/components/schemas/User'
+
+    /api/cars:
+        get:
+            tags:
+                - Cars
+            summary: List cars
+            description: List cars. Users see their own, mechanics/admins see all.
+            parameters:
+                - name: user_id
+                  in: query
+                  description: Filter by user (Admin/Mechanic only)
+                  schema:
+                      type: integer
+            responses:
+                '200':
+                    description: Paginated list of cars
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/PaginatedCars'
+
+        post:
+            tags:
+                - Cars
+            summary: Create car
+            requestBody:
+                required: true
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/CarInput'
+            responses:
+                '201':
+                    description: Car created
+                    content:
+                        application/json:
+                            schema:
+                                type: object
+                                properties:
+                                    message:
+                                        type: string
+                                    data:
+                                        $ref: '#/components/schemas/Car'
+
+    /api/cars/{id}:
+        get:
+            tags:
+                - Cars
+            summary: Get car
+            parameters:
+                - $ref: '#/components/parameters/CarId'
+            responses:
+                '200':
+                    description: Car details
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/CarWithRelations'
+
+        put:
+            tags:
+                - Cars
+            summary: Update car
+            parameters:
+                - $ref: '#/components/parameters/CarId'
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/CarInput'
+            responses:
+                '200':
+                    description: Car updated
+
+        delete:
+            tags:
+                - Cars
+            summary: Delete car
+            parameters:
+                - $ref: '#/components/parameters/CarId'
+            responses:
+                '200':
+                    description: Car deleted
+
+    /api/problems:
+        get:
+            tags:
+                - Problems
+            summary: List problems
+            parameters:
+                - name: category
+                  in: query
+                  schema:
+                      type: string
+                - name: is_active
+                  in: query
+                  schema:
+                      type: boolean
+                - name: search
+                  in: query
+                  schema:
+                      type: string
+            responses:
+                '200':
+                    description: Paginated list of problems
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/PaginatedProblems'
+
+        post:
+            tags:
+                - Problems
+            summary: Create problem
+            description: Create problem (Mechanic/Admin only)
+            requestBody:
+                required: true
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/ProblemInput'
+            responses:
+                '201':
+                    description: Problem created
+
+    /api/problems/statistics:
+        get:
+            tags:
+                - Problems
+            summary: Problem statistics
+            description: Get problem statistics (Mechanic/Admin only)
+            responses:
+                '200':
+                    description: Problem statistics
+                    content:
+                        application/json:
+                            schema:
+                                type: object
+                                properties:
+                                    total_problems:
+                                        type: integer
+                                    active_problems:
+                                        type: integer
+                                    problems_by_frequency:
+                                        type: array
+                                        items:
+                                            $ref: '#/components/schemas/Problem'
+
+    /api/tickets:
+        get:
+            tags:
+                - Tickets
+            summary: List tickets
+            parameters:
+                - name: status
+                  in: query
+                  schema:
+                      type: string
+                      enum: [open, assigned, in_progress, completed, closed]
+                - name: priority
+                  in: query
+                  schema:
+                      type: string
+                      enum: [low, medium, high, urgent]
+                - name: mechanic_id
+                  in: query
+                  schema:
+                      type: integer
+                - name: user_id
+                  in: query
+                  schema:
+                      type: integer
+            responses:
+                '200':
+                    description: Paginated list of tickets
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/PaginatedTickets'
+
+        post:
+            tags:
+                - Tickets
+            summary: Create ticket
+            requestBody:
+                required: true
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/TicketInput'
+            responses:
+                '201':
+                    description: Ticket created
+                    content:
+                        application/json:
+                            schema:
+                                type: object
+                                properties:
+                                    message:
+                                        type: string
+                                    data:
+                                        $ref: '#/components/schemas/TicketWithRelations'
+
+    /api/tickets/{id}:
+        get:
+            tags:
+                - Tickets
+            summary: Get ticket
+            parameters:
+                - $ref: '#/components/parameters/TicketId'
+            responses:
+                '200':
+                    description: Ticket details
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/TicketWithRelations'
+
+        put:
+            tags:
+                - Tickets
+            summary: Update ticket
+            parameters:
+                - $ref: '#/components/parameters/TicketId'
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/TicketInput'
+            responses:
+                '200':
+                    description: Ticket updated
+
+        delete:
+            tags:
+                - Tickets
+            summary: Delete ticket
+            parameters:
+                - $ref: '#/components/parameters/TicketId'
+            responses:
+                '200':
+                    description: Ticket deleted
+
+    /api/tickets/{id}/accept:
+        post:
+            tags:
+                - Tickets
+            summary: Accept ticket
+            description: Mechanic accepts/assigns ticket to themselves
+            parameters:
+                - $ref: '#/components/parameters/TicketId'
+            responses:
+                '200':
+                    description: Ticket accepted
+                    content:
+                        application/json:
+                            schema:
+                                type: object
+                                properties:
+                                    message:
+                                        type: string
+                                    data:
+                                        $ref: '#/components/schemas/TicketWithRelations'
+
+    /api/tickets/{id}/start:
+        post:
+            tags:
+                - Tickets
+            summary: Start work
+            description: Mechanic starts working on ticket
+            parameters:
+                - $ref: '#/components/parameters/TicketId'
+            responses:
+                '200':
+                    description: Work started
+
+    /api/tickets/{id}/complete:
+        post:
+            tags:
+                - Tickets
+            summary: Complete ticket
+            description: Mechanic marks ticket as completed
+            parameters:
+                - $ref: '#/components/parameters/TicketId'
+            responses:
+                '200':
+                    description: Ticket completed
+
+    /api/tickets/{id}/close:
+        post:
+            tags:
+                - Tickets
+            summary: Close ticket
+            description: User or admin closes ticket
+            parameters:
+                - $ref: '#/components/parameters/TicketId'
+            responses:
+                '200':
+                    description: Ticket closed
+
+    /api/tickets/statistics:
+        get:
+            tags:
+                - Tickets
+            summary: Ticket statistics
+            description: Get ticket statistics (Mechanic/Admin only)
+            responses:
+                '200':
+                    description: Ticket statistics
+                    content:
+                        application/json:
+                            schema:
+                                type: object
+                                properties:
+                                    total_tickets:
+                                        type: integer
+                                    by_status:
+                                        type: object
+                                    by_priority:
+                                        type: object
+                                    open_tickets:
+                                        type: integer
+
+components:
+    securitySchemes:
+        bearerAuth:
+            type: http
+            scheme: bearer
+            bearerFormat: JWT
+
+    parameters:
+        UserId:
+            name: id
+            in: path
+            required: true
+            schema:
+                type: integer
+
+        CarId:
+            name: id
+            in: path
+            required: true
+            schema:
+                type: integer
+
+        ProblemId:
+            name: id
+            in: path
+            required: true
+            schema:
+                type: integer
+
+        TicketId:
+            name: id
+            in: path
+            required: true
+            schema:
+                type: integer
+
+    responses:
+        Unauthorized:
+            description: Unauthorized
+            content:
+                application/json:
+                    schema:
+                        type: object
+                        properties:
+                            message:
+                                type: string
+                                example: Unauthenticated
+
+        Forbidden:
+            description: Forbidden
+            content:
+                application/json:
+                    schema:
+                        type: object
+                        properties:
+                            message:
+                                type: string
+                                example: Unauthorized
+
+    schemas:
+        User:
+            type: object
+            properties:
+                id:
+                    type: integer
+                name:
+                    type: string
+                email:
+                    type: string
+                created_at:
+                    type: string
+                    format: date-time
+                updated_at:
+                    type: string
+                    format: date-time
+                roles:
+                    type: array
+                    items:
+                        type: object
+                        properties:
+                            id:
+                                type: integer
+                            name:
+                                type: string
+
+        UserWithRelations:
+            allOf:
+                - $ref: '#/components/schemas/User'
+                - type: object
+                  properties:
+                      cars:
+                          type: array
+                          items:
+                              $ref: '#/components/schemas/Car'
+                      tickets:
+                          type: array
+                          items:
+                              $ref: '#/components/schemas/Ticket'
+
+        Car:
+            type: object
+            properties:
+                id:
+                    type: integer
+                user_id:
+                    type: integer
+                make:
+                    type: string
+                model:
+                    type: string
+                year:
+                    type: integer
+                license_plate:
+                    type: string
+                vin:
+                    type: string
+                color:
+                    type: string
+                created_at:
+                    type: string
+                    format: date-time
+                updated_at:
+                    type: string
+                    format: date-time
+
+        CarInput:
+            type: object
+            required:
+                - make
+                - model
+                - year
+                - license_plate
+            properties:
+                make:
+                    type: string
+                model:
+                    type: string
+                year:
+                    type: integer
+                    minimum: 1900
+                license_plate:
+                    type: string
+                vin:
+                    type: string
+                color:
+                    type: string
+                user_id:
+                    type: integer
+
+        CarWithRelations:
+            allOf:
+                - $ref: '#/components/schemas/Car'
+                - type: object
+                  properties:
+                      user:
+                          $ref: '#/components/schemas/User'
+                      tickets:
+                          type: array
+                          items:
+                              $ref: '#/components/schemas/Ticket'
+
+        Problem:
+            type: object
+            properties:
+                id:
+                    type: integer
+                name:
+                    type: string
+                category:
+                    type: string
+                description:
+                    type: string
+                is_active:
+                    type: boolean
+                created_at:
+                    type: string
+                    format: date-time
+                updated_at:
+                    type: string
+                    format: date-time
+
+        ProblemInput:
+            type: object
+            required:
+                - name
+                - category
+            properties:
+                name:
+                    type: string
+                category:
+                    type: string
+                description:
+                    type: string
+                is_active:
+                    type: boolean
+
+        Ticket:
+            type: object
+            properties:
+                id:
+                    type: integer
+                user_id:
+                    type: integer
+                mechanic_id:
+                    type: integer
+                car_id:
+                    type: integer
+                status:
+                    type: string
+                    enum: [open, assigned, in_progress, completed, closed]
+                priority:
+                    type: string
+                    enum: [low, medium, high, urgent]
+                description:
+                    type: string
+                accepted_at:
+                    type: string
+                    format: date-time
+                completed_at:
+                    type: string
+                    format: date-time
+                created_at:
+                    type: string
+                    format: date-time
+                updated_at:
+                    type: string
+                    format: date-time
+
+        TicketInput:
+            type: object
+            required:
+                - car_id
+                - description
+                - problem_ids
+            properties:
+                car_id:
+                    type: integer
+                description:
+                    type: string
+                priority:
+                    type: string
+                    enum: [low, medium, high, urgent]
+                problem_ids:
+                    type: array
+                    items:
+                        type: integer
+                    minItems: 1
+                problem_notes:
+                    type: array
+                    items:
+                        type: string
+
+        TicketWithRelations:
+            allOf:
+                - $ref: '#/components/schemas/Ticket'
+                - type: object
+                  properties:
+                      user:
+                          $ref: '#/components/schemas/User'
+                      mechanic:
+                          $ref: '#/components/schemas/User'
+                      car:
+                          $ref: '#/components/schemas/Car'
+                      problems:
+                          type: array
+                          items:
+                              allOf:
+                                  - $ref: '#/components/schemas/Problem'
+                                  - type: object
+                                    properties:
+                                        pivot:
+                                            type: object
+                                            properties:
+                                                notes:
+                                                    type: string
+
+        PaginatedUsers:
+            type: object
+            properties:
+                data:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/User'
+                current_page:
+                    type: integer
+                last_page:
+                    type: integer
+                per_page:
+                    type: integer
+                total:
+                    type: integer
+
+        PaginatedCars:
+            type: object
+            properties:
+                data:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/Car'
+                current_page:
+                    type: integer
+                last_page:
+                    type: integer
+                per_page:
+                    type: integer
+                total:
+                    type: integer
+
+        PaginatedProblems:
+            type: object
+            properties:
+                data:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/Problem'
+                current_page:
+                    type: integer
+                last_page:
+                    type: integer
+                per_page:
+                    type: integer
+                total:
+                    type: integer
+
+        PaginatedTickets:
+            type: object
+            properties:
+                data:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/TicketWithRelations'
+                current_page:
+                    type: integer
+                last_page:
+                    type: integer
+                per_page:
+                    type: integer
+                total:
+                    type: integer
