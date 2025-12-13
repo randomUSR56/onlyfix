@@ -55,4 +55,28 @@ class UserFactory extends Factory
             'two_factor_confirmed_at' => null,
         ]);
     }
+
+    /**
+     * Indicate that the user should have the 'user' role.
+     */
+    public function asUser(): static
+    {
+        return $this->afterCreating(fn ($user) => $user->assignRole('user'));
+    }
+
+    /**
+     * Indicate that the user should have the 'mechanic' role.
+     */
+    public function asMechanic(): static
+    {
+        return $this->afterCreating(fn ($user) => $user->assignRole('mechanic'));
+    }
+
+    /**
+     * Indicate that the user should have the 'admin' role.
+     */
+    public function asAdmin(): static
+    {
+        return $this->afterCreating(fn ($user) => $user->assignRole('admin'));
+    }
 }
