@@ -21,7 +21,7 @@ return new class extends Migration
             $table->string('vin')->unique()->nullable();
             $table->string('color')->nullable();
             $table->timestamps();
-            
+
             $table->index('user_id');
         });
     }

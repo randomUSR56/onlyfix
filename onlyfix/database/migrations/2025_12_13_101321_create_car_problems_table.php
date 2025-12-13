@@ -21,7 +21,7 @@ return new class extends Migration
             $table->enum('severity', ['minor', 'moderate', 'severe'])->default('moderate');
             $table->text('notes')->nullable();
             $table->timestamps();
-            
+
             $table->index('car_id');
             $table->index('problem_id');
             $table->index('ticket_id');

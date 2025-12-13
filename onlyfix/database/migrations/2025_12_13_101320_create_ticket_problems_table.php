@@ -17,7 +17,7 @@ return new class extends Migration
             $table->foreignId('problem_id')->constrained()->onDelete('cascade');
             $table->text('notes')->nullable();
             $table->timestamps();
-            
+
             $table->unique(['ticket_id', 'problem_id']);
             $table->index('ticket_id');
             $table->index('problem_id');

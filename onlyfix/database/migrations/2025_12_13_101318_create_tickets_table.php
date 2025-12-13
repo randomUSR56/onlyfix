@@ -22,7 +22,7 @@ return new class extends Migration
             $table->timestamp('accepted_at')->nullable();
             $table->timestamp('completed_at')->nullable();
             $table->timestamps();
-            
+
             $table->index('user_id');
             $table->index('mechanic_id');
             $table->index('car_id');
