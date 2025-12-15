@@ -26,3 +26,10 @@ yarn-error.log
 /.nova
 /.vscode
 /.zed
+
+# macOS Finder metadata
+.DS_Store
+**/.DS_Store
+
+# Ignore Swagger UI build artifacts
+/public/swagger-ui/

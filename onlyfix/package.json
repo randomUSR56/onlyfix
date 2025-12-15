@@ -7,7 +7,8 @@
         "dev": "vite",
         "format": "prettier --write resources/",
         "format:check": "prettier --check resources/",
-        "lint": "eslint . --fix"
+        "lint": "eslint . --fix",
+        "postinstall": "cp -r node_modules/swagger-ui-dist/* public/swagger-ui/"
     },
     "devDependencies": {
         "@eslint/js": "^9.19.0",
@@ -23,6 +24,7 @@
         "prettier": "^3.4.2",
         "prettier-plugin-organize-imports": "^4.1.0",
         "prettier-plugin-tailwindcss": "^0.6.11",
+        "swagger-ui-dist": "^5.31.0",
         "typescript": "^5.2.2",
         "typescript-eslint": "^8.23.0",
         "vite": "^7.0.4",

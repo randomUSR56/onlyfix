@@ -28,9 +28,9 @@ class UserFactory extends Factory
             'email_verified_at' => now(),
             'password' => static::$password ??= 'password',
             'remember_token' => Str::random(10),
-            'two_factor_secret' => Str::random(10),
-            'two_factor_recovery_codes' => Str::random(10),
-            'two_factor_confirmed_at' => now(),
+            'two_factor_secret' => null,
+            'two_factor_recovery_codes' => null,
+            'two_factor_confirmed_at' => null,
         ];
     }
 
@@ -54,5 +54,41 @@ class UserFactory extends Factory
             'two_factor_recovery_codes' => null,
             'two_factor_confirmed_at' => null,
         ]);
+    }
+
+    /**
+     * Indicate that the user should have two-factor authentication configured.
+     */
+    public function withTwoFactor(): static
+    {
+        return $this->state(fn (array $attributes) => [
+            'two_factor_secret' => Str::random(32), // Use a longer secret for TOTP
+            'two_factor_recovery_codes' => encrypt(json_encode(collect(range(1, 8))->map(fn () => Str::random(10))->toArray())),
+            'two_factor_confirmed_at' => now(),
+        ]);
+    }
+
+    /**
+     * Indicate that the user should have the 'user' role.
+     */
+    public function asUser(): static
+    {
+        return $this->afterCreating(fn ($user) => $user->assignRole('user'));
+    }
+
+    /**
+     * Indicate that the user should have the 'mechanic' role.
+     */
+    public function asMechanic(): static
+    {
+        return $this->afterCreating(fn ($user) => $user->assignRole('mechanic'));
+    }
+
+    /**
+     * Indicate that the user should have the 'admin' role.
+     */
+    public function asAdmin(): static
+    {
+        return $this->afterCreating(fn ($user) => $user->assignRole('admin'));
     }
 }
