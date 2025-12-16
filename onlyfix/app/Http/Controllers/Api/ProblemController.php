@@ -39,13 +39,7 @@ class ProblemController extends Controller
         return response()->json($problems);
     }
 
-    /**
-     * Show the form for creating a new problem.
-     */
-    public function create()
-    {
-        return inertia('Problems/Create');
-    }
+    // Removed create() - not needed for API
 
     /**
      * Store a newly created problem.
@@ -84,15 +78,7 @@ class ProblemController extends Controller
         return response()->json($problem);
     }
 
-    /**
-     * Show the form for editing the specified problem.
-     */
-    public function edit(Problem $problem)
-    {
-        return inertia('Problems/Edit', [
-            'problem' => $problem
-        ]);
-    }
+    // Removed edit() - not needed for API
 
     /**
      * Update the specified problem.

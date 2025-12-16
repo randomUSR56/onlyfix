@@ -50,13 +50,7 @@ class CarController extends Controller
         return response()->json($cars);
     }
 
-    /**
-     * Show the form for creating a new car.
-     */
-    public function create()
-    {
-        return inertia('Cars/Create');
-    }
+    // Removed create() - not needed for API
 
     /**
      * Store a newly created car.
@@ -111,15 +105,7 @@ class CarController extends Controller
         return response()->json($car);
     }
 
-    /**
-     * Show the form for editing the specified car.
-     */
-    public function edit(Car $car)
-    {
-        return inertia('Cars/Edit', [
-            'car' => $car->load('user')
-        ]);
-    }
+    // Removed edit() - not needed for API
 
     /**
      * Update the specified car.

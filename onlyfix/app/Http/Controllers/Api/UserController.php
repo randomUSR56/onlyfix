@@ -41,13 +41,7 @@ class UserController extends Controller
         return response()->json($users);
     }
 
-    /**
-     * Show the form for creating a new user.
-     */
-    public function create()
-    {
-        return inertia('Users/Create');
-    }
+    // Removed create() - not needed for API
 
     /**
      * Store a newly created user.
@@ -98,15 +92,7 @@ class UserController extends Controller
         return response()->json($user);
     }
 
-    /**
-     * Show the form for editing the specified user.
-     */
-    public function edit(User $user)
-    {
-        return inertia('Users/Edit', [
-            'user' => $user->load('roles')
-        ]);
-    }
+    // Removed edit() - not needed for API
 
     /**
      * Update the specified user.

@@ -62,13 +62,7 @@ class TicketController extends Controller
         return response()->json($tickets);
     }
 
-    /**
-     * Show the form for creating a new ticket.
-     */
-    public function create()
-    {
-        return inertia('Tickets/Create');
-    }
+    // Removed create() - not needed for API
 
     /**
      * Store a newly created ticket.
@@ -136,15 +130,7 @@ class TicketController extends Controller
         return response()->json($ticket);
     }
 
-    /**
-     * Show the form for editing the specified ticket.
-     */
-    public function edit(Ticket $ticket)
-    {
-        return inertia('Tickets/Edit', [
-            'ticket' => $ticket->load(['user', 'mechanic', 'car', 'problems'])
-        ]);
-    }
+    // Removed edit() - not needed for API
 
     /**
      * Update the specified ticket.
