@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Http\Controllers\Api;
+namespace App\Http\Controllers;
 
-use App\Http\Controllers\Controller;
 use App\Models\Problem;
 use Illuminate\Http\Request;
+use Inertia\Inertia;
 
 class ProblemController extends Controller
 {
@@ -36,10 +36,24 @@ class ProblemController extends Controller
 
         $problems = $query->paginate(15);
 
-        return response()->json($problems);
+        return Inertia::render('Problems/Index', [
+            'problems' => $problems,
+            'filters' => $request->only(['category', 'is_active', 'search'])
+        ]);
     }
 
-    // Removed create() - not needed for API
+    /**
+     * Show the form for creating a new problem.
+     * Only admins and mechanics can create problems.
+     */
+    public function create()
+    {
+        if (!auth()->user()->hasAnyRole(['admin', 'mechanic'])) {
+            abort(403, 'Unauthorized');
+        }
+
+        return Inertia::render('Problems/Create');
+    }
 
     /**
      * Store a newly created problem.
@@ -48,7 +62,7 @@ class ProblemController extends Controller
     public function store(Request $request)
     {
         if (!$request->user()->hasAnyRole(['admin', 'mechanic'])) {
-            return response()->json(['message' => 'Unauthorized'], 403);
+            abort(403, 'Unauthorized');
         }
 
         $validated = $request->validate([
@@ -62,10 +76,8 @@ class ProblemController extends Controller
 
         $problem = Problem::create($validated);
 
-        return response()->json([
-            'message' => 'Problem created successfully',
-            'data' => $problem
-        ], 201);
+        return redirect()->route('problems.show', $problem)
+            ->with('success', 'Problem created successfully');
     }
 
     /**
@@ -75,10 +87,24 @@ class ProblemController extends Controller
     {
         $problem->load('tickets');
 
-        return response()->json($problem);
+        return Inertia::render('Problems/Show', [
+            'problem' => $problem
+        ]);
     }
 
-    // Removed edit() - not needed for API
+    /**
+     * Show the form for editing the specified problem.
+     */
+    public function edit(Problem $problem)
+    {
+        if (!auth()->user()->hasAnyRole(['admin', 'mechanic'])) {
+            abort(403, 'Unauthorized');
+        }
+
+        return Inertia::render('Problems/Edit', [
+            'problem' => $problem
+        ]);
+    }
 
     /**
      * Update the specified problem.
@@ -87,7 +113,7 @@ class ProblemController extends Controller
     public function update(Request $request, Problem $problem)
     {
         if (!$request->user()->hasAnyRole(['admin', 'mechanic'])) {
-            return response()->json(['message' => 'Unauthorized'], 403);
+            abort(403, 'Unauthorized');
         }
 
         $validated = $request->validate([
@@ -99,10 +125,8 @@ class ProblemController extends Controller
 
         $problem->update($validated);
 
-        return response()->json([
-            'message' => 'Problem updated successfully',
-            'data' => $problem
-        ]);
+        return redirect()->route('problems.show', $problem)
+            ->with('success', 'Problem updated successfully');
     }
 
     /**
@@ -112,14 +136,13 @@ class ProblemController extends Controller
     public function destroy(Request $request, Problem $problem)
     {
         if (!$request->user()->hasRole('admin')) {
-            return response()->json(['message' => 'Unauthorized'], 403);
+            abort(403, 'Unauthorized');
         }
 
         $problem->delete();
 
-        return response()->json([
-            'message' => 'Problem deleted successfully'
-        ]);
+        return redirect()->route('problems.index')
+            ->with('success', 'Problem deleted successfully');
     }
 
     /**
@@ -128,17 +151,21 @@ class ProblemController extends Controller
     public function statistics(Request $request)
     {
         if (!$request->user()->hasAnyRole(['admin', 'mechanic'])) {
-            return response()->json(['message' => 'Unauthorized'], 403);
+            abort(403, 'Unauthorized');
         }
 
         $problems = Problem::withCount('tickets')
             ->orderBy('tickets_count', 'desc')
             ->get();
 
-        return response()->json([
+        $stats = [
             'total_problems' => Problem::count(),
             'active_problems' => Problem::where('is_active', true)->count(),
             'problems_by_frequency' => $problems,
+        ];
+
+        return Inertia::render('Statistics/Problems', [
+            'statistics' => $stats
         ]);
     }
 }

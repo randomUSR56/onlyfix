@@ -1,9 +1,9 @@
 <?php
 
-use App\Http\Controllers\Api\CarController;
-use App\Http\Controllers\Api\ProblemController;
-use App\Http\Controllers\Api\TicketController;
-use App\Http\Controllers\Api\UserController;
+use App\Http\Controllers\CarController;
+use App\Http\Controllers\ProblemController;
+use App\Http\Controllers\TicketController;
+use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
@@ -71,15 +71,20 @@ Route::middleware(['auth', 'verified'])->group(function () {
         });
     });
 
-    // Users Management (admins only)
-    Route::middleware(['role:admin'])->prefix('users')->name('users.')->group(function () {
-        Route::get('/', [UserController::class, 'index'])->name('index');
-        Route::get('/create', [UserController::class, 'create'])->name('create');
-        Route::post('/', [UserController::class, 'store'])->name('store');
+    // Users Management
+    Route::prefix('users')->name('users.')->group(function () {
+        // Admin-only routes
+        Route::middleware(['role:admin'])->group(function () {
+            Route::get('/', [UserController::class, 'index'])->name('index');
+            Route::get('/create', [UserController::class, 'create'])->name('create');
+            Route::post('/', [UserController::class, 'store'])->name('store');
+            Route::delete('/{user}', [UserController::class, 'destroy'])->name('destroy');
+        });
+
+        // Routes accessible by users for their own profile and admins for any user
         Route::get('/{user}', [UserController::class, 'show'])->name('show');
         Route::get('/{user}/edit', [UserController::class, 'edit'])->name('edit');
         Route::patch('/{user}', [UserController::class, 'update'])->name('update');
-        Route::delete('/{user}', [UserController::class, 'destroy'])->name('destroy');
     });
 
     // Statistics & Reports (mechanics & admins only)

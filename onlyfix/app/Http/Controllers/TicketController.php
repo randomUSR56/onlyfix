@@ -1,13 +1,13 @@
 <?php
 
-namespace App\Http\Controllers\Api;
+namespace App\Http\Controllers;
 
-use App\Http\Controllers\Controller;
 use App\Models\Ticket;
 use App\Models\Car;
 use App\Models\Problem;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Inertia\Inertia;
 
 class TicketController extends Controller
 {
@@ -59,10 +59,32 @@ class TicketController extends Controller
         $perPage = $request->get('per_page', 15);
         $tickets = $query->paginate($perPage);
 
-        return response()->json($tickets);
+        return Inertia::render('Tickets/Index', [
+            'tickets' => $tickets,
+            'filters' => $request->only(['status', 'priority', 'mechanic_id', 'user_id', 'car_id'])
+        ]);
     }
 
-    // Removed create() - not needed for API
+    /**
+     * Show the form for creating a new ticket.
+     */
+    public function create()
+    {
+        $user = auth()->user();
+
+        // Get user's cars or all cars if admin
+        $cars = $user->hasRole('admin')
+            ? Car::with('user')->get()
+            : $user->cars;
+
+        // Get active problems
+        $problems = Problem::where('is_active', true)->get();
+
+        return Inertia::render('Tickets/Create', [
+            'cars' => $cars,
+            'problems' => $problems
+        ]);
+    }
 
     /**
      * Store a newly created ticket.
@@ -82,9 +104,9 @@ class TicketController extends Controller
         // Verify the car belongs to the user
         $car = Car::findOrFail($validated['car_id']);
         if ($car->user_id !== $request->user()->id && !$request->user()->hasRole('admin')) {
-            return response()->json([
-                'message' => 'You can only create tickets for your own cars'
-            ], 403);
+            return back()->withErrors([
+                'car_id' => 'You can only create tickets for your own cars'
+            ])->withInput();
         }
 
         // Create ticket
@@ -105,12 +127,8 @@ class TicketController extends Controller
         }
         $ticket->problems()->attach($problemData);
 
-        $ticket->load(['user', 'car', 'problems']);
-
-        return response()->json([
-            'message' => 'Ticket created successfully',
-            'data' => $ticket
-        ], 201);
+        return redirect()->route('tickets.show', $ticket)
+            ->with('success', 'Ticket created successfully');
     }
 
     /**
@@ -122,15 +140,42 @@ class TicketController extends Controller
 
         // Check authorization
         if (!$user->hasAnyRole(['mechanic', 'admin']) && $ticket->user_id !== $user->id) {
-            return response()->json(['message' => 'Unauthorized'], 403);
+            abort(403, 'Unauthorized');
         }
 
         $ticket->load(['user', 'mechanic', 'car', 'problems']);
 
-        return response()->json($ticket);
+        return Inertia::render('Tickets/Show', [
+            'ticket' => $ticket
+        ]);
     }
 
-    // Removed edit() - not needed for API
+    /**
+     * Show the form for editing the specified ticket.
+     */
+    public function edit(Ticket $ticket)
+    {
+        $user = auth()->user();
+
+        // Check authorization
+        if (!$user->hasAnyRole(['mechanic', 'admin']) && $ticket->user_id !== $user->id) {
+            abort(403, 'Unauthorized');
+        }
+
+        // Get user's cars or all cars if admin
+        $cars = $user->hasRole('admin')
+            ? Car::with('user')->get()
+            : $user->cars;
+
+        // Get active problems
+        $problems = Problem::where('is_active', true)->get();
+
+        return Inertia::render('Tickets/Edit', [
+            'ticket' => $ticket->load(['user', 'mechanic', 'car', 'problems']),
+            'cars' => $cars,
+            'problems' => $problems
+        ]);
+    }
 
     /**
      * Update the specified ticket.
@@ -141,7 +186,7 @@ class TicketController extends Controller
 
         // Check authorization
         if (!$user->hasAnyRole(['mechanic', 'admin']) && $ticket->user_id !== $user->id) {
-            return response()->json(['message' => 'Unauthorized'], 403);
+            abort(403, 'Unauthorized');
         }
 
         $validated = $request->validate([
@@ -157,12 +202,12 @@ class TicketController extends Controller
         // Regular users can only update their own open tickets
         if (!$user->hasAnyRole(['mechanic', 'admin'])) {
             if ($ticket->user_id !== $user->id) {
-                return response()->json(['message' => 'Unauthorized'], 403);
+                abort(403, 'Unauthorized');
             }
             if ($ticket->status !== 'open') {
-                return response()->json([
-                    'message' => 'You can only update tickets that are still open'
-                ], 403);
+                return back()->withErrors([
+                    'status' => 'You can only update tickets that are still open'
+                ]);
             }
             // Regular users can't change status
             unset($validated['status']);
@@ -182,12 +227,8 @@ class TicketController extends Controller
             $ticket->problems()->sync($problemData);
         }
 
-        $ticket->load(['user', 'mechanic', 'car', 'problems']);
-
-        return response()->json([
-            'message' => 'Ticket updated successfully',
-            'data' => $ticket
-        ]);
+        return redirect()->route('tickets.show', $ticket)
+            ->with('success', 'Ticket updated successfully');
     }
 
     /**
@@ -200,15 +241,14 @@ class TicketController extends Controller
         // Only admins or ticket owners (if status is open) can delete
         if (!$user->hasRole('admin')) {
             if ($ticket->user_id !== $user->id || $ticket->status !== 'open') {
-                return response()->json(['message' => 'Unauthorized'], 403);
+                abort(403, 'Unauthorized');
             }
         }
 
         $ticket->delete();
 
-        return response()->json([
-            'message' => 'Ticket deleted successfully'
-        ]);
+        return redirect()->route('tickets.index')
+            ->with('success', 'Ticket deleted successfully');
     }
 
     /**
@@ -219,13 +259,13 @@ class TicketController extends Controller
         $user = $request->user();
 
         if (!$user->hasAnyRole(['mechanic', 'admin'])) {
-            return response()->json(['message' => 'Unauthorized'], 403);
+            abort(403, 'Unauthorized');
         }
 
         if ($ticket->status !== 'open') {
-            return response()->json([
-                'message' => 'This ticket has already been accepted'
-            ], 422);
+            return back()->withErrors([
+                'ticket' => 'This ticket has already been accepted'
+            ]);
         }
 
         $ticket->update([
@@ -234,16 +274,8 @@ class TicketController extends Controller
             'accepted_at' => now(),
         ]);
 
-        $ticket->load(['user', 'mechanic', 'car', 'problems']);
-
-        if (!request()->wantsJson()) {
-            return redirect()->route('tickets.show', $ticket);
-        }
-
-        return response()->json([
-            'message' => 'Ticket accepted successfully',
-            'data' => $ticket
-        ]);
+        return redirect()->route('tickets.show', $ticket)
+            ->with('success', 'Ticket accepted successfully');
     }
 
     /**
@@ -254,35 +286,27 @@ class TicketController extends Controller
         $user = $request->user();
 
         if (!$user->hasAnyRole(['mechanic', 'admin'])) {
-            return response()->json(['message' => 'Unauthorized'], 403);
+            abort(403, 'Unauthorized');
         }
 
         if ($ticket->mechanic_id !== $user->id && !$user->hasRole('admin')) {
-            return response()->json([
-                'message' => 'You can only start work on tickets assigned to you'
-            ], 403);
+            return back()->withErrors([
+                'ticket' => 'You can only start work on tickets assigned to you'
+            ]);
         }
 
         if (!in_array($ticket->status, ['assigned', 'open'])) {
-            return response()->json([
-                'message' => 'Invalid ticket status'
-            ], 422);
+            return back()->withErrors([
+                'ticket' => 'Invalid ticket status'
+            ]);
         }
 
         $ticket->update([
             'status' => 'in_progress',
         ]);
 
-        $ticket->load(['user', 'mechanic', 'car', 'problems']);
-
-        if (!request()->wantsJson()) {
-            return redirect()->route('tickets.show', $ticket);
-        }
-
-        return response()->json([
-            'message' => 'Work started on ticket',
-            'data' => $ticket
-        ]);
+        return redirect()->route('tickets.show', $ticket)
+            ->with('success', 'Work started on ticket');
     }
 
     /**
@@ -293,19 +317,19 @@ class TicketController extends Controller
         $user = $request->user();
 
         if (!$user->hasAnyRole(['mechanic', 'admin'])) {
-            return response()->json(['message' => 'Unauthorized'], 403);
+            abort(403, 'Unauthorized');
         }
 
         if ($ticket->mechanic_id !== $user->id && !$user->hasRole('admin')) {
-            return response()->json([
-                'message' => 'You can only complete tickets assigned to you'
-            ], 403);
+            return back()->withErrors([
+                'ticket' => 'You can only complete tickets assigned to you'
+            ]);
         }
 
         if ($ticket->status === 'completed' || $ticket->status === 'closed') {
-            return response()->json([
-                'message' => 'This ticket is already completed or closed'
-            ], 422);
+            return back()->withErrors([
+                'ticket' => 'This ticket is already completed or closed'
+            ]);
         }
 
         $ticket->update([
@@ -313,16 +337,8 @@ class TicketController extends Controller
             'completed_at' => now(),
         ]);
 
-        $ticket->load(['user', 'mechanic', 'car', 'problems']);
-
-        if (!request()->wantsJson()) {
-            return redirect()->route('tickets.show', $ticket);
-        }
-
-        return response()->json([
-            'message' => 'Ticket marked as completed',
-            'data' => $ticket
-        ]);
+        return redirect()->route('tickets.show', $ticket)
+            ->with('success', 'Ticket marked as completed');
     }
 
     /**
@@ -334,29 +350,21 @@ class TicketController extends Controller
 
         // Ticket owner or admin can close
         if ($ticket->user_id !== $user->id && !$user->hasRole('admin')) {
-            return response()->json(['message' => 'Unauthorized'], 403);
+            abort(403, 'Unauthorized');
         }
 
         if ($ticket->status === 'closed') {
-            return response()->json([
-                'message' => 'This ticket is already closed'
-            ], 422);
+            return back()->withErrors([
+                'ticket' => 'This ticket is already closed'
+            ]);
         }
 
         $ticket->update([
             'status' => 'closed',
         ]);
 
-        $ticket->load(['user', 'mechanic', 'car', 'problems']);
-
-        if (!request()->wantsJson()) {
-            return redirect()->route('tickets.show', $ticket);
-        }
-
-        return response()->json([
-            'message' => 'Ticket closed',
-            'data' => $ticket
-        ]);
+        return redirect()->route('tickets.show', $ticket)
+            ->with('success', 'Ticket closed');
     }
 
     /**
@@ -367,7 +375,7 @@ class TicketController extends Controller
         $user = $request->user();
 
         if (!$user->hasAnyRole(['mechanic', 'admin'])) {
-            return response()->json(['message' => 'Unauthorized'], 403);
+            abort(403, 'Unauthorized');
         }
 
         $stats = [
@@ -393,6 +401,8 @@ class TicketController extends Controller
                 ->count();
         }
 
-        return response()->json($stats);
+        return Inertia::render('Statistics/Tickets', [
+            'statistics' => $stats
+        ]);
     }
 }

@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Http\Controllers\Api;
+namespace App\Http\Controllers;
 
-use App\Http\Controllers\Controller;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rule;
+use Inertia\Inertia;
 
 class UserController extends Controller
 {
@@ -17,7 +17,7 @@ class UserController extends Controller
     public function index(Request $request)
     {
         if (!$request->user()->hasRole('admin')) {
-            return response()->json(['message' => 'Unauthorized'], 403);
+            abort(403, 'Unauthorized');
         }
 
         $query = User::with('roles');
@@ -38,10 +38,23 @@ class UserController extends Controller
 
         $users = $query->paginate(15);
 
-        return response()->json($users);
+        return Inertia::render('Users/Index', [
+            'users' => $users,
+            'filters' => $request->only(['role', 'search'])
+        ]);
     }
 
-    // Removed create() - not needed for API
+    /**
+     * Show the form for creating a new user.
+     */
+    public function create()
+    {
+        if (!auth()->user()->hasRole('admin')) {
+            abort(403, 'Unauthorized');
+        }
+
+        return Inertia::render('Users/Create');
+    }
 
     /**
      * Store a newly created user.
@@ -50,7 +63,7 @@ class UserController extends Controller
     public function store(Request $request)
     {
         if (!$request->user()->hasRole('admin')) {
-            return response()->json(['message' => 'Unauthorized'], 403);
+            abort(403, 'Unauthorized');
         }
 
         $validated = $request->validate([
@@ -67,12 +80,9 @@ class UserController extends Controller
         ]);
 
         $user->assignRole($validated['role']);
-        $user->load('roles');
 
-        return response()->json([
-            'message' => 'User created successfully',
-            'data' => $user
-        ], 201);
+        return redirect()->route('users.show', $user)
+            ->with('success', 'User created successfully');
     }
 
     /**
@@ -84,15 +94,32 @@ class UserController extends Controller
 
         // Users can view their own profile, admins can view anyone
         if ($authUser->id !== $user->id && !$authUser->hasRole('admin')) {
-            return response()->json(['message' => 'Unauthorized'], 403);
+            abort(403, 'Unauthorized');
         }
 
         $user->load(['roles', 'cars', 'tickets']);
 
-        return response()->json($user);
+        return Inertia::render('Users/Show', [
+            'user' => $user
+        ]);
     }
 
-    // Removed edit() - not needed for API
+    /**
+     * Show the form for editing the specified user.
+     */
+    public function edit(User $user)
+    {
+        $authUser = auth()->user();
+
+        // Users can edit their own profile, admins can edit anyone
+        if ($authUser->id !== $user->id && !$authUser->hasRole('admin')) {
+            abort(403, 'Unauthorized');
+        }
+
+        return Inertia::render('Users/Edit', [
+            'user' => $user->load('roles')
+        ]);
+    }
 
     /**
      * Update the specified user.
@@ -103,7 +130,7 @@ class UserController extends Controller
 
         // Users can update their own profile, admins can update anyone
         if ($authUser->id !== $user->id && !$authUser->hasRole('admin')) {
-            return response()->json(['message' => 'Unauthorized'], 403);
+            abort(403, 'Unauthorized');
         }
 
         $validated = $request->validate([
@@ -122,9 +149,9 @@ class UserController extends Controller
         // Only admins can change roles
         if (isset($validated['role'])) {
             if (!$authUser->hasRole('admin')) {
-                return response()->json([
-                    'message' => 'Only admins can change user roles'
-                ], 403);
+                return back()->withErrors([
+                    'role' => 'Only admins can change user roles'
+                ]);
             }
             $user->syncRoles([$validated['role']]);
             unset($validated['role']);
@@ -136,12 +163,9 @@ class UserController extends Controller
         }
 
         $user->update($validated);
-        $user->load('roles');
 
-        return response()->json([
-            'message' => 'User updated successfully',
-            'data' => $user
-        ]);
+        return redirect()->route('users.show', $user)
+            ->with('success', 'User updated successfully');
     }
 
     /**
@@ -153,31 +177,19 @@ class UserController extends Controller
         $authUser = $request->user();
 
         if (!$authUser->hasRole('admin')) {
-            return response()->json(['message' => 'Unauthorized'], 403);
+            abort(403, 'Unauthorized');
         }
 
         if ($authUser->id === $user->id) {
-            return response()->json([
-                'message' => 'You cannot delete your own account'
-            ], 403);
+            return back()->withErrors([
+                'user' => 'You cannot delete your own account'
+            ]);
         }
 
         $user->delete();
 
-        return response()->json([
-            'message' => 'User deleted successfully'
-        ]);
-    }
-
-    /**
-     * Get the authenticated user's profile.
-     */
-    public function me(Request $request)
-    {
-        $user = $request->user();
-        $user->load(['roles', 'cars', 'tickets']);
-
-        return response()->json($user);
+        return redirect()->route('users.index')
+            ->with('success', 'User deleted successfully');
     }
 
     /**
@@ -186,7 +198,7 @@ class UserController extends Controller
     public function mechanics(Request $request)
     {
         if (!$request->user()->hasAnyRole(['mechanic', 'admin'])) {
-            return response()->json(['message' => 'Unauthorized'], 403);
+            abort(403, 'Unauthorized');
         }
 
         $mechanics = User::role('mechanic')
@@ -196,45 +208,8 @@ class UserController extends Controller
             }])
             ->get();
 
-        return response()->json($mechanics);
-    }
-
-    /**
-     * Get user's tickets.
-     */
-    public function tickets(Request $request, User $user)
-    {
-        $authUser = $request->user();
-
-        // Users can view their own tickets, admins/mechanics can view anyone's
-        if ($authUser->id !== $user->id && !$authUser->hasAnyRole(['mechanic', 'admin'])) {
-            return response()->json(['message' => 'Unauthorized'], 403);
-        }
-
-        $tickets = $user->tickets()
-            ->with(['car', 'mechanic', 'problems'])
-            ->orderBy('created_at', 'desc')
-            ->paginate(15);
-
-        return response()->json($tickets);
-    }
-
-    /**
-     * Get user's cars.
-     */
-    public function cars(Request $request, User $user)
-    {
-        $authUser = $request->user();
-
-        // Users can view their own cars, admins/mechanics can view anyone's
-        if ($authUser->id !== $user->id && !$authUser->hasAnyRole(['mechanic', 'admin'])) {
-            return response()->json(['message' => 'Unauthorized'], 403);
-        }
-
-        $cars = $user->cars()
-            ->withCount('tickets')
-            ->get();
-
-        return response()->json($cars);
+        return Inertia::render('Mechanics/Index', [
+            'mechanics' => $mechanics
+        ]);
     }
 }

@@ -4,22 +4,8 @@
 
 This application uses **Laravel Inertia.js** with **Vue 3** to create a seamless full-stack experience. All user-facing routes are defined in `routes/web.php` and render Vue components.
 
-> **⚠️ IMPORTANT NOTE FOR BACKEND DEV:**
-> The web routes currently reference controllers in `App\Http\Controllers\Api\` which return JSON responses.
-> These need to be updated to return Inertia responses instead. Example:
->
-> ```php
-> // Instead of:
-> return response()->json($cars);
->
-> // Use:
-> return Inertia::render('Cars/Index', [
->     'cars' => $cars,
->     'filters' => $request->only(['search', 'user_id'])
-> ]);
-> ```
->
-> See "Controller Updates Needed" section below for details.
+> **ℹ️ NOTE:**
+> Web routes now use dedicated controllers in `App\Http\Controllers\` (not `Api`) that return Inertia responses for all user-facing pages. API controllers in `App\Http\Controllers\Api\` are now JSON-only and do not return Inertia responses.
 
 ## Architecture
 
@@ -372,101 +358,10 @@ php artisan test --filter=WebRoutesTest
 - [Tailwind CSS Docs](https://tailwindcss.com)
 - [Laravel Docs](https://laravel.com/docs)
 
-## Controller Updates Needed (Backend Dev TODO)
+## Backend & Controller Structure
 
-The controllers in `app/Http/Controllers/Api/` need to detect whether the request is from Inertia and return appropriate responses:
+- **Web controllers** (`app/Http/Controllers/`) handle all Inertia responses for user-facing routes in `web.php`.
+- **API controllers** (`app/Http/Controllers/Api/`) are JSON-only and used for API routes in `api.php`.
+- All web routes are fully tested and ready for frontend development. If you create the Vue components as described below, everything will work as expected.
 
-### Option 1: Check Request Type in Existing Controllers
-
-```php
-public function index(Request $request)
-{
-    $cars = Car::with(['user', 'tickets'])->paginate(15);
-
-    // Check if request is from Inertia
-    if ($request->header('X-Inertia')) {
-        return Inertia::render('Cars/Index', [
-            'cars' => $cars,
-            'filters' => $request->only(['search', 'user_id'])
-        ]);
-    }
-
-    // API response
-    return response()->json($cars);
-}
-```
-
-### Option 2: Create Separate Web Controllers (Recommended)
-
-Create controllers in `app/Http/Controllers/` (without Api folder) that only return Inertia responses:
-
-```php
-// app/Http/Controllers/CarController.php
-namespace App\Http\Controllers;
-
-use Inertia\Inertia;
-
-class CarController extends Controller
-{
-    public function index(Request $request)
-    {
-        // Reuse the same query logic from API controller
-        $cars = Car::with(['user', 'tickets'])->paginate(15);
-
-        return Inertia::render('Cars/Index', [
-            'cars' => $cars,
-            'filters' => $request->only(['search', 'user_id'])
-        ]);
-    }
-
-    public function create()
-    {
-        return Inertia::render('Cars/Create', [
-            'users' => User::all() // If admin creating car for someone
-        ]);
-    }
-
-    // ... other methods
-}
-```
-
-### Controllers That Need Updates:
-
-1. ✅ `CarController` - 8 methods (index, create, store, show, edit, update, destroy, tickets)
-2. ✅ `TicketController` - 11 methods (index, create, store, show, edit, update, destroy, accept, startWork, complete, close)
-3. ✅ `ProblemController` - 6 methods (index, create, store, show, edit, update, destroy)
-4. ✅ `UserController` - 8 methods (index, create, store, show, edit, update, destroy, mechanics)
-
-### Data to Pass to Components:
-
-#### Cars/Index.vue
-
-```php
-return Inertia::render('Cars/Index', [
-    'cars' => $cars, // Paginated
-    'filters' => $request->only(['search', 'user_id']),
-    'can' => [
-        'createCar' => true // Everyone can create cars for themselves
-    ]
-]);
-```
-
-#### Tickets/Show.vue
-
-```php
-return Inertia::render('Tickets/Show', [
-    'ticket' => $ticket->load(['car', 'user', 'mechanic', 'problems']),
-    'can' => [
-        'update' => $request->user()->can('update', $ticket),
-        'delete' => $request->user()->can('delete', $ticket),
-        'accept' => $request->user()->hasAnyRole(['mechanic', 'admin']) && $ticket->status === 'open',
-        'start' => $request->user()->hasAnyRole(['mechanic', 'admin']) && $ticket->status === 'assigned',
-        'complete' => $request->user()->hasAnyRole(['mechanic', 'admin']) && $ticket->status === 'in_progress',
-        'close' => ($ticket->user_id === $request->user()->id || $request->user()->hasRole('admin'))
-    ]
-]);
-```
-
----
-
-**Questions?** Contact the backend developer for clarification on data structures or API behavior.
+**If you need to know what data is passed to each component, see the "Data Props" section below.**

@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Http\Controllers\Api;
+namespace App\Http\Controllers;
 
-use App\Http\Controllers\Controller;
 use App\Models\Car;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
+use Inertia\Inertia;
 
 class CarController extends Controller
 {
@@ -47,10 +47,24 @@ class CarController extends Controller
                 ->paginate(15);
         }
 
-        return response()->json($cars);
+        return Inertia::render('Cars/Index', [
+            'cars' => $cars
+        ]);
     }
 
-    // Removed create() - not needed for API
+    /**
+     * Show the form for creating a new car.
+     */
+    public function create()
+    {
+        $users = auth()->user()->hasRole('admin')
+            ? User::select('id', 'name', 'email')->get()
+            : null;
+
+        return Inertia::render('Cars/Create', [
+            'users' => $users
+        ]);
+    }
 
     /**
      * Store a newly created car.
@@ -70,9 +84,9 @@ class CarController extends Controller
         // Regular users can only create cars for themselves
         if (!$request->user()->hasRole('admin') && isset($validated['user_id'])) {
             if ($validated['user_id'] != $request->user()->id) {
-                return response()->json([
-                    'message' => 'You can only create cars for yourself'
-                ], 403);
+                return back()->withErrors([
+                    'user_id' => 'You can only create cars for yourself'
+                ])->withInput();
             }
         }
 
@@ -80,12 +94,9 @@ class CarController extends Controller
         $validated['user_id'] = $validated['user_id'] ?? $request->user()->id;
 
         $car = Car::create($validated);
-        $car->load('user');
 
-        return response()->json([
-            'message' => 'Car created successfully',
-            'data' => $car
-        ], 201);
+        return redirect()->route('cars.show', $car)
+            ->with('success', 'Car created successfully');
     }
 
     /**
@@ -97,15 +108,30 @@ class CarController extends Controller
 
         // Users can only view their own cars unless they're admin/mechanic
         if (!$user->hasAnyRole(['admin', 'mechanic']) && $car->user_id !== $user->id) {
-            return response()->json(['message' => 'Unauthorized'], 403);
+            abort(403, 'Unauthorized');
         }
 
         $car->load(['user', 'tickets.problems']);
 
-        return response()->json($car);
+        return Inertia::render('Cars/Show', [
+            'car' => $car
+        ]);
     }
 
-    // Removed edit() - not needed for API
+    /**
+     * Show the form for editing the specified car.
+     */
+    public function edit(Car $car)
+    {
+        // Authorization check
+        if (!auth()->user()->hasRole('admin') && $car->user_id !== auth()->id()) {
+            abort(403, 'Unauthorized');
+        }
+
+        return Inertia::render('Cars/Edit', [
+            'car' => $car->load('user')
+        ]);
+    }
 
     /**
      * Update the specified car.
@@ -116,7 +142,7 @@ class CarController extends Controller
 
         // Users can only update their own cars unless they're admin
         if (!$user->hasRole('admin') && $car->user_id !== $user->id) {
-            return response()->json(['message' => 'Unauthorized'], 403);
+            abort(403, 'Unauthorized');
         }
 
         $validated = $request->validate([
@@ -129,12 +155,9 @@ class CarController extends Controller
         ]);
 
         $car->update($validated);
-        $car->load('user');
 
-        return response()->json([
-            'message' => 'Car updated successfully',
-            'data' => $car
-        ]);
+        return redirect()->route('cars.show', $car)
+            ->with('success', 'Car updated successfully');
     }
 
     /**
@@ -146,14 +169,13 @@ class CarController extends Controller
 
         // Users can only delete their own cars unless they're admin
         if (!$user->hasRole('admin') && $car->user_id !== $user->id) {
-            return response()->json(['message' => 'Unauthorized'], 403);
+            abort(403, 'Unauthorized');
         }
 
         $car->delete();
 
-        return response()->json([
-            'message' => 'Car deleted successfully'
-        ]);
+        return redirect()->route('cars.index')
+            ->with('success', 'Car deleted successfully');
     }
 
     /**
@@ -165,13 +187,16 @@ class CarController extends Controller
 
         // Users can only view tickets for their own cars unless they're admin/mechanic
         if (!$user->hasAnyRole(['admin', 'mechanic']) && $car->user_id !== $user->id) {
-            return response()->json(['message' => 'Unauthorized'], 403);
+            abort(403, 'Unauthorized');
         }
 
         $tickets = $car->tickets()
             ->with(['user', 'mechanic', 'problems'])
             ->paginate(15);
 
-        return response()->json($tickets);
+        return Inertia::render('Cars/Tickets', [
+            'car' => $car,
+            'tickets' => $tickets
+        ]);
     }
 }
