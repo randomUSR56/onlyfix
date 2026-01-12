@@ -57,7 +57,9 @@ class CarController extends Controller
      */
     public function create()
     {
-        $users = auth()->user()->hasRole('admin')
+        /** @var \App\Models\User $user */
+        $user = auth()->user();
+        $users = $user->hasRole('admin')
             ? User::select('id', 'name', 'email')->get()
             : null;
 
@@ -129,8 +131,10 @@ class CarController extends Controller
      */
     public function edit(Car $car)
     {
+        /** @var \App\Models\User $user */
+        $user = auth()->user();
         // Authorization check
-        if (!auth()->user()->hasRole('admin') && $car->user_id !== auth()->id()) {
+        if (!$user->hasRole('admin') && $car->user_id !== $user->id) {
             abort(403, 'Unauthorized');
         }
 

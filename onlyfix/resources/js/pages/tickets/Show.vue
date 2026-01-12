@@ -323,7 +323,7 @@ const canCloseTicket = computed(() =>
                                         </div>
                                         <div>
                                             <p class="font-medium">{{ item.label }}</p>
-                                            <p class="text-sm text-muted-foreground">{{ formatDate(item.date) }}</p>
+                                            <p v-if="item.date" class="text-sm text-muted-foreground">{{ formatDate(item.date) }}</p>
                                         </div>
                                     </div>
                                 </div>

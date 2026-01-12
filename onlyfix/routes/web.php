@@ -16,6 +16,7 @@ Route::get('/', function () {
 Route::middleware(['auth', 'verified'])->group(function () {
     // Dashboard
     Route::get('dashboard', function () {
+        /** @var \App\Models\User $user */
         $user = auth()->user();
         
         // Get stats for the current user

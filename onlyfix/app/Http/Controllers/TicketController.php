@@ -70,6 +70,7 @@ class TicketController extends Controller
      */
     public function create()
     {
+        /** @var \App\Models\User $user */
         $user = auth()->user();
 
         // Get user's cars or all cars if admin
@@ -163,6 +164,7 @@ class TicketController extends Controller
      */
     public function edit(Ticket $ticket)
     {
+        /** @var \App\Models\User $user */
         $user = auth()->user();
 
         // Check authorization
