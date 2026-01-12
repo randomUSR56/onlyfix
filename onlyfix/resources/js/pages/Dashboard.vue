@@ -10,7 +10,7 @@ import { type BreadcrumbItem } from '@/types';
 import type { DashboardStats, Ticket, Car } from '@/types/models';
 import { Head, Link } from '@inertiajs/vue3';
 import { useI18n } from 'vue-i18n';
-import { Car as CarIcon, Ticket as TicketIcon, Clock, CheckCircle2, Plus, ArrowRight, AlertCircle, Wrench } from 'lucide-vue-next';
+import { Car as CarIcon, Plus, ArrowRight, AlertCircle, Wrench, Clock, CheckCircle2 } from 'lucide-vue-next';
 
 const { t } = useI18n();
 
@@ -48,9 +48,14 @@ const getPriorityBadgeClass = (priority: string) => {
     return classes[priority] || 'bg-gray-100 text-gray-800';
 };
 
+const getStatusIcon = (status: string) => {
+    if (status === 'open') return AlertCircle;
+    if (status === 'assigned' || status === 'in_progress') return Wrench;
+    return CheckCircle2;
+};
+
 const formatDate = (dateString: string) => {
     return new Date(dateString).toLocaleDateString(undefined, {
-        year: 'numeric',
         month: 'short',
         day: 'numeric',
     });
@@ -61,209 +66,179 @@ const formatDate = (dateString: string) => {
     <Head :title="$t('dashboard.pageTitle')" />
 
     <AppLayout :breadcrumbs="breadcrumbs">
-        <div class="flex h-full flex-1 flex-col gap-6 p-4 md:p-6">
-            <!-- Welcome Section -->
-            <div class="space-y-1">
-                <h1 class="text-2xl font-bold tracking-tight">{{ $t('dashboard.welcome') }}</h1>
-                <p class="text-muted-foreground">{{ $t('dashboard.subtitle') }}</p>
+        <div class="flex h-full flex-1 flex-col gap-4 p-4 md:p-6">
+            <!-- Header with welcome and quick action -->
+            <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+                <div>
+                    <h1 class="text-2xl font-bold tracking-tight">{{ $t('dashboard.welcome') }}</h1>
+                    <p class="text-sm text-muted-foreground">{{ $t('dashboard.subtitle') }}</p>
+                </div>
+                <Link :href="ticketsRoutes.create().url">
+                    <Button class="shadow-lg shadow-primary/25">
+                        <Plus class="mr-2 h-4 w-4" />
+                        {{ $t('dashboard.quickActions.newTicket') }}
+                    </Button>
+                </Link>
             </div>
 
-            <!-- Stats Cards -->
-            <div class="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-                <!-- Total Cars -->
-                <Card>
-                    <CardHeader class="flex flex-row items-center justify-between space-y-0 pb-2">
-                        <CardTitle class="text-sm font-medium">{{ $t('dashboard.stats.totalCars') }}</CardTitle>
-                        <CarIcon class="h-4 w-4 text-muted-foreground" />
-                    </CardHeader>
-                    <CardContent>
-                        <div class="text-2xl font-bold">{{ stats?.total_cars ?? 0 }}</div>
-                        <p class="text-xs text-muted-foreground">{{ $t('dashboard.stats.registeredVehicles') }}</p>
-                    </CardContent>
-                </Card>
-
-                <!-- Total Tickets -->
-                <Card>
-                    <CardHeader class="flex flex-row items-center justify-between space-y-0 pb-2">
-                        <CardTitle class="text-sm font-medium">{{ $t('dashboard.stats.totalTickets') }}</CardTitle>
-                        <TicketIcon class="h-4 w-4 text-muted-foreground" />
-                    </CardHeader>
-                    <CardContent>
-                        <div class="text-2xl font-bold">{{ stats?.total_tickets ?? 0 }}</div>
-                        <p class="text-xs text-muted-foreground">{{ $t('dashboard.stats.serviceRequests') }}</p>
-                    </CardContent>
-                </Card>
-
-                <!-- Open Tickets -->
-                <Card>
-                    <CardHeader class="flex flex-row items-center justify-between space-y-0 pb-2">
-                        <CardTitle class="text-sm font-medium">{{ $t('dashboard.stats.openTickets') }}</CardTitle>
-                        <Clock class="h-4 w-4 text-orange-500" />
-                    </CardHeader>
-                    <CardContent>
-                        <div class="text-2xl font-bold text-orange-600 dark:text-orange-400">{{ stats?.open_tickets ?? 0 }}</div>
-                        <p class="text-xs text-muted-foreground">{{ $t('dashboard.stats.awaitingService') }}</p>
-                    </CardContent>
-                </Card>
-
-                <!-- Completed Tickets -->
-                <Card>
-                    <CardHeader class="flex flex-row items-center justify-between space-y-0 pb-2">
-                        <CardTitle class="text-sm font-medium">{{ $t('dashboard.stats.completedTickets') }}</CardTitle>
-                        <CheckCircle2 class="h-4 w-4 text-green-500" />
-                    </CardHeader>
-                    <CardContent>
-                        <div class="text-2xl font-bold text-green-600 dark:text-green-400">{{ stats?.completed_tickets ?? 0 }}</div>
-                        <p class="text-xs text-muted-foreground">{{ $t('dashboard.stats.successfulRepairs') }}</p>
-                    </CardContent>
-                </Card>
+            <!-- Mini Stats Bar - compact, inline -->
+            <div class="flex items-center gap-4 text-sm">
+                <div class="flex items-center gap-2 px-3 py-1.5 rounded-full bg-orange-100 dark:bg-orange-900/30">
+                    <Clock class="h-3.5 w-3.5 text-orange-600 dark:text-orange-400" />
+                    <span class="font-medium text-orange-700 dark:text-orange-300">
+                        {{ stats?.open_tickets ?? 0 }} {{ $t('dashboard.stats.openTickets').toLowerCase() }}
+                    </span>
+                </div>
+                <div class="flex items-center gap-2 px-3 py-1.5 rounded-full bg-green-100 dark:bg-green-900/30">
+                    <CheckCircle2 class="h-3.5 w-3.5 text-green-600 dark:text-green-400" />
+                    <span class="font-medium text-green-700 dark:text-green-300">
+                        {{ stats?.completed_tickets ?? 0 }} {{ $t('dashboard.stats.completedTickets').toLowerCase() }}
+                    </span>
+                </div>
             </div>
 
-            <!-- Quick Actions -->
-            <div class="grid gap-4 md:grid-cols-2">
-                <Card class="border-dashed border-2 hover:border-primary/50 transition-colors cursor-pointer">
-                    <Link :href="ticketsRoutes.create().url" class="block">
-                        <CardHeader>
-                            <CardTitle class="flex items-center gap-2">
-                                <div class="p-2 rounded-lg bg-primary/10">
-                                    <Plus class="h-5 w-5 text-primary" />
-                                </div>
-                                {{ $t('dashboard.quickActions.newTicket') }}
-                            </CardTitle>
-                            <CardDescription>{{ $t('dashboard.quickActions.newTicketDescription') }}</CardDescription>
-                        </CardHeader>
+            <!-- My Tickets - Main focus -->
+            <Card>
+                <CardHeader class="flex flex-row items-center justify-between pb-3">
+                    <CardTitle class="text-lg">{{ $t('dashboard.recentTickets.title') }}</CardTitle>
+                    <Link :href="ticketsRoutes.index().url">
+                        <Button variant="ghost" size="sm">
+                            {{ $t('common.viewAll') }}
+                            <ArrowRight class="ml-1 h-4 w-4" />
+                        </Button>
                     </Link>
-                </Card>
-
-                <Card class="border-dashed border-2 hover:border-primary/50 transition-colors cursor-pointer">
-                    <Link :href="carsRoutes.create().url" class="block">
-                        <CardHeader>
-                            <CardTitle class="flex items-center gap-2">
-                                <div class="p-2 rounded-lg bg-accent/10">
-                                    <CarIcon class="h-5 w-5 text-accent" />
-                                </div>
-                                {{ $t('dashboard.quickActions.addCar') }}
-                            </CardTitle>
-                            <CardDescription>{{ $t('dashboard.quickActions.addCarDescription') }}</CardDescription>
-                        </CardHeader>
-                    </Link>
-                </Card>
-            </div>
-
-            <!-- Main Content Grid - Tickets prominent, cars smaller -->
-            <div class="grid gap-6 lg:grid-cols-3">
-                <!-- Recent Tickets - takes 2 columns -->
-                <Card class="lg:col-span-2">
-                    <CardHeader class="flex flex-row items-center justify-between">
-                        <div>
-                            <CardTitle>{{ $t('dashboard.recentTickets.title') }}</CardTitle>
-                            <CardDescription>{{ $t('dashboard.recentTickets.description') }}</CardDescription>
-                        </div>
-                        <Link :href="ticketsRoutes.index().url">
-                            <Button variant="ghost" size="sm">
-                                {{ $t('common.viewAll') }}
-                                <ArrowRight class="ml-1 h-4 w-4" />
-                            </Button>
-                        </Link>
-                    </CardHeader>
-                    <CardContent>
-                        <div v-if="recentTickets?.length" class="space-y-4">
-                            <div
-                                v-for="ticket in recentTickets"
-                                :key="ticket.id"
-                                class="flex items-center justify-between p-3 rounded-lg border bg-card hover:bg-muted/50 transition-colors"
+                </CardHeader>
+                <CardContent>
+                    <div v-if="recentTickets?.length" class="space-y-2">
+                        <Link
+                            v-for="ticket in recentTickets"
+                            :key="ticket.id"
+                            :href="ticketsRoutes.show({ ticket: ticket.id }).url"
+                            class="flex items-center gap-4 p-3 rounded-lg border bg-card hover:bg-muted/50 transition-colors group"
+                        >
+                            <!-- Status Icon -->
+                            <div 
+                                class="p-2 rounded-lg shrink-0"
+                                :class="{
+                                    'bg-orange-100 dark:bg-orange-900/30': ticket.status === 'open',
+                                    'bg-blue-100 dark:bg-blue-900/30': ticket.status === 'assigned' || ticket.status === 'in_progress',
+                                    'bg-green-100 dark:bg-green-900/30': ticket.status === 'completed' || ticket.status === 'closed',
+                                }"
                             >
-                                <div class="flex items-start gap-3 min-w-0">
-                                    <div class="p-2 rounded-lg bg-muted">
-                                        <Wrench class="h-4 w-4 text-muted-foreground" />
-                                    </div>
-                                    <div class="min-w-0">
-                                        <Link
-                                            :href="ticketsRoutes.show({ ticket: ticket.id }).url"
-                                            class="font-medium hover:text-primary transition-colors line-clamp-1"
-                                        >
-                                            {{ ticket.car?.make }} {{ ticket.car?.model }}
-                                        </Link>
-                                        <p class="text-sm text-muted-foreground line-clamp-1">
-                                            {{ ticket.description }}
-                                        </p>
-                                        <p class="text-xs text-muted-foreground mt-1">
-                                            {{ formatDate(ticket.created_at) }}
-                                        </p>
-                                    </div>
-                                </div>
-                                <div class="flex flex-col items-end gap-1">
-                                    <Badge :variant="getStatusBadgeVariant(ticket.status)">
-                                        {{ $t(`tickets.status.${ticket.status}`) }}
-                                    </Badge>
-                                    <span :class="['text-xs px-2 py-0.5 rounded-full', getPriorityBadgeClass(ticket.priority)]">
-                                        {{ $t(`tickets.priority.${ticket.priority}`) }}
+                                <component
+                                    :is="getStatusIcon(ticket.status)"
+                                    class="h-4 w-4"
+                                    :class="{
+                                        'text-orange-600 dark:text-orange-400': ticket.status === 'open',
+                                        'text-blue-600 dark:text-blue-400': ticket.status === 'assigned' || ticket.status === 'in_progress',
+                                        'text-green-600 dark:text-green-400': ticket.status === 'completed' || ticket.status === 'closed',
+                                    }"
+                                />
+                            </div>
+                            
+                            <!-- Ticket Info -->
+                            <div class="flex-1 min-w-0">
+                                <div class="flex items-center gap-2">
+                                    <span class="font-medium group-hover:text-primary transition-colors">
+                                        {{ ticket.car?.make }} {{ ticket.car?.model }}
+                                    </span>
+                                    <span class="text-xs text-muted-foreground">
+                                        {{ ticket.car?.license_plate }}
                                     </span>
                                 </div>
+                                <p class="text-sm text-muted-foreground line-clamp-1">
+                                    {{ ticket.description }}
+                                </p>
                             </div>
+                            
+                            <!-- Right side: Status & Priority -->
+                            <div class="flex items-center gap-2 shrink-0">
+                                <span class="text-xs text-muted-foreground hidden sm:block">
+                                    {{ formatDate(ticket.created_at) }}
+                                </span>
+                                <Badge :variant="getStatusBadgeVariant(ticket.status)" class="text-xs">
+                                    {{ $t(`tickets.status.${ticket.status}`) }}
+                                </Badge>
+                                <span :class="['text-xs px-2 py-0.5 rounded-full hidden sm:block', getPriorityBadgeClass(ticket.priority)]">
+                                    {{ $t(`tickets.priority.${ticket.priority}`) }}
+                                </span>
+                            </div>
+                        </Link>
+                    </div>
+                    
+                    <!-- Empty State -->
+                    <div v-else class="flex flex-col items-center justify-center py-12 text-center">
+                        <div class="p-4 rounded-full bg-muted mb-4">
+                            <Wrench class="h-8 w-8 text-muted-foreground" />
                         </div>
-                        <div v-else class="flex flex-col items-center justify-center py-8 text-center">
-                            <AlertCircle class="h-12 w-12 text-muted-foreground/50 mb-3" />
-                            <p class="text-muted-foreground">{{ $t('dashboard.recentTickets.empty') }}</p>
-                            <Link :href="ticketsRoutes.create().url" class="mt-2">
-                                <Button variant="outline" size="sm">
-                                    <Plus class="mr-1 h-4 w-4" />
-                                    {{ $t('dashboard.quickActions.newTicket') }}
-                                </Button>
-                            </Link>
-                        </div>
-                    </CardContent>
-                </Card>
-
-                <!-- My Cars - takes 1 column -->
-                <Card>
-                    <CardHeader class="flex flex-row items-center justify-between">
-                        <div>
-                            <CardTitle>{{ $t('dashboard.myCars.title') }}</CardTitle>
-                            <CardDescription class="text-xs">{{ $t('dashboard.myCars.description') }}</CardDescription>
-                        </div>
-                        <Link :href="carsRoutes.index().url">
-                            <Button variant="ghost" size="icon" class="h-8 w-8">
-                                <ArrowRight class="h-4 w-4" />
+                        <h3 class="font-medium mb-1">{{ $t('dashboard.recentTickets.empty') }}</h3>
+                        <p class="text-sm text-muted-foreground mb-4">{{ $t('dashboard.quickActions.newTicketDescription') }}</p>
+                        <Link :href="ticketsRoutes.create().url">
+                            <Button>
+                                <Plus class="mr-2 h-4 w-4" />
+                                {{ $t('dashboard.quickActions.newTicket') }}
                             </Button>
                         </Link>
-                    </CardHeader>
-                    <CardContent>
-                        <div v-if="cars?.length" class="space-y-3">
-                            <Link
-                                v-for="car in cars"
-                                :key="car.id"
-                                :href="carsRoutes.show({ car: car.id }).url"
-                                class="flex items-center gap-3 p-2 rounded-lg border bg-card hover:bg-muted/50 transition-colors"
-                            >
-                                <div class="p-1.5 rounded-md bg-muted">
-                                    <CarIcon class="h-3.5 w-3.5 text-muted-foreground" />
-                                </div>
-                                <div class="min-w-0 flex-1">
-                                    <p class="font-medium text-sm truncate">
-                                        {{ car.make }} {{ car.model }}
-                                    </p>
-                                    <p class="text-xs text-muted-foreground">
-                                        {{ car.license_plate }}
-                                    </p>
-                                </div>
-                                <Badge v-if="car.tickets_count" variant="secondary" class="text-xs">
-                                    {{ car.tickets_count }}
-                                </Badge>
-                            </Link>
-                        </div>
-                        <div v-else class="flex flex-col items-center justify-center py-6 text-center">
-                            <CarIcon class="h-10 w-10 text-muted-foreground/50 mb-2" />
-                            <p class="text-sm text-muted-foreground">{{ $t('dashboard.myCars.empty') }}</p>
-                            <Link :href="carsRoutes.create().url" class="mt-2">
-                                <Button variant="outline" size="sm">
-                                    <Plus class="mr-1 h-3.5 w-3.5" />
-                                    {{ $t('common.create') }}
-                                </Button>
-                            </Link>
-                        </div>
-                    </CardContent>
-                </Card>
+                    </div>
+                </CardContent>
+            </Card>
+
+            <!-- My Cars - Secondary, smaller section -->
+            <div class="flex items-center justify-between">
+                <h2 class="text-sm font-medium text-muted-foreground">{{ $t('dashboard.myCars.title') }}</h2>
+                <Link :href="carsRoutes.index().url" class="text-xs text-muted-foreground hover:text-primary transition-colors">
+                    {{ $t('common.viewAll') }} →
+                </Link>
+            </div>
+            
+            <div v-if="cars?.length" class="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+                <Link
+                    v-for="car in cars"
+                    :key="car.id"
+                    :href="carsRoutes.show({ car: car.id }).url"
+                    class="flex items-center gap-3 p-3 rounded-lg border bg-card hover:bg-muted/50 transition-colors group"
+                >
+                    <div class="p-2 rounded-md bg-muted group-hover:bg-primary/10 transition-colors">
+                        <CarIcon class="h-4 w-4 text-muted-foreground group-hover:text-primary transition-colors" />
+                    </div>
+                    <div class="min-w-0 flex-1">
+                        <p class="font-medium text-sm truncate group-hover:text-primary transition-colors">
+                            {{ car.make }} {{ car.model }}
+                        </p>
+                        <p class="text-xs text-muted-foreground">
+                            {{ car.license_plate }}
+                        </p>
+                    </div>
+                </Link>
+                
+                <!-- Add Car Card -->
+                <Link
+                    :href="carsRoutes.create().url"
+                    class="flex items-center gap-3 p-3 rounded-lg border border-dashed hover:border-primary/50 transition-colors group"
+                >
+                    <div class="p-2 rounded-md bg-muted/50 group-hover:bg-primary/10 transition-colors">
+                        <Plus class="h-4 w-4 text-muted-foreground group-hover:text-primary transition-colors" />
+                    </div>
+                    <p class="text-sm text-muted-foreground group-hover:text-primary transition-colors">
+                        {{ $t('cars.addCar') }}
+                    </p>
+                </Link>
+            </div>
+            
+            <!-- No cars yet -->
+            <div v-else class="flex items-center gap-4 p-4 rounded-lg border border-dashed">
+                <div class="p-2 rounded-md bg-muted">
+                    <CarIcon class="h-5 w-5 text-muted-foreground" />
+                </div>
+                <div class="flex-1">
+                    <p class="text-sm text-muted-foreground">{{ $t('dashboard.myCars.empty') }}</p>
+                </div>
+                <Link :href="carsRoutes.create().url">
+                    <Button variant="outline" size="sm">
+                        <Plus class="mr-1 h-4 w-4" />
+                        {{ $t('cars.addCar') }}
+                    </Button>
+                </Link>
             </div>
         </div>
     </AppLayout>
