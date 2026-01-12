@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 180 180" fill="none">
+    <!-- Background Circle -->
+    <circle cx="90" cy="90" r="90" fill="#2563eb"/>
+    <!-- Highlight -->
+    <ellipse cx="60" cy="55" rx="30" ry="22" fill="#60a5fa" opacity="0.4"/>
+    <!-- Wrench Icon -->
+    <path
+        d="M126 54C120.5 48.5 112 47 105 50L85 70L77.5 62.5C75.8 60.8 72.2 60.8 70.5 62.5L66.5 66.5C64.8 68.2 64.8 71.8 66.5 73.5L74 81L60 95C55 105 57 117 64 124C71 131 83 133 93 128L138 83C143 73 141 61 126 54Z"
+        fill="white"
+    />
+    <!-- Inner Circle -->
+    <circle cx="72" cy="116" r="11" fill="#1d4ed8"/>
+    <!-- Accent dot -->
+    <circle cx="118" cy="62" r="8" fill="#f97316"/>
+</svg>
