@@ -221,6 +221,18 @@
       "colorPlaceholder": "e.g., Silver"
     }
   },
+  "problems": {
+    "categories": {
+      "engine": "Engine",
+      "transmission": "Transmission",
+      "electrical": "Electrical",
+      "brakes": "Brakes",
+      "suspension": "Suspension",
+      "steering": "Steering",
+      "body": "Body",
+      "other": "Other"
+    }
+  },
   "tickets": {
     "pageTitle": "My Tickets",
     "title": "My Tickets",

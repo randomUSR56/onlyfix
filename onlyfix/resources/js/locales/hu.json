@@ -221,6 +221,18 @@
       "colorPlaceholder": "pl. Ezüst"
     }
   },
+  "problems": {
+    "categories": {
+      "engine": "Motor",
+      "transmission": "Váltó",
+      "electrical": "Elektromos",
+      "brakes": "Fékek",
+      "suspension": "Futómű",
+      "steering": "Kormányzás",
+      "body": "Karosszéria",
+      "other": "Egyéb"
+    }
+  },
   "tickets": {
     "pageTitle": "Jegyeim",
     "title": "Jegyeim",

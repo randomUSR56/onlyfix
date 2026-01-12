@@ -213,7 +213,7 @@ onMounted(() => {
                             <CardContent class="space-y-6">
                                 <div v-for="(problems, category) in problemsByCategory" :key="category" class="space-y-3">
                                     <h4 class="font-medium text-sm text-muted-foreground uppercase tracking-wide">
-                                        {{ category }}
+                                        {{ $t(`problems.categories.${category}`) }}
                                     </h4>
                                     <div class="grid gap-2 sm:grid-cols-2">
                                         <div
