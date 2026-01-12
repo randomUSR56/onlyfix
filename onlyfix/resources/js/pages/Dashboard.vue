@@ -11,12 +11,13 @@ import type { DashboardStats, Ticket, Car } from '@/types/models';
 import { Head, Link } from '@inertiajs/vue3';
 import { useI18n } from 'vue-i18n';
 import { Car as CarIcon, Ticket as TicketIcon, Clock, CheckCircle2, Plus, ArrowRight, AlertCircle, Wrench } from 'lucide-vue-next';
-import { computed } from 'vue';
 
 const { t } = useI18n();
 
 const props = defineProps<{
     stats: DashboardStats;
+    recentTickets: Ticket[];
+    cars: (Car & { tickets_count?: number })[];
 }>();
 
 const breadcrumbs: BreadcrumbItem[] = [
@@ -166,9 +167,9 @@ const formatDate = (dateString: string) => {
                         </Link>
                     </CardHeader>
                     <CardContent>
-                        <div v-if="stats?.recent_tickets?.length" class="space-y-4">
+                        <div v-if="recentTickets?.length" class="space-y-4">
                             <div
-                                v-for="ticket in stats.recent_tickets"
+                                v-for="ticket in recentTickets"
                                 :key="ticket.id"
                                 class="flex items-center justify-between p-3 rounded-lg border bg-card hover:bg-muted/50 transition-colors"
                             >
@@ -229,9 +230,9 @@ const formatDate = (dateString: string) => {
                         </Link>
                     </CardHeader>
                     <CardContent>
-                        <div v-if="stats?.cars?.length" class="space-y-4">
+                        <div v-if="cars?.length" class="space-y-4">
                             <div
-                                v-for="car in stats.cars"
+                                v-for="car in cars"
                                 :key="car.id"
                                 class="flex items-center justify-between p-3 rounded-lg border bg-card hover:bg-muted/50 transition-colors"
                             >
