@@ -35,16 +35,16 @@ const mainNavItems = computed<NavItem[]>(() => [
         isActive: currentUrl.value === '/dashboard',
     },
     {
-        title: t('nav.myCars'),
-        href: carsRoutes.index(),
-        icon: Car,
-        isActive: currentUrl.value.startsWith('/cars'),
-    },
-    {
         title: t('nav.myTickets'),
         href: ticketsRoutes.index(),
         icon: Ticket,
         isActive: currentUrl.value.startsWith('/tickets'),
+    },
+    {
+        title: t('nav.myCars'),
+        href: carsRoutes.index(),
+        icon: Car,
+        isActive: currentUrl.value.startsWith('/cars'),
     },
 ]);
 
