@@ -145,8 +145,16 @@ class TicketController extends Controller
 
         $ticket->load(['user', 'mechanic', 'car', 'problems']);
 
+        // Determine permissions
+        $isOwner = $ticket->user_id === $user->id;
+        $isAdmin = $user->hasRole('admin');
+        $isMechanic = $user->hasRole('mechanic');
+
         return Inertia::render('Tickets/Show', [
-            'ticket' => $ticket
+            'ticket' => $ticket,
+            'canEdit' => ($isOwner && $ticket->status === 'open') || $isAdmin || $isMechanic,
+            'canDelete' => ($isOwner && $ticket->status === 'open') || $isAdmin,
+            'canClose' => ($isOwner || $isAdmin) && $ticket->status !== 'closed',
         ]);
     }
 
