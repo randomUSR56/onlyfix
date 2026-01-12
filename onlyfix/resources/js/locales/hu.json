@@ -20,6 +20,9 @@
     "search": "Keresés",
     "filter": "Szűrés",
     "reset": "Visszaállítás",
+    "view": "Megtekintés",
+    "viewAll": "Összes megtekintése",
+    "clearFilters": "Szűrők törlése",
     "copyright": "© {year} OnlyFix. Minden jog fenntartva."
   },
   "nav": {
@@ -29,7 +32,10 @@
     "register": "Regisztráció",
     "logout": "Kijelentkezés",
     "settings": "Beállítások",
-    "profile": "Profil"
+    "profile": "Profil",
+    "myCars": "Autóim",
+    "myTickets": "Jegyeim",
+    "help": "Súgó és támogatás"
   },
   "welcome": {
     "pageTitle": "Üdvözöljük",
@@ -126,7 +132,181 @@
   },
   "dashboard": {
     "pageTitle": "Irányítópult",
-    "title": "Irányítópult"
+    "title": "Irányítópult",
+    "welcome": "Üdvözöljük újra!",
+    "subtitle": "Itt láthatja autói és szervizjegyei áttekintését.",
+    "stats": {
+      "totalCars": "Összes autó",
+      "registeredVehicles": "Regisztrált járművek",
+      "totalTickets": "Összes jegy",
+      "serviceRequests": "Szerviz kérések",
+      "openTickets": "Nyitott jegyek",
+      "awaitingService": "Szervizre vár",
+      "completedTickets": "Befejezett",
+      "successfulRepairs": "Sikeres javítások"
+    },
+    "quickActions": {
+      "newTicket": "Új szervizjegy",
+      "newTicketDescription": "Jelentsen problémát autójával és kérjen szervizt",
+      "addCar": "Autó hozzáadása",
+      "addCarDescription": "Regisztráljon új járművet fiókjához"
+    },
+    "recentTickets": {
+      "title": "Legutóbbi jegyek",
+      "description": "Legújabb szerviz kérései",
+      "empty": "Még nincsenek szervizjegyei"
+    },
+    "myCars": {
+      "title": "Autóim",
+      "description": "Regisztrált járművei",
+      "empty": "Még nincsenek regisztrált autói",
+      "tickets": "jegy"
+    }
+  },
+  "cars": {
+    "pageTitle": "Autóim",
+    "title": "Autóim",
+    "subtitle": "Regisztrált járműveinek kezelése",
+    "addCar": "Autó hozzáadása",
+    "searchPlaceholder": "Autók keresése...",
+    "licensePlate": "Rendszám",
+    "color": "Szín",
+    "vin": "Alvázszám",
+    "registered": "Regisztrálva",
+    "serviceHistory": "szervizjegy",
+    "empty": {
+      "title": "Nincsenek regisztrált autók",
+      "description": "Adja hozzá első autóját szervizjegyek létrehozásához"
+    },
+    "create": {
+      "pageTitle": "Autó hozzáadása",
+      "title": "Új autó hozzáadása",
+      "subtitle": "Regisztráljon járművet fiókjához",
+      "formTitle": "Jármű adatok",
+      "formDescription": "Adja meg autója adatait",
+      "submitButton": "Autó hozzáadása"
+    },
+    "edit": {
+      "pageTitle": "Autó szerkesztése",
+      "title": "Autó szerkesztése",
+      "formTitle": "Jármű adatok frissítése",
+      "formDescription": "Módosítsa autója adatait",
+      "submitButton": "Változások mentése"
+    },
+    "show": {
+      "details": "Jármű részletek",
+      "detailsDescription": "Autója adatai",
+      "serviceHistory": "Szerviz előzmények",
+      "serviceHistoryDescription": "A jármű összes szervizjegye",
+      "noServiceHistory": "Nincs szerviz előzmény",
+      "noServiceHistoryDescription": "Ez az autó még nem volt szervizben",
+      "registeredOn": "Regisztrálva"
+    },
+    "delete": {
+      "title": "Autó törlése",
+      "description": "Biztosan törölni szeretné a következő autót: {car}? Ez az összes kapcsolódó szervizjegyet is törli. Ez a művelet nem vonható vissza."
+    },
+    "form": {
+      "make": "Márka",
+      "makePlaceholder": "pl. Toyota",
+      "model": "Típus",
+      "modelPlaceholder": "pl. Camry",
+      "year": "Évjárat",
+      "licensePlate": "Rendszám",
+      "licensePlatePlaceholder": "pl. ABC-123",
+      "vin": "Alvázszám (opcionális)",
+      "vinPlaceholder": "17 karakteres alvázszám",
+      "vinHint": "Járműazonosító szám - a forgalmi engedélyen található",
+      "color": "Szín (opcionális)",
+      "colorPlaceholder": "pl. Ezüst"
+    }
+  },
+  "tickets": {
+    "pageTitle": "Jegyeim",
+    "title": "Jegyeim",
+    "subtitle": "Szerviz kérések nyomon követése és kezelése",
+    "ticket": "Jegy",
+    "createTicket": "Új jegy",
+    "searchPlaceholder": "Jegyek keresése...",
+    "filterByStatus": "Szűrés állapot szerint",
+    "filterByPriority": "Szűrés prioritás szerint",
+    "problems": "probléma",
+    "empty": {
+      "title": "Nincsenek szervizjegyek",
+      "description": "Hozza létre első jegyét autószerviz igényléséhez"
+    },
+    "status": {
+      "label": "Állapot",
+      "open": "Nyitott",
+      "assigned": "Kiosztva",
+      "in_progress": "Folyamatban",
+      "completed": "Befejezve",
+      "closed": "Lezárva"
+    },
+    "priority": {
+      "label": "Prioritás",
+      "low": "Alacsony",
+      "medium": "Közepes",
+      "high": "Magas",
+      "urgent": "Sürgős"
+    },
+    "create": {
+      "pageTitle": "Új jegy",
+      "title": "Szervizjegy létrehozása",
+      "subtitle": "Írja le autója problémáit",
+      "noCarsTitle": "Nincsenek regisztrált autók",
+      "noCarsDescription": "Szervizjegy létrehozásához először hozzá kell adnia egy autót.",
+      "selectCar": "Autó kiválasztása",
+      "selectCarDescription": "Válassza ki, melyik autónak van szervizre szüksége",
+      "selectProblems": "Problémák kiválasztása",
+      "selectProblemsDescription": "Milyen problémákat tapasztal?",
+      "problemNotePlaceholder": "Adjon hozzá részleteket erről a problémáról...",
+      "descriptionTitle": "További részletek",
+      "descriptionSubtitle": "Írjon le minden egyéb hasznos információt",
+      "descriptionPlaceholder": "Kérjük, írja le az autójával tapasztalt problémákat. Tartalmazza, mikor kezdődött a probléma, szokatlan hangokat, viselkedést vagy figyelmeztető lámpákat...",
+      "priorityTitle": "Prioritási szint",
+      "priorityDescription": "Mennyire sürgős ez a szerviz kérés?",
+      "summaryTitle": "Összegzés",
+      "selectedCar": "Kiválasztott autó",
+      "noCarSelected": "Nincs autó kiválasztva",
+      "selectedProblems": "Kiválasztott problémák",
+      "noProblemsSelected": "Nincs probléma kiválasztva",
+      "submitButton": "Jegy létrehozása"
+    },
+    "show": {
+      "createdOn": "Létrehozva",
+      "description": "Leírás",
+      "reportedProblems": "Bejelentett problémák",
+      "reportedProblemsDescription": "Az ügyfél által kiválasztott problémák",
+      "customerNote": "Ügyfél megjegyzése",
+      "noProblems": "Nincsenek bejelentett problémák",
+      "timeline": "Idővonal",
+      "vehicleInfo": "Jármű információk",
+      "viewCarDetails": "Autó részletek megtekintése",
+      "assignedMechanic": "Kijelölt szerelő",
+      "statusInfo": "Állapot információk",
+      "status": "Állapot",
+      "priority": "Prioritás",
+      "created": "Létrehozva",
+      "accepted": "Elfogadva",
+      "completed": "Befejezve",
+      "closeTicket": "Jegy lezárása"
+    },
+    "timeline": {
+      "created": "Jegy létrehozva",
+      "assigned": "Szerelőhöz rendelve",
+      "inProgress": "Munka megkezdve",
+      "completed": "Munka befejezve",
+      "closed": "Jegy lezárva"
+    },
+    "delete": {
+      "title": "Jegy törlése",
+      "description": "Biztosan törölni szeretné ezt a jegyet? Ez a művelet nem vonható vissza."
+    },
+    "close": {
+      "title": "Jegy lezárása",
+      "description": "A jegy lezárásával azt megoldottnak jelöli. Elégedett a szolgáltatással?"
+    }
   },
   "settings": {
     "profile": {
