@@ -113,8 +113,14 @@ class CarController extends Controller
 
         $car->load(['user', 'tickets.problems']);
 
+        // Determine permissions
+        $isOwner = $car->user_id === $user->id;
+        $isAdmin = $user->hasRole('admin');
+
         return Inertia::render('Cars/Show', [
-            'car' => $car
+            'car' => $car,
+            'canEdit' => $isOwner || $isAdmin,
+            'canDelete' => $isOwner || $isAdmin,
         ]);
     }
 
