@@ -150,10 +150,10 @@ const formatDate = (dateString: string) => {
                 </Card>
             </div>
 
-            <!-- Main Content Grid -->
-            <div class="grid gap-6 lg:grid-cols-2">
-                <!-- Recent Tickets -->
-                <Card>
+            <!-- Main Content Grid - Tickets prominent, cars smaller -->
+            <div class="grid gap-6 lg:grid-cols-3">
+                <!-- Recent Tickets - takes 2 columns -->
+                <Card class="lg:col-span-2">
                     <CardHeader class="flex flex-row items-center justify-between">
                         <div>
                             <CardTitle>{{ $t('dashboard.recentTickets.title') }}</CardTitle>
@@ -215,60 +215,50 @@ const formatDate = (dateString: string) => {
                     </CardContent>
                 </Card>
 
-                <!-- My Cars -->
+                <!-- My Cars - takes 1 column -->
                 <Card>
                     <CardHeader class="flex flex-row items-center justify-between">
                         <div>
                             <CardTitle>{{ $t('dashboard.myCars.title') }}</CardTitle>
-                            <CardDescription>{{ $t('dashboard.myCars.description') }}</CardDescription>
+                            <CardDescription class="text-xs">{{ $t('dashboard.myCars.description') }}</CardDescription>
                         </div>
                         <Link :href="carsRoutes.index().url">
-                            <Button variant="ghost" size="sm">
-                                {{ $t('common.viewAll') }}
-                                <ArrowRight class="ml-1 h-4 w-4" />
+                            <Button variant="ghost" size="icon" class="h-8 w-8">
+                                <ArrowRight class="h-4 w-4" />
                             </Button>
                         </Link>
                     </CardHeader>
                     <CardContent>
-                        <div v-if="cars?.length" class="space-y-4">
-                            <div
+                        <div v-if="cars?.length" class="space-y-3">
+                            <Link
                                 v-for="car in cars"
                                 :key="car.id"
-                                class="flex items-center justify-between p-3 rounded-lg border bg-card hover:bg-muted/50 transition-colors"
+                                :href="carsRoutes.show({ car: car.id }).url"
+                                class="flex items-center gap-3 p-2 rounded-lg border bg-card hover:bg-muted/50 transition-colors"
                             >
-                                <div class="flex items-center gap-3 min-w-0">
-                                    <div class="p-2 rounded-lg bg-muted">
-                                        <CarIcon class="h-4 w-4 text-muted-foreground" />
-                                    </div>
-                                    <div class="min-w-0">
-                                        <Link
-                                            :href="carsRoutes.show({ car: car.id }).url"
-                                            class="font-medium hover:text-primary transition-colors"
-                                        >
-                                            {{ car.make }} {{ car.model }}
-                                        </Link>
-                                        <p class="text-sm text-muted-foreground">
-                                            {{ car.year }} • {{ car.license_plate }}
-                                        </p>
-                                    </div>
+                                <div class="p-1.5 rounded-md bg-muted">
+                                    <CarIcon class="h-3.5 w-3.5 text-muted-foreground" />
                                 </div>
-                                <div class="flex items-center gap-2">
-                                    <span v-if="car.color" class="text-xs text-muted-foreground px-2 py-1 rounded bg-muted">
-                                        {{ car.color }}
-                                    </span>
-                                    <Badge v-if="car.tickets_count" variant="secondary">
-                                        {{ car.tickets_count }} {{ $t('dashboard.myCars.tickets') }}
-                                    </Badge>
+                                <div class="min-w-0 flex-1">
+                                    <p class="font-medium text-sm truncate">
+                                        {{ car.make }} {{ car.model }}
+                                    </p>
+                                    <p class="text-xs text-muted-foreground">
+                                        {{ car.license_plate }}
+                                    </p>
                                 </div>
-                            </div>
+                                <Badge v-if="car.tickets_count" variant="secondary" class="text-xs">
+                                    {{ car.tickets_count }}
+                                </Badge>
+                            </Link>
                         </div>
-                        <div v-else class="flex flex-col items-center justify-center py-8 text-center">
-                            <CarIcon class="h-12 w-12 text-muted-foreground/50 mb-3" />
-                            <p class="text-muted-foreground">{{ $t('dashboard.myCars.empty') }}</p>
+                        <div v-else class="flex flex-col items-center justify-center py-6 text-center">
+                            <CarIcon class="h-10 w-10 text-muted-foreground/50 mb-2" />
+                            <p class="text-sm text-muted-foreground">{{ $t('dashboard.myCars.empty') }}</p>
                             <Link :href="carsRoutes.create().url" class="mt-2">
                                 <Button variant="outline" size="sm">
-                                    <Plus class="mr-1 h-4 w-4" />
-                                    {{ $t('dashboard.quickActions.addCar') }}
+                                    <Plus class="mr-1 h-3.5 w-3.5" />
+                                    {{ $t('common.create') }}
                                 </Button>
                             </Link>
                         </div>
