@@ -280,7 +280,7 @@ const canCloseTicket = computed(() =>
                                     <div class="flex items-start justify-between mb-2">
                                         <div>
                                             <h4 class="font-medium">{{ problem.name }}</h4>
-                                            <p class="text-xs text-muted-foreground">{{ problem.category }}</p>
+                                            <p class="text-xs text-muted-foreground">{{ $t(`problems.categories.${problem.category}`) }}</p>
                                         </div>
                                     </div>
                                     <p v-if="problem.description" class="text-sm text-muted-foreground mb-2">
