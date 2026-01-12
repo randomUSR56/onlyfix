@@ -28,6 +28,8 @@ const { t } = useI18n();
 
 const props = defineProps<{
     car: Car & { tickets?: Ticket[] };
+    canEdit?: boolean;
+    canDelete?: boolean;
 }>();
 
 const breadcrumbs: BreadcrumbItem[] = [
@@ -110,13 +112,13 @@ const getStatusIcon = (status: string) => {
                     </div>
                 </div>
                 <div class="flex items-center gap-2">
-                    <Link :href="carsRoutes.edit({ car: car.id }).url">
+                    <Link v-if="canEdit !== false" :href="carsRoutes.edit({ car: car.id }).url">
                         <Button variant="outline">
                             <Edit class="mr-2 h-4 w-4" />
                             {{ $t('common.edit') }}
                         </Button>
                     </Link>
-                    <Button variant="destructive" @click="deleteDialogOpen = true">
+                    <Button v-if="canDelete !== false" variant="destructive" @click="deleteDialogOpen = true">
                         <Trash2 class="mr-2 h-4 w-4" />
                         {{ $t('common.delete') }}
                     </Button>
