@@ -13,12 +13,12 @@ import { LoaderCircle, User, Mail, Lock, ShieldCheck, ArrowRight } from 'lucide-
 
 <template>
     <AuthBrandedLayout
-        title="Create your account"
-        description="Join OnlyFix and start managing your car repairs efficiently"
-        hero-title="Get Started in Minutes"
-        hero-subtitle="Whether you're a car owner seeking repairs or a mechanic managing work orders, OnlyFix streamlines the entire process."
+        :title="$t('auth.register.title')"
+        :description="$t('auth.register.description')"
+        :hero-title="$t('auth.register.heroTitle')"
+        :hero-subtitle="$t('auth.register.heroSubtitle')"
     >
-        <Head title="Register" />
+        <Head :title="$t('auth.register.pageTitle')" />
 
         <Form
             v-bind="RegisteredUserController.store.form()"
@@ -29,7 +29,7 @@ import { LoaderCircle, User, Mail, Lock, ShieldCheck, ArrowRight } from 'lucide-
             <!-- Name Field -->
             <div class="space-y-1.5">
                 <Label for="name" class="text-sm font-medium">
-                    Full name
+                    {{ $t('auth.register.nameLabel') }}
                 </Label>
                 <div class="relative">
                     <div class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
@@ -43,7 +43,7 @@ import { LoaderCircle, User, Mail, Lock, ShieldCheck, ArrowRight } from 'lucide-
                         :tabindex="1"
                         autocomplete="name"
                         name="name"
-                        placeholder="John Doe"
+                        :placeholder="$t('auth.register.namePlaceholder')"
                         class="pl-10"
                     />
                 </div>
@@ -53,7 +53,7 @@ import { LoaderCircle, User, Mail, Lock, ShieldCheck, ArrowRight } from 'lucide-
             <!-- Email Field -->
             <div class="space-y-1.5">
                 <Label for="email" class="text-sm font-medium">
-                    Email address
+                    {{ $t('auth.register.emailLabel') }}
                 </Label>
                 <div class="relative">
                     <div class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
@@ -66,7 +66,7 @@ import { LoaderCircle, User, Mail, Lock, ShieldCheck, ArrowRight } from 'lucide-
                         :tabindex="2"
                         autocomplete="email"
                         name="email"
-                        placeholder="you@example.com"
+                        :placeholder="$t('auth.register.emailPlaceholder')"
                         class="pl-10"
                     />
                 </div>
@@ -76,7 +76,7 @@ import { LoaderCircle, User, Mail, Lock, ShieldCheck, ArrowRight } from 'lucide-
             <!-- Password Field -->
             <div class="space-y-1.5">
                 <Label for="password" class="text-sm font-medium">
-                    Password
+                    {{ $t('auth.register.passwordLabel') }}
                 </Label>
                 <div class="relative">
                     <div class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
@@ -89,7 +89,7 @@ import { LoaderCircle, User, Mail, Lock, ShieldCheck, ArrowRight } from 'lucide-
                         :tabindex="3"
                         autocomplete="new-password"
                         name="password"
-                        placeholder="••••••••"
+                        :placeholder="$t('auth.register.passwordPlaceholder')"
                         class="pl-10"
                     />
                 </div>
@@ -99,7 +99,7 @@ import { LoaderCircle, User, Mail, Lock, ShieldCheck, ArrowRight } from 'lucide-
             <!-- Confirm Password Field -->
             <div class="space-y-1.5">
                 <Label for="password_confirmation" class="text-sm font-medium">
-                    Confirm password
+                    {{ $t('auth.register.confirmPasswordLabel') }}
                 </Label>
                 <div class="relative">
                     <div class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
@@ -112,7 +112,7 @@ import { LoaderCircle, User, Mail, Lock, ShieldCheck, ArrowRight } from 'lucide-
                         :tabindex="4"
                         autocomplete="new-password"
                         name="password_confirmation"
-                        placeholder="••••••••"
+                        :placeholder="$t('auth.register.passwordPlaceholder')"
                         class="pl-10"
                     />
                 </div>
@@ -121,10 +121,10 @@ import { LoaderCircle, User, Mail, Lock, ShieldCheck, ArrowRight } from 'lucide-
 
             <!-- Terms Notice -->
             <p class="text-xs text-muted-foreground text-center">
-                By creating an account, you agree to our
-                <a href="#" class="text-primary hover:underline">Terms of Service</a>
-                and
-                <a href="#" class="text-primary hover:underline">Privacy Policy</a>
+                {{ $t('auth.register.termsNotice') }}
+                <a href="#" class="text-primary hover:underline">{{ $t('auth.register.termsOfService') }}</a>
+                {{ $t('common.and') }}
+                <a href="#" class="text-primary hover:underline">{{ $t('auth.register.privacyPolicy') }}</a>
             </p>
 
             <!-- Submit Button -->
@@ -140,7 +140,7 @@ import { LoaderCircle, User, Mail, Lock, ShieldCheck, ArrowRight } from 'lucide-
                     class="mr-2 h-4 w-4 animate-spin"
                 />
                 <template v-else>
-                    Create account
+                    {{ $t('auth.register.submitButton') }}
                     <ArrowRight class="ml-2 h-4 w-4" />
                 </template>
             </Button>
@@ -152,7 +152,7 @@ import { LoaderCircle, User, Mail, Lock, ShieldCheck, ArrowRight } from 'lucide-
                 </div>
                 <div class="relative flex justify-center text-xs uppercase">
                     <span class="bg-background px-2 text-muted-foreground">
-                        Already have an account?
+                        {{ $t('auth.register.alreadyHaveAccount') }}
                     </span>
                 </div>
             </div>
@@ -164,7 +164,7 @@ import { LoaderCircle, User, Mail, Lock, ShieldCheck, ArrowRight } from 'lucide-
                     class="inline-flex items-center gap-2 text-sm font-medium text-primary hover:text-primary/80 transition-colors"
                     :tabindex="6"
                 >
-                    Sign in instead
+                    {{ $t('auth.register.signInInstead') }}
                     <ArrowRight class="h-3 w-3" />
                 </TextLink>
             </div>

@@ -1,0 +1,202 @@
+{
+  "common": {
+    "appName": "OnlyFix",
+    "loading": "Betöltés...",
+    "save": "Mentés",
+    "cancel": "Mégse",
+    "delete": "Törlés",
+    "edit": "Szerkesztés",
+    "create": "Létrehozás",
+    "submit": "Küldés",
+    "back": "Vissza",
+    "next": "Következő",
+    "close": "Bezárás",
+    "or": "Vagy",
+    "and": "és",
+    "yes": "Igen",
+    "no": "Nem",
+    "all": "Összes",
+    "none": "Egyik sem",
+    "search": "Keresés",
+    "filter": "Szűrés",
+    "reset": "Visszaállítás",
+    "copyright": "© {year} OnlyFix. Minden jog fenntartva."
+  },
+  "nav": {
+    "home": "Kezdőlap",
+    "dashboard": "Irányítópult",
+    "login": "Bejelentkezés",
+    "register": "Regisztráció",
+    "logout": "Kijelentkezés",
+    "settings": "Beállítások",
+    "profile": "Profil"
+  },
+  "welcome": {
+    "pageTitle": "Üdvözöljük",
+    "getStarted": "Kezdjük el",
+    "ecosystemDescription": "A Laravel rendkívül gazdag ökoszisztémával rendelkezik.",
+    "suggestion": "Javasoljuk, hogy kezdje a következőkkel.",
+    "readThe": "Olvassa el a",
+    "documentation": "Dokumentációt",
+    "watchTutorials": "Nézzen oktatóvideókat itt:",
+    "laracasts": "Laracasts",
+    "deployNow": "Telepítés most"
+  },
+  "auth": {
+    "login": {
+      "pageTitle": "Bejelentkezés",
+      "title": "Üdvözöljük újra",
+      "description": "Jelentkezzen be fiókjába a javítási jegyek kezeléséhez",
+      "heroTitle": "Megbízható autójavító partnerünk",
+      "heroSubtitle": "Küldjön javítási kéréseket, kövesse nyomon a folyamatot, és kommunikáljon minősített szerelőkkel - mindezt egy helyen.",
+      "emailLabel": "E-mail cím",
+      "emailPlaceholder": "pelda{'@'}email.com",
+      "passwordLabel": "Jelszó",
+      "passwordPlaceholder": "••••••••",
+      "forgotPassword": "Elfelejtett jelszó?",
+      "rememberMe": "Emlékezz rám",
+      "submitButton": "Bejelentkezés",
+      "newToOnlyFix": "Még nincs fiókja?",
+      "createAccount": "Fiók létrehozása"
+    },
+    "register": {
+      "pageTitle": "Regisztráció",
+      "title": "Fiók létrehozása",
+      "description": "Csatlakozzon az OnlyFix-hez és kezdje el hatékonyan kezelni autójavításait",
+      "heroTitle": "Kezdjen percek alatt",
+      "heroSubtitle": "Legyen Ön autótulajdonos, aki javítást keres, vagy szerelő, aki munkamegrendeléseket kezel, az OnlyFix egyszerűsíti az egész folyamatot.",
+      "nameLabel": "Teljes név",
+      "namePlaceholder": "Kovács János",
+      "emailLabel": "E-mail cím",
+      "emailPlaceholder": "pelda{'@'}email.com",
+      "passwordLabel": "Jelszó",
+      "passwordPlaceholder": "••••••••",
+      "confirmPasswordLabel": "Jelszó megerősítése",
+      "termsNotice": "A fiók létrehozásával elfogadja a",
+      "termsOfService": "Felhasználási feltételeket",
+      "privacyPolicy": "Adatvédelmi szabályzatot",
+      "submitButton": "Fiók létrehozása",
+      "alreadyHaveAccount": "Már van fiókja?",
+      "signInInstead": "Jelentkezzen be"
+    },
+    "forgotPassword": {
+      "pageTitle": "Elfelejtett jelszó",
+      "title": "Elfelejtett jelszó",
+      "description": "Adja meg e-mail címét a jelszó-visszaállító link küldéséhez",
+      "emailLabel": "E-mail cím",
+      "emailPlaceholder": "pelda{'@'}email.com",
+      "submitButton": "Jelszó-visszaállító link küldése",
+      "returnTo": "Vagy térjen vissza a",
+      "login": "bejelentkezéshez"
+    },
+    "resetPassword": {
+      "pageTitle": "Jelszó visszaállítása",
+      "title": "Jelszó visszaállítása",
+      "description": "Adja meg az új jelszavát",
+      "emailLabel": "E-mail",
+      "passwordLabel": "Jelszó",
+      "confirmPasswordLabel": "Jelszó megerősítése",
+      "submitButton": "Jelszó visszaállítása"
+    },
+    "confirmPassword": {
+      "pageTitle": "Jelszó megerősítése",
+      "title": "Erősítse meg jelszavát",
+      "description": "Ez egy biztonságos terület. Kérjük, erősítse meg jelszavát a folytatás előtt.",
+      "passwordLabel": "Jelszó",
+      "submitButton": "Megerősítés"
+    },
+    "verifyEmail": {
+      "pageTitle": "E-mail megerősítése",
+      "title": "E-mail címének megerősítése",
+      "description": "Köszönjük a regisztrációt! Mielőtt elkezdené, kérjük, erősítse meg e-mail címét az elküldött linkre kattintva.",
+      "resendButton": "Megerősítő e-mail újraküldése",
+      "resendSuccess": "Új megerősítő link lett elküldve az e-mail címére.",
+      "logout": "Kijelentkezés"
+    },
+    "twoFactor": {
+      "pageTitle": "Kétfaktoros hitelesítés",
+      "title": "Kétfaktoros hitelesítés",
+      "description": "Kérjük, erősítse meg a hozzáférést a hitelesítő alkalmazás által megadott kód beírásával.",
+      "codeLabel": "Kód",
+      "recoveryCodeLabel": "Helyreállítási kód",
+      "useRecoveryCode": "Helyreállítási kód használata",
+      "useAuthCode": "Hitelesítési kód használata",
+      "submitButton": "Bejelentkezés"
+    }
+  },
+  "dashboard": {
+    "pageTitle": "Irányítópult",
+    "title": "Irányítópult"
+  },
+  "settings": {
+    "profile": {
+      "pageTitle": "Profil beállítások",
+      "breadcrumb": "Profil beállítások",
+      "title": "Profil információk",
+      "description": "Frissítse nevét és e-mail címét",
+      "nameLabel": "Név",
+      "namePlaceholder": "Teljes név",
+      "emailLabel": "E-mail cím",
+      "emailPlaceholder": "E-mail cím",
+      "unverifiedEmail": "Az e-mail címe nincs megerősítve.",
+      "resendVerification": "Kattintson ide a megerősítő e-mail újraküldéséhez.",
+      "verificationSent": "Új megerősítő link lett elküldve az e-mail címére.",
+      "saveButton": "Mentés",
+      "saved": "Mentve."
+    },
+    "password": {
+      "pageTitle": "Jelszó beállítások",
+      "breadcrumb": "Jelszó beállítások",
+      "title": "Jelszó frissítése",
+      "description": "Győződjön meg róla, hogy fiókja hosszú, véletlenszerű jelszót használ a biztonság érdekében",
+      "currentPasswordLabel": "Jelenlegi jelszó",
+      "currentPasswordPlaceholder": "Jelenlegi jelszó",
+      "newPasswordLabel": "Új jelszó",
+      "newPasswordPlaceholder": "Új jelszó",
+      "confirmPasswordLabel": "Jelszó megerősítése",
+      "confirmPasswordPlaceholder": "Jelszó megerősítése",
+      "saveButton": "Jelszó mentése",
+      "saved": "Mentve."
+    },
+    "appearance": {
+      "pageTitle": "Megjelenés beállítások",
+      "breadcrumb": "Megjelenés beállítások",
+      "title": "Megjelenés beállítások",
+      "description": "Frissítse fiókja megjelenési beállításait"
+    },
+    "twoFactor": {
+      "pageTitle": "Kétfaktoros hitelesítés",
+      "breadcrumb": "Kétfaktoros hitelesítés",
+      "title": "Kétfaktoros hitelesítés",
+      "description": "További biztonság hozzáadása fiókjához kétfaktoros hitelesítéssel"
+    },
+    "deleteAccount": {
+      "title": "Fiók törlése",
+      "description": "Fiókja és összes erőforrása törlése",
+      "warningTitle": "Figyelmeztetés",
+      "warningText": "Kérjük, óvatosan járjon el, ez nem visszavonható.",
+      "deleteButton": "Fiók törlése",
+      "confirmTitle": "Biztosan törölni szeretné a fiókját?",
+      "confirmDescription": "A fiók törlése után annak összes erőforrása és adata véglegesen törlődik. Kérjük, adja meg jelszavát a fiók végleges törlésének megerősítéséhez.",
+      "passwordLabel": "Jelszó",
+      "passwordPlaceholder": "Jelszó"
+    }
+  },
+  "language": {
+    "title": "Nyelv",
+    "select": "Nyelv kiválasztása",
+    "en": "English",
+    "hu": "Magyar"
+  },
+  "layouts": {
+    "auth": {
+      "defaultHeroTitle": "Professzionális autójavítás kezelés",
+      "defaultHeroSubtitle": "Egyszerűsítse autójavítási munkafolyamatait átfogó jegykezelő rendszerünkkel. Kapcsolja össze az ügyfeleket a szerelőkkel hatékonyan."
+    }
+  },
+  "features": {
+    "quickTicket": "Gyors jegylétrehozás autóproblémákhoz",
+    "realTimeUpdates": "Valós idejű javítási állapotfrissítések",
+    "directCommunication": "Közvetlen kommunikáció a szerelőkkel"
+  }
+}

@@ -2,8 +2,12 @@
 import OnlyFixLogo from '@/components/brand/OnlyFixLogo.vue';
 import AuthBackground from '@/components/brand/AuthBackground.vue';
 import AuthHeroSection from '@/components/brand/AuthHeroSection.vue';
+import LanguageSwitcher from '@/components/LanguageSwitcher.vue';
 import { home } from '@/routes';
 import { Link } from '@inertiajs/vue3';
+import { useI18n } from 'vue-i18n';
+
+const { t } = useI18n();
 
 interface Props {
     title: string;
@@ -13,8 +17,8 @@ interface Props {
 }
 
 withDefaults(defineProps<Props>(), {
-    heroTitle: 'Professional Car Repair Management',
-    heroSubtitle: 'Streamline your auto repair workflow with our comprehensive ticketing system. Connect customers with mechanics efficiently.',
+    heroTitle: undefined,
+    heroSubtitle: undefined,
 });
 </script>
 
@@ -27,8 +31,8 @@ withDefaults(defineProps<Props>(), {
             
             <!-- Content Overlay -->
             <AuthHeroSection
-                :title="heroTitle"
-                :subtitle="heroSubtitle"
+                :title="heroTitle || $t('layouts.auth.defaultHeroTitle')"
+                :subtitle="heroSubtitle || $t('layouts.auth.defaultHeroSubtitle')"
                 class="relative z-10 w-full"
             />
         </div>
@@ -41,8 +45,9 @@ withDefaults(defineProps<Props>(), {
                     <OnlyFixLogo size="md" />
                 </Link>
                 
-                <!-- Mobile Menu / Theme Toggle placeholder -->
+                <!-- Language Switcher -->
                 <div class="flex items-center gap-2">
+                    <LanguageSwitcher />
                     <slot name="header-actions" />
                 </div>
             </header>
@@ -68,7 +73,7 @@ withDefaults(defineProps<Props>(), {
             <!-- Footer -->
             <footer class="flex-shrink-0 border-t border-border p-4 text-center text-xs text-muted-foreground">
                 <p>
-                    © {{ new Date().getFullYear() }} OnlyFix. All rights reserved.
+                    {{ $t('common.copyright', { year: new Date().getFullYear() }) }}
                 </p>
             </footer>
         </div>

@@ -48,19 +48,19 @@ const props = defineProps<Props>();
                         <div class="flex-shrink-0 w-5 h-5 rounded-full bg-accent/20 flex items-center justify-center">
                             <img src="/images/brand/checkmark-small.svg" alt="" class="w-3 h-3" />
                         </div>
-                        <span class="text-white/90 text-sm">Quick ticket creation for car issues</span>
+                        <span class="text-white/90 text-sm">{{ $t('features.quickTicket') }}</span>
                     </div>
                     <div class="flex items-center gap-3 text-left">
                         <div class="flex-shrink-0 w-5 h-5 rounded-full bg-accent/20 flex items-center justify-center">
                             <img src="/images/brand/checkmark-small.svg" alt="" class="w-3 h-3" />
                         </div>
-                        <span class="text-white/90 text-sm">Real-time repair status updates</span>
+                        <span class="text-white/90 text-sm">{{ $t('features.realTimeUpdates') }}</span>
                     </div>
                     <div class="flex items-center gap-3 text-left">
                         <div class="flex-shrink-0 w-5 h-5 rounded-full bg-accent/20 flex items-center justify-center">
                             <img src="/images/brand/checkmark-small.svg" alt="" class="w-3 h-3" />
                         </div>
-                        <span class="text-white/90 text-sm">Direct communication with mechanics</span>
+                        <span class="text-white/90 text-sm">{{ $t('features.directCommunication') }}</span>
                     </div>
                 </slot>
             </div>

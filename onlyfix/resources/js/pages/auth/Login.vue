@@ -11,6 +11,9 @@ import { store } from '@/routes/login';
 import { request } from '@/routes/password';
 import { Form, Head } from '@inertiajs/vue3';
 import { LoaderCircle, Mail, Lock, ArrowRight } from 'lucide-vue-next';
+import { useI18n } from 'vue-i18n';
+
+const { t } = useI18n();
 
 defineProps<{
     status?: string;
@@ -20,12 +23,12 @@ defineProps<{
 
 <template>
     <AuthBrandedLayout
-        title="Welcome back"
-        description="Sign in to your account to manage your repair tickets"
-        hero-title="Your Trusted Auto Repair Partner"
-        hero-subtitle="Submit repair requests, track progress, and communicate with certified mechanics - all in one place."
+        :title="$t('auth.login.title')"
+        :description="$t('auth.login.description')"
+        :hero-title="$t('auth.login.heroTitle')"
+        :hero-subtitle="$t('auth.login.heroSubtitle')"
     >
-        <Head title="Log in" />
+        <Head :title="$t('auth.login.pageTitle')" />
 
         <!-- Success Status Message -->
         <div
@@ -47,7 +50,7 @@ defineProps<{
             <!-- Email Field -->
             <div class="space-y-1.5">
                 <Label for="email" class="text-sm font-medium">
-                    Email address
+                    {{ $t('auth.login.emailLabel') }}
                 </Label>
                 <div class="relative">
                     <div class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
@@ -61,7 +64,7 @@ defineProps<{
                         autofocus
                         :tabindex="1"
                         autocomplete="email"
-                        placeholder="you@example.com"
+                        :placeholder="$t('auth.login.emailPlaceholder')"
                         class="pl-10"
                     />
                 </div>
@@ -72,7 +75,7 @@ defineProps<{
             <div class="space-y-1.5">
                 <div class="flex items-center justify-between">
                     <Label for="password" class="text-sm font-medium">
-                        Password
+                        {{ $t('auth.login.passwordLabel') }}
                     </Label>
                     <TextLink
                         v-if="canResetPassword"
@@ -80,7 +83,7 @@ defineProps<{
                         class="text-xs font-medium text-primary hover:text-primary/80 transition-colors"
                         :tabindex="5"
                     >
-                        Forgot password?
+                        {{ $t('auth.login.forgotPassword') }}
                     </TextLink>
                 </div>
                 <div class="relative">
@@ -94,7 +97,7 @@ defineProps<{
                         required
                         :tabindex="2"
                         autocomplete="current-password"
-                        placeholder="••••••••"
+                        :placeholder="$t('auth.login.passwordPlaceholder')"
                         class="pl-10"
                     />
                 </div>
@@ -105,7 +108,7 @@ defineProps<{
             <div class="flex items-center justify-between">
                 <Label for="remember" class="flex items-center gap-3 cursor-pointer">
                     <Checkbox id="remember" name="remember" :tabindex="3" />
-                    <span class="text-sm text-muted-foreground">Keep me signed in</span>
+                    <span class="text-sm text-muted-foreground">{{ $t('auth.login.rememberMe') }}</span>
                 </Label>
             </div>
 
@@ -122,7 +125,7 @@ defineProps<{
                     class="mr-2 h-4 w-4 animate-spin"
                 />
                 <template v-else>
-                    Sign in
+                    {{ $t('auth.login.submitButton') }}
                     <ArrowRight class="ml-2 h-4 w-4" />
                 </template>
             </Button>
@@ -134,7 +137,7 @@ defineProps<{
                 </div>
                 <div class="relative flex justify-center text-xs uppercase">
                     <span class="bg-background px-2 text-muted-foreground">
-                        New to OnlyFix?
+                        {{ $t('auth.login.newToOnlyFix') }}
                     </span>
                 </div>
             </div>
@@ -146,7 +149,7 @@ defineProps<{
                     class="inline-flex items-center gap-2 text-sm font-medium text-primary hover:text-primary/80 transition-colors"
                     :tabindex="6"
                 >
-                    Create an account
+                    {{ $t('auth.login.createAccount') }}
                     <ArrowRight class="h-3 w-3" />
                 </TextLink>
             </div>
