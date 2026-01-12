@@ -249,8 +249,12 @@
       "medium": "Medium",
       "high": "High",
       "urgent": "Urgent"
-    },
-    "create": {
+    },    "edit": {
+      "pageTitle": "Edit Ticket",
+      "title": "Edit Ticket",
+      "subtitle": "Update the details of your service request",
+      "submitButton": "Save Changes"
+    },    "create": {
       "pageTitle": "New Ticket",
       "title": "Create Service Ticket",
       "subtitle": "Describe the problems with your car",

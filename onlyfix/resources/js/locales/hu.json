@@ -250,6 +250,12 @@
       "high": "Magas",
       "urgent": "Sürgős"
     },
+    "edit": {
+      "pageTitle": "Jegy szerkesztése",
+      "title": "Jegy szerkesztése",
+      "subtitle": "Frissítse a szerviz kérés részleteit",
+      "submitButton": "Változások mentése"
+    },
     "create": {
       "pageTitle": "Új jegy",
       "title": "Szervizjegy létrehozása",
