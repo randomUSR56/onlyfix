@@ -167,12 +167,18 @@ const acceptTicket = (ticketId: number) => {
                             class="flex items-center gap-4 p-3 rounded-lg border bg-card"
                         >
                             <!-- Status Icon -->
-                            <div class="p-2 rounded-lg shrink-0 bg-orange-100 dark:bg-orange-900/30">
+                            <Link 
+                                :href="ticketsRoutes.show({ ticket: ticket.id }).url"
+                                class="p-2 rounded-lg shrink-0 bg-orange-100 dark:bg-orange-900/30 hover:bg-orange-200 dark:hover:bg-orange-900/50 transition-colors"
+                            >
                                 <AlertCircle class="h-4 w-4 text-orange-600 dark:text-orange-400" />
-                            </div>
+                            </Link>
                             
-                            <!-- Ticket Info -->
-                            <div class="flex-1 min-w-0">
+                            <!-- Ticket Info (clickable) -->
+                            <Link 
+                                :href="ticketsRoutes.show({ ticket: ticket.id }).url"
+                                class="flex-1 min-w-0 hover:opacity-80 transition-opacity"
+                            >
                                 <div class="flex items-center gap-2">
                                     <span class="font-medium">
                                         {{ ticket.car?.make }} {{ ticket.car?.model }}
@@ -190,7 +196,7 @@ const acceptTicket = (ticketId: number) => {
                                         {{ ticket.car?.user?.name }}
                                     </span>
                                 </div>
-                            </div>
+                            </Link>
                             
                             <!-- Right side: Priority & Action -->
                             <div class="flex items-center gap-2 shrink-0">
