@@ -73,6 +73,11 @@ class TicketController extends Controller
         /** @var \App\Models\User $user */
         $user = auth()->user();
 
+        // Mechanics can only accept tickets, not create them
+        if ($user->hasRole('mechanic') && !$user->hasRole('admin')) {
+            abort(403, 'Mechanics cannot create tickets');
+        }
+
         // Get user's cars or all cars if admin
         $cars = $user->hasRole('admin')
             ? Car::with('user')->get()
@@ -92,6 +97,13 @@ class TicketController extends Controller
      */
     public function store(Request $request)
     {
+        $user = $request->user();
+        
+        // Mechanics can only accept tickets, not create them
+        if ($user->hasRole('mechanic') && !$user->hasRole('admin')) {
+            abort(403, 'Mechanics cannot create tickets');
+        }
+
         $validated = $request->validate([
             'car_id' => 'required|exists:cars,id',
             'description' => 'required|string',
@@ -104,7 +116,7 @@ class TicketController extends Controller
 
         // Verify the car belongs to the user
         $car = Car::findOrFail($validated['car_id']);
-        if ($car->user_id !== $request->user()->id && !$request->user()->hasRole('admin')) {
+        if ($car->user_id !== $user->id && !$user->hasRole('admin')) {
             return back()->withErrors([
                 'car_id' => 'You can only create tickets for your own cars'
             ])->withInput();

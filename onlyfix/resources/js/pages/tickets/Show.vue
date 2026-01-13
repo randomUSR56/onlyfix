@@ -92,13 +92,13 @@ const canAcceptTicket = computed(() =>
 const canStartWork = computed(() => 
     (isMechanic.value || isAdmin.value) && 
     props.ticket.status === 'assigned' && 
-    props.ticket.mechanic_id === user.value?.id
+    (props.ticket.mechanic_id === user.value?.id || isAdmin.value)
 );
 
 const canCompleteTicket = computed(() => 
     (isMechanic.value || isAdmin.value) && 
     props.ticket.status === 'in_progress' && 
-    props.ticket.mechanic_id === user.value?.id
+    (props.ticket.mechanic_id === user.value?.id || isAdmin.value)
 );
 
 const formatDate = (dateString: string) => {
