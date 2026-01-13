@@ -1,0 +1,202 @@
+{
+  "common": {
+    "appName": "OnlyFix",
+    "loading": "Loading...",
+    "save": "Save",
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "edit": "Edit",
+    "create": "Create",
+    "submit": "Submit",
+    "back": "Back",
+    "next": "Next",
+    "close": "Close",
+    "or": "Or",
+    "and": "and",
+    "yes": "Yes",
+    "no": "No",
+    "all": "All",
+    "none": "None",
+    "search": "Search",
+    "filter": "Filter",
+    "reset": "Reset",
+    "copyright": "© {year} OnlyFix. All rights reserved."
+  },
+  "nav": {
+    "home": "Home",
+    "dashboard": "Dashboard",
+    "login": "Log in",
+    "register": "Register",
+    "logout": "Log out",
+    "settings": "Settings",
+    "profile": "Profile"
+  },
+  "welcome": {
+    "pageTitle": "Welcome",
+    "getStarted": "Let's get started",
+    "ecosystemDescription": "Laravel has an incredibly rich ecosystem.",
+    "suggestion": "We suggest starting with the following.",
+    "readThe": "Read the",
+    "documentation": "Documentation",
+    "watchTutorials": "Watch video tutorials at",
+    "laracasts": "Laracasts",
+    "deployNow": "Deploy now"
+  },
+  "auth": {
+    "login": {
+      "pageTitle": "Log in",
+      "title": "Welcome back",
+      "description": "Sign in to your account to manage your repair tickets",
+      "heroTitle": "Your Trusted Auto Repair Partner",
+      "heroSubtitle": "Submit repair requests, track progress, and communicate with certified mechanics - all in one place.",
+      "emailLabel": "Email address",
+      "emailPlaceholder": "you{'@'}example.com",
+      "passwordLabel": "Password",
+      "passwordPlaceholder": "••••••••",
+      "forgotPassword": "Forgot password?",
+      "rememberMe": "Keep me signed in",
+      "submitButton": "Sign in",
+      "newToOnlyFix": "New to OnlyFix?",
+      "createAccount": "Create an account"
+    },
+    "register": {
+      "pageTitle": "Register",
+      "title": "Create your account",
+      "description": "Join OnlyFix and start managing your car repairs efficiently",
+      "heroTitle": "Get Started in Minutes",
+      "heroSubtitle": "Whether you're a car owner seeking repairs or a mechanic managing work orders, OnlyFix streamlines the entire process.",
+      "nameLabel": "Full name",
+      "namePlaceholder": "John Doe",
+      "emailLabel": "Email address",
+      "emailPlaceholder": "you{'@'}example.com",
+      "passwordLabel": "Password",
+      "passwordPlaceholder": "••••••••",
+      "confirmPasswordLabel": "Confirm password",
+      "termsNotice": "By creating an account, you agree to our",
+      "termsOfService": "Terms of Service",
+      "privacyPolicy": "Privacy Policy",
+      "submitButton": "Create account",
+      "alreadyHaveAccount": "Already have an account?",
+      "signInInstead": "Sign in instead"
+    },
+    "forgotPassword": {
+      "pageTitle": "Forgot password",
+      "title": "Forgot password",
+      "description": "Enter your email to receive a password reset link",
+      "emailLabel": "Email address",
+      "emailPlaceholder": "email{'@'}example.com",
+      "submitButton": "Email password reset link",
+      "returnTo": "Or, return to",
+      "login": "log in"
+    },
+    "resetPassword": {
+      "pageTitle": "Reset password",
+      "title": "Reset password",
+      "description": "Enter your new password",
+      "emailLabel": "Email",
+      "passwordLabel": "Password",
+      "confirmPasswordLabel": "Confirm password",
+      "submitButton": "Reset password"
+    },
+    "confirmPassword": {
+      "pageTitle": "Confirm password",
+      "title": "Confirm your password",
+      "description": "This is a secure area. Please confirm your password before continuing.",
+      "passwordLabel": "Password",
+      "submitButton": "Confirm"
+    },
+    "verifyEmail": {
+      "pageTitle": "Verify email",
+      "title": "Verify your email",
+      "description": "Thanks for signing up! Before getting started, could you verify your email address by clicking on the link we just emailed to you?",
+      "resendButton": "Resend verification email",
+      "resendSuccess": "A new verification link has been sent to your email address.",
+      "logout": "Log out"
+    },
+    "twoFactor": {
+      "pageTitle": "Two-factor authentication",
+      "title": "Two-factor authentication",
+      "description": "Please confirm access to your account by entering the authentication code provided by your authenticator application.",
+      "codeLabel": "Code",
+      "recoveryCodeLabel": "Recovery code",
+      "useRecoveryCode": "Use a recovery code",
+      "useAuthCode": "Use an authentication code",
+      "submitButton": "Log in"
+    }
+  },
+  "dashboard": {
+    "pageTitle": "Dashboard",
+    "title": "Dashboard"
+  },
+  "settings": {
+    "profile": {
+      "pageTitle": "Profile settings",
+      "breadcrumb": "Profile settings",
+      "title": "Profile information",
+      "description": "Update your name and email address",
+      "nameLabel": "Name",
+      "namePlaceholder": "Full name",
+      "emailLabel": "Email address",
+      "emailPlaceholder": "Email address",
+      "unverifiedEmail": "Your email address is unverified.",
+      "resendVerification": "Click here to resend the verification email.",
+      "verificationSent": "A new verification link has been sent to your email address.",
+      "saveButton": "Save",
+      "saved": "Saved."
+    },
+    "password": {
+      "pageTitle": "Password settings",
+      "breadcrumb": "Password settings",
+      "title": "Update password",
+      "description": "Ensure your account is using a long, random password to stay secure",
+      "currentPasswordLabel": "Current password",
+      "currentPasswordPlaceholder": "Current password",
+      "newPasswordLabel": "New password",
+      "newPasswordPlaceholder": "New password",
+      "confirmPasswordLabel": "Confirm password",
+      "confirmPasswordPlaceholder": "Confirm password",
+      "saveButton": "Save password",
+      "saved": "Saved."
+    },
+    "appearance": {
+      "pageTitle": "Appearance settings",
+      "breadcrumb": "Appearance settings",
+      "title": "Appearance settings",
+      "description": "Update your account's appearance settings"
+    },
+    "twoFactor": {
+      "pageTitle": "Two-factor authentication",
+      "breadcrumb": "Two-factor authentication",
+      "title": "Two-factor authentication",
+      "description": "Add additional security to your account using two factor authentication"
+    },
+    "deleteAccount": {
+      "title": "Delete account",
+      "description": "Delete your account and all of its resources",
+      "warningTitle": "Warning",
+      "warningText": "Please proceed with caution, this cannot be undone.",
+      "deleteButton": "Delete account",
+      "confirmTitle": "Are you sure you want to delete your account?",
+      "confirmDescription": "Once your account is deleted, all of its resources and data will also be permanently deleted. Please enter your password to confirm you would like to permanently delete your account.",
+      "passwordLabel": "Password",
+      "passwordPlaceholder": "Password"
+    }
+  },
+  "language": {
+    "title": "Language",
+    "select": "Select language",
+    "en": "English",
+    "hu": "Magyar"
+  },
+  "layouts": {
+    "auth": {
+      "defaultHeroTitle": "Professional Car Repair Management",
+      "defaultHeroSubtitle": "Streamline your auto repair workflow with our comprehensive ticketing system. Connect customers with mechanics efficiently."
+    }
+  },
+  "features": {
+    "quickTicket": "Quick ticket creation for car issues",
+    "realTimeUpdates": "Real-time repair status updates",
+    "directCommunication": "Direct communication with mechanics"
+  }
+}
