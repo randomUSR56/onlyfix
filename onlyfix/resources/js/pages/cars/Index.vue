@@ -10,8 +10,9 @@ import { type BreadcrumbItem } from '@/types';
 import type { Car, PaginatedData } from '@/types/models';
 import { Head, Link, router } from '@inertiajs/vue3';
 import { useI18n } from 'vue-i18n';
+import { useAuth } from '@/composables/useAuth';
 import { Car as CarIcon, Plus, Search, Edit, Trash2, Eye, MoreHorizontal, Ticket } from 'lucide-vue-next';
-import { ref, watch } from 'vue';
+import { ref, watch, computed } from 'vue';
 import {
     DropdownMenu,
     DropdownMenuContent,
@@ -28,6 +29,10 @@ import {
 } from '@/components/ui/dialog';
 
 const { t } = useI18n();
+const { isMechanic, isAdmin } = useAuth();
+
+// Mechanics can view but not create cars
+const canCreateCar = computed(() => !isMechanic.value || isAdmin.value);
 
 const props = defineProps<{
     cars: PaginatedData<Car>;
@@ -100,7 +105,7 @@ const formatDate = (dateString: string) => {
                     <h1 class="text-2xl font-bold tracking-tight">{{ $t('cars.title') }}</h1>
                     <p class="text-muted-foreground">{{ $t('cars.subtitle') }}</p>
                 </div>
-                <Link :href="carsRoutes.create().url">
+                <Link v-if="canCreateCar" :href="carsRoutes.create().url">
                     <Button class="shadow-lg shadow-primary/25">
                         <Plus class="mr-2 h-4 w-4" />
                         {{ $t('cars.addCar') }}
@@ -206,7 +211,7 @@ const formatDate = (dateString: string) => {
                 <CarIcon class="h-16 w-16 text-muted-foreground/50 mb-4" />
                 <h3 class="text-lg font-semibold mb-1">{{ $t('cars.empty.title') }}</h3>
                 <p class="text-muted-foreground mb-4">{{ $t('cars.empty.description') }}</p>
-                <Link :href="carsRoutes.create().url">
+                <Link v-if="canCreateCar" :href="carsRoutes.create().url">
                     <Button>
                         <Plus class="mr-2 h-4 w-4" />
                         {{ $t('cars.addCar') }}

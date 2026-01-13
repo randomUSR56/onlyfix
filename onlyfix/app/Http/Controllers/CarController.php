@@ -58,6 +58,12 @@ class CarController extends Controller
     public function create(Request $request)
     {
         $user = $request->user();
+        
+        // Mechanics can view but not create cars
+        if ($user->hasRole('mechanic') && !$user->hasRole('admin')) {
+            abort(403, 'Mechanics cannot create cars');
+        }
+
         /** @var \App\Models\User $user */
         $users = $user->hasRole('admin')
             ? User::select('id', 'name', 'email')->get()
@@ -73,6 +79,13 @@ class CarController extends Controller
      */
     public function store(Request $request)
     {
+        $user = $request->user();
+        
+        // Mechanics can view but not create cars
+        if ($user->hasRole('mechanic') && !$user->hasRole('admin')) {
+            abort(403, 'Mechanics cannot create cars');
+        }
+
         $validated = $request->validate([
             'make' => 'required|string|max:255',
             'model' => 'required|string|max:255',
