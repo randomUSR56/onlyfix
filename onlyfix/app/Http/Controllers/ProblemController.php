@@ -46,9 +46,9 @@ class ProblemController extends Controller
      * Show the form for creating a new problem.
      * Only admins and mechanics can create problems.
      */
-    public function create()
+    public function create(Request $request)
     {
-        if (!auth()->user()->hasAnyRole(['admin', 'mechanic'])) {
+        if (!$request->user()->hasAnyRole(['admin', 'mechanic'])) {
             abort(403, 'Unauthorized');
         }
 
@@ -95,9 +95,9 @@ class ProblemController extends Controller
     /**
      * Show the form for editing the specified problem.
      */
-    public function edit(Problem $problem)
+    public function edit(Request $request, Problem $problem)
     {
-        if (!auth()->user()->hasAnyRole(['admin', 'mechanic'])) {
+        if (!$request->user()->hasAnyRole(['admin', 'mechanic'])) {
             abort(403, 'Unauthorized');
         }
 

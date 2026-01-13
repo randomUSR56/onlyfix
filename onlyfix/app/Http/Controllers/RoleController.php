@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Gate;
 use Spatie\Permission\Models\Role;
 
 class RoleController extends Controller
@@ -11,10 +12,10 @@ class RoleController extends Controller
     /**
      * Display a listing of all users (admin only).
      */
-    public function index()
+    public function index(Request $request)
     {
         // Only admins can view all users
-        $this->authorize('viewAny', User::class);
+        Gate::authorize('viewAny', User::class);
 
         $users = User::with('roles')->get();
 
@@ -29,7 +30,7 @@ class RoleController extends Controller
     public function updateRole(Request $request, User $user)
     {
         // Only admins can manage roles
-        $this->authorize('manageRoles', $user);
+        Gate::authorize('manageRoles', $user);
 
         $request->validate([
             'role' => 'required|in:user,mechanic,admin',
@@ -44,9 +45,10 @@ class RoleController extends Controller
     /**
      * Get the current user's dashboard based on their role.
      */
-    public function dashboard()
+    public function dashboard(Request $request)
     {
-        $user = auth()->user();
+        $user = $request->user();
+        /** @var \App\Models\User $user */
 
         // Different dashboard views based on role
         if ($user->hasRole('admin')) {

@@ -47,9 +47,9 @@ class UserController extends Controller
     /**
      * Show the form for creating a new user.
      */
-    public function create()
+    public function create(Request $request)
     {
-        if (!auth()->user()->hasRole('admin')) {
+        if (!$request->user()->hasRole('admin')) {
             abort(403, 'Unauthorized');
         }
 
@@ -107,9 +107,9 @@ class UserController extends Controller
     /**
      * Show the form for editing the specified user.
      */
-    public function edit(User $user)
+    public function edit(Request $request, User $user)
     {
-        $authUser = auth()->user();
+        $authUser = $request->user();
 
         // Users can edit their own profile, admins can edit anyone
         if ($authUser->id !== $user->id && !$authUser->hasRole('admin')) {

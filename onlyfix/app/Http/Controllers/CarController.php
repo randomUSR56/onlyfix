@@ -55,10 +55,10 @@ class CarController extends Controller
     /**
      * Show the form for creating a new car.
      */
-    public function create()
+    public function create(Request $request)
     {
+        $user = $request->user();
         /** @var \App\Models\User $user */
-        $user = auth()->user();
         $users = $user->hasRole('admin')
             ? User::select('id', 'name', 'email')->get()
             : null;
@@ -129,10 +129,10 @@ class CarController extends Controller
     /**
      * Show the form for editing the specified car.
      */
-    public function edit(Car $car)
+    public function edit(Request $request, Car $car)
     {
+        $user = $request->user();
         /** @var \App\Models\User $user */
-        $user = auth()->user();
         // Authorization check
         if (!$user->hasRole('admin') && $car->user_id !== $user->id) {
             abort(403, 'Unauthorized');
