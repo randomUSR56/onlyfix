@@ -46,9 +46,9 @@ const breadcrumbs: BreadcrumbItem[] = [
 ];
 
 // Initialize form with existing ticket data
-const initialProblemIds = props.ticket.problems?.map(p => p.id) || [];
+const initialProblemIds = props.ticket.problems?.map((p: Problem) => p.id) || [];
 const initialProblemNotes: Record<number, string> = {};
-props.ticket.problems?.forEach(p => {
+props.ticket.problems?.forEach((p: Problem) => {
     if (p.pivot?.notes) {
         initialProblemNotes[p.id] = p.pivot.notes;
     }
@@ -94,7 +94,7 @@ const translateProblem = (problem: Problem) => {
     };
 };
 
-const toggleProblem = (problemId: number) => {
+const toggleProblem = (problemId: number): void => {
     const index = form.problem_ids.indexOf(problemId);
     if (index === -1) {
         form.problem_ids.push(problemId);
@@ -104,7 +104,7 @@ const toggleProblem = (problemId: number) => {
     }
 };
 
-const isProblemSelected = (problemId: number) => form.problem_ids.includes(problemId);
+const isProblemSelected = (problemId: number): boolean => form.problem_ids.includes(problemId);
 
 const selectedCar = computed(() => 
     props.cars.find(car => car.id === form.car_id)
