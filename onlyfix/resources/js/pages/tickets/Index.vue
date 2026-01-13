@@ -10,9 +10,10 @@ import { type BreadcrumbItem } from '@/types';
 import type { Ticket, PaginatedData } from '@/types/models';
 import { Head, Link, router } from '@inertiajs/vue3';
 import { useI18n } from 'vue-i18n';
+import { useAuth } from '@/composables/useAuth';
 import { 
     Ticket as TicketIcon, Plus, Search, Eye, MoreHorizontal, Filter,
-    Clock, CheckCircle2, AlertCircle, Wrench, Car as CarIcon, X
+    Clock, CheckCircle2, AlertCircle, Wrench, Car as CarIcon, X, UserPlus
 } from 'lucide-vue-next';
 import { ref, watch, computed } from 'vue';
 import {
@@ -25,6 +26,10 @@ import {
 } from '@/components/ui/dropdown-menu';
 
 const { t } = useI18n();
+const { isMechanic, isAdmin, user } = useAuth();
+
+// Mechanics can't create tickets, only users (and admins)
+const canCreateTicket = computed(() => !isMechanic.value || isAdmin.value);
 
 const props = defineProps<{
     tickets: PaginatedData<Ticket>;
@@ -134,6 +139,15 @@ const getStatusIcon = (status: string) => {
     };
     return icons[status] || Clock;
 };
+
+// Mechanic can accept open tickets
+const canAcceptTicket = (ticket: Ticket) => {
+    return (isMechanic.value || isAdmin.value) && ticket.status === 'open' && !ticket.mechanic_id;
+};
+
+const acceptTicket = (ticketId: number) => {
+    router.post(ticketsRoutes.accept({ ticket: ticketId }).url);
+};
 </script>
 
 <template>
@@ -147,7 +161,7 @@ const getStatusIcon = (status: string) => {
                     <h1 class="text-2xl font-bold tracking-tight">{{ $t('tickets.title') }}</h1>
                     <p class="text-muted-foreground">{{ $t('tickets.subtitle') }}</p>
                 </div>
-                <Link :href="ticketsRoutes.create().url">
+                <Link v-if="canCreateTicket" :href="ticketsRoutes.create().url">
                     <Button class="shadow-lg shadow-primary/25">
                         <Plus class="mr-2 h-4 w-4" />
                         {{ $t('tickets.createTicket') }}
@@ -294,6 +308,14 @@ const getStatusIcon = (status: string) => {
                                     </span>
                                 </div>
                                 <div class="flex items-center gap-2">
+                                    <Button 
+                                        v-if="canAcceptTicket(ticket)" 
+                                        size="sm"
+                                        @click="acceptTicket(ticket.id)"
+                                    >
+                                        <UserPlus class="mr-2 h-4 w-4" />
+                                        {{ $t('tickets.actions.accept') }}
+                                    </Button>
                                     <Link :href="ticketsRoutes.show({ ticket: ticket.id }).url">
                                         <Button variant="outline" size="sm">
                                             <Eye class="mr-2 h-4 w-4" />
@@ -312,7 +334,7 @@ const getStatusIcon = (status: string) => {
                 <TicketIcon class="h-16 w-16 text-muted-foreground/50 mb-4" />
                 <h3 class="text-lg font-semibold mb-1">{{ $t('tickets.empty.title') }}</h3>
                 <p class="text-muted-foreground mb-4">{{ $t('tickets.empty.description') }}</p>
-                <Link :href="ticketsRoutes.create().url">
+                <Link v-if="canCreateTicket" :href="ticketsRoutes.create().url">
                     <Button>
                         <Plus class="mr-2 h-4 w-4" />
                         {{ $t('tickets.createTicket') }}
