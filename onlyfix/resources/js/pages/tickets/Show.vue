@@ -11,10 +11,11 @@ import { type BreadcrumbItem } from '@/types';
 import type { Ticket, Problem } from '@/types/models';
 import { Head, Link, router } from '@inertiajs/vue3';
 import { useI18n } from 'vue-i18n';
+import { useAuth } from '@/composables/useAuth';
 import { 
     Ticket as TicketIcon, ArrowLeft, Edit, Trash2, Car as CarIcon,
     Clock, CheckCircle2, AlertCircle, Wrench, User, Calendar,
-    MessageSquare, XCircle
+    MessageSquare, XCircle, Play, UserPlus
 } from 'lucide-vue-next';
 import { ref, computed } from 'vue';
 import {
@@ -27,6 +28,7 @@ import {
 } from '@/components/ui/dialog';
 
 const { t } = useI18n();
+const { isMechanic, isAdmin, user } = useAuth();
 
 const props = defineProps<{
     ticket: Ticket;
@@ -68,6 +70,36 @@ const closeTicket = () => {
         },
     });
 };
+
+// Mechanic actions
+const acceptTicket = () => {
+    router.post(ticketsRoutes.accept({ ticket: props.ticket.id }).url);
+};
+
+const startWork = () => {
+    router.post(ticketsRoutes.start({ ticket: props.ticket.id }).url);
+};
+
+const completeTicket = () => {
+    router.post(ticketsRoutes.complete({ ticket: props.ticket.id }).url);
+};
+
+// Mechanic action permissions
+const canAcceptTicket = computed(() => 
+    (isMechanic.value || isAdmin.value) && props.ticket.status === 'open'
+);
+
+const canStartWork = computed(() => 
+    (isMechanic.value || isAdmin.value) && 
+    props.ticket.status === 'assigned' && 
+    props.ticket.mechanic_id === user.value?.id
+);
+
+const canCompleteTicket = computed(() => 
+    (isMechanic.value || isAdmin.value) && 
+    props.ticket.status === 'in_progress' && 
+    props.ticket.mechanic_id === user.value?.id
+);
 
 const formatDate = (dateString: string) => {
     return new Date(dateString).toLocaleDateString(undefined, {
@@ -234,7 +266,33 @@ const canCloseTicket = computed(() =>
                         </div>
                     </div>
                 </div>
-                <div class="flex items-center gap-2">
+                <div class="flex items-center gap-2 flex-wrap">
+                    <!-- Mechanic Actions -->
+                    <Button
+                        v-if="canAcceptTicket"
+                        @click="acceptTicket"
+                    >
+                        <UserPlus class="mr-2 h-4 w-4" />
+                        {{ $t('tickets.actions.accept') }}
+                    </Button>
+                    <Button
+                        v-if="canStartWork"
+                        @click="startWork"
+                    >
+                        <Play class="mr-2 h-4 w-4" />
+                        {{ $t('tickets.actions.startWork') }}
+                    </Button>
+                    <Button
+                        v-if="canCompleteTicket"
+                        variant="default"
+                        class="bg-green-600 hover:bg-green-700"
+                        @click="completeTicket"
+                    >
+                        <CheckCircle2 class="mr-2 h-4 w-4" />
+                        {{ $t('tickets.actions.complete') }}
+                    </Button>
+                    
+                    <!-- User Actions -->
                     <Button
                         v-if="canCloseTicket"
                         variant="outline"

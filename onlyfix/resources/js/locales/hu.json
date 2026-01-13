@@ -35,6 +35,7 @@
     "profile": "Profil",
     "myCars": "Autóim",
     "myTickets": "Jegyeim",
+    "allTickets": "Összes jegy",
     "help": "Súgó és támogatás"
   },
   "welcome": {
@@ -504,6 +505,11 @@
       "medium": "Közepes",
       "high": "Magas",
       "urgent": "Sürgős"
+    },
+    "actions": {
+      "accept": "Jegy elfogadása",
+      "startWork": "Munka indítása",
+      "complete": "Befejezés"
     },
     "edit": {
       "pageTitle": "Jegy szerkesztése",

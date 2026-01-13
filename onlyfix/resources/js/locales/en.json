@@ -35,6 +35,7 @@
     "profile": "Profile",
     "myCars": "My Cars",
     "myTickets": "My Tickets",
+    "allTickets": "All Tickets",
     "help": "Help & Support"
   },
   "welcome": {
@@ -286,7 +287,13 @@
       "medium": "Medium",
       "high": "High",
       "urgent": "Urgent"
-    },    "edit": {
+    },
+    "actions": {
+      "accept": "Accept Ticket",
+      "startWork": "Start Work",
+      "complete": "Mark Complete"
+    },
+    "edit": {
       "pageTitle": "Edit Ticket",
       "title": "Edit Ticket",
       "subtitle": "Update the details of your service request",
