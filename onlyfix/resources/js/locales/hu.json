@@ -163,6 +163,31 @@
       "tickets": "jegy"
     }
   },
+  "mechanicDashboard": {
+    "pageTitle": "Szerelő irányítópult",
+    "title": "Szerelő irányítópult",
+    "welcome": "Üdvözöljük, Szerelő!",
+    "subtitle": "Kezelje szervizjegyeit és munkamegrendeléseit.",
+    "stats": {
+      "availableTickets": "Elérhető jegyek",
+      "myTickets": "Saját jegyek",
+      "inProgressTickets": "Folyamatban",
+      "completedTickets": "Befejezett"
+    },
+    "availableTickets": {
+      "title": "Elérhető jegyek",
+      "description": "Nem kiosztott jegyek, amelyek elfogadásra várnak",
+      "empty": "Nincsenek elérhető jegyek",
+      "emptyDescription": "Minden jegy jelenleg ki van osztva"
+    },
+    "myTickets": {
+      "title": "Aktív jegyeim",
+      "description": "Önhöz rendelt jegyek",
+      "empty": "Nincsenek aktív jegyek",
+      "emptyDescription": "Fogadjon el jegyeket az elérhető listából"
+    },
+    "acceptTicket": "Elfogadás"
+  },
   "cars": {
     "pageTitle": "Autóim",
     "title": "Autóim",

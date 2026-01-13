@@ -163,6 +163,31 @@
       "tickets": "tickets"
     }
   },
+  "mechanicDashboard": {
+    "pageTitle": "Mechanic Dashboard",
+    "title": "Mechanic Dashboard",
+    "welcome": "Welcome, Mechanic!",
+    "subtitle": "Manage your service tickets and work orders.",
+    "stats": {
+      "availableTickets": "Available Tickets",
+      "myTickets": "My Tickets",
+      "inProgressTickets": "In Progress",
+      "completedTickets": "Completed"
+    },
+    "availableTickets": {
+      "title": "Available Tickets",
+      "description": "Unassigned tickets ready to be accepted",
+      "empty": "No available tickets",
+      "emptyDescription": "All tickets are currently assigned"
+    },
+    "myTickets": {
+      "title": "My Active Tickets",
+      "description": "Tickets assigned to you",
+      "empty": "No active tickets",
+      "emptyDescription": "Accept tickets from the available list"
+    },
+    "acceptTicket": "Accept"
+  },
   "cars": {
     "pageTitle": "My Cars",
     "title": "My Cars",

@@ -19,7 +19,49 @@ Route::middleware(['auth', 'verified'])->group(function () {
         /** @var \App\Models\User $user */
         $user = auth()->user();
         
-        // Get stats for the current user
+        // Mechanic Dashboard
+        if ($user->hasRole('mechanic') || $user->hasRole('admin')) {
+            $stats = [
+                'available_tickets' => Ticket::where('status', 'open')
+                    ->whereNull('mechanic_id')
+                    ->count(),
+                'my_tickets' => Ticket::where('mechanic_id', $user->id)
+                    ->whereIn('status', ['assigned', 'in_progress'])
+                    ->count(),
+                'in_progress_tickets' => Ticket::where('mechanic_id', $user->id)
+                    ->where('status', 'in_progress')
+                    ->count(),
+                'completed_tickets' => Ticket::where('mechanic_id', $user->id)
+                    ->whereIn('status', ['completed', 'closed'])
+                    ->count(),
+            ];
+            
+            // Get available tickets (not assigned)
+            $availableTickets = Ticket::where('status', 'open')
+                ->whereNull('mechanic_id')
+                ->with(['car.user', 'problems'])
+                ->orderBy('priority', 'desc')
+                ->orderBy('created_at', 'asc')
+                ->take(5)
+                ->get();
+            
+            // Get mechanic's assigned tickets
+            $myTickets = Ticket::where('mechanic_id', $user->id)
+                ->whereIn('status', ['assigned', 'in_progress'])
+                ->with(['car.user', 'problems'])
+                ->orderBy('priority', 'desc')
+                ->orderBy('created_at', 'asc')
+                ->take(5)
+                ->get();
+            
+            return Inertia::render('MechanicDashboard', [
+                'stats' => $stats,
+                'availableTickets' => $availableTickets,
+                'myTickets' => $myTickets,
+            ]);
+        }
+        
+        // User Dashboard
         $stats = [
             'total_cars' => Car::where('user_id', $user->id)->count(),
             'total_tickets' => Ticket::where('user_id', $user->id)->count(),
