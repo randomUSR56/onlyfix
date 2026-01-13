@@ -15,9 +15,9 @@ Route::get('/', function () {
 
 Route::middleware(['auth', 'verified'])->group(function () {
     // Dashboard
-    Route::get('dashboard', function () {
+    Route::get('dashboard', function (\Illuminate\Http\Request $request) {
         /** @var \App\Models\User $user */
-        $user = auth()->user();
+        $user = $request->user();
         
         // Mechanic Dashboard
         if ($user->hasRole('mechanic') || $user->hasRole('admin')) {

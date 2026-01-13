@@ -68,10 +68,10 @@ class TicketController extends Controller
     /**
      * Show the form for creating a new ticket.
      */
-    public function create()
+    public function create(Request $request)
     {
         /** @var \App\Models\User $user */
-        $user = auth()->user();
+        $user = $request->user();
 
         // Mechanics can only accept tickets, not create them
         if ($user->hasRole('mechanic') && !$user->hasRole('admin')) {
@@ -174,10 +174,10 @@ class TicketController extends Controller
     /**
      * Show the form for editing the specified ticket.
      */
-    public function edit(Ticket $ticket)
+    public function edit(Request $request, Ticket $ticket)
     {
         /** @var \App\Models\User $user */
-        $user = auth()->user();
+        $user = $request->user();
 
         // Check authorization
         if (!$user->hasAnyRole(['mechanic', 'admin']) && $ticket->user_id !== $user->id) {
