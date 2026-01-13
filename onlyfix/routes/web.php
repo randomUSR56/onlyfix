@@ -4,6 +4,8 @@ use App\Http\Controllers\CarController;
 use App\Http\Controllers\ProblemController;
 use App\Http\Controllers\TicketController;
 use App\Http\Controllers\UserController;
+use App\Models\Car;
+use App\Models\Ticket;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
@@ -13,8 +15,83 @@ Route::get('/', function () {
 
 Route::middleware(['auth', 'verified'])->group(function () {
     // Dashboard
-    Route::get('dashboard', function () {
-        return Inertia::render('Dashboard');
+    Route::get('dashboard', function (\Illuminate\Http\Request $request) {
+        /** @var \App\Models\User $user */
+        $user = $request->user();
+        
+        // Mechanic Dashboard
+        if ($user->hasRole('mechanic') || $user->hasRole('admin')) {
+            $stats = [
+                'available_tickets' => Ticket::where('status', 'open')
+                    ->whereNull('mechanic_id')
+                    ->count(),
+                'my_tickets' => Ticket::where('mechanic_id', $user->id)
+                    ->whereIn('status', ['assigned', 'in_progress'])
+                    ->count(),
+                'in_progress_tickets' => Ticket::where('mechanic_id', $user->id)
+                    ->where('status', 'in_progress')
+                    ->count(),
+                'completed_tickets' => Ticket::where('mechanic_id', $user->id)
+                    ->whereIn('status', ['completed', 'closed'])
+                    ->count(),
+            ];
+            
+            // Get available tickets (not assigned)
+            $availableTickets = Ticket::where('status', 'open')
+                ->whereNull('mechanic_id')
+                ->with(['car.user', 'problems'])
+                ->orderBy('priority', 'desc')
+                ->orderBy('created_at', 'asc')
+                ->take(5)
+                ->get();
+            
+            // Get mechanic's assigned tickets
+            $myTickets = Ticket::where('mechanic_id', $user->id)
+                ->whereIn('status', ['assigned', 'in_progress'])
+                ->with(['car.user', 'problems'])
+                ->orderBy('priority', 'desc')
+                ->orderBy('created_at', 'asc')
+                ->take(5)
+                ->get();
+            
+            return Inertia::render('MechanicDashboard', [
+                'stats' => $stats,
+                'availableTickets' => $availableTickets,
+                'myTickets' => $myTickets,
+            ]);
+        }
+        
+        // User Dashboard
+        $stats = [
+            'total_cars' => Car::where('user_id', $user->id)->count(),
+            'total_tickets' => Ticket::where('user_id', $user->id)->count(),
+            'open_tickets' => Ticket::where('user_id', $user->id)
+                ->whereIn('status', ['open', 'assigned', 'in_progress'])
+                ->count(),
+            'completed_tickets' => Ticket::where('user_id', $user->id)
+                ->whereIn('status', ['completed', 'closed'])
+                ->count(),
+        ];
+        
+        // Get recent tickets
+        $recentTickets = Ticket::where('user_id', $user->id)
+            ->with(['car', 'problems'])
+            ->orderBy('created_at', 'desc')
+            ->take(5)
+            ->get();
+        
+        // Get user's cars
+        $cars = Car::where('user_id', $user->id)
+            ->withCount('tickets')
+            ->orderBy('created_at', 'desc')
+            ->take(3)
+            ->get();
+        
+        return Inertia::render('Dashboard', [
+            'stats' => $stats,
+            'recentTickets' => $recentTickets,
+            'cars' => $cars,
+        ]);
     })->name('dashboard');
 
     // Cars Management

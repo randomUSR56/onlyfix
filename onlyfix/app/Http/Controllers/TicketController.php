@@ -68,9 +68,15 @@ class TicketController extends Controller
     /**
      * Show the form for creating a new ticket.
      */
-    public function create()
+    public function create(Request $request)
     {
-        $user = auth()->user();
+        /** @var \App\Models\User $user */
+        $user = $request->user();
+
+        // Mechanics can only accept tickets, not create them
+        if ($user->hasRole('mechanic') && !$user->hasRole('admin')) {
+            abort(403, 'Mechanics cannot create tickets');
+        }
 
         // Get user's cars or all cars if admin
         $cars = $user->hasRole('admin')
@@ -91,6 +97,13 @@ class TicketController extends Controller
      */
     public function store(Request $request)
     {
+        $user = $request->user();
+        
+        // Mechanics can only accept tickets, not create them
+        if ($user->hasRole('mechanic') && !$user->hasRole('admin')) {
+            abort(403, 'Mechanics cannot create tickets');
+        }
+
         $validated = $request->validate([
             'car_id' => 'required|exists:cars,id',
             'description' => 'required|string',
@@ -103,7 +116,7 @@ class TicketController extends Controller
 
         // Verify the car belongs to the user
         $car = Car::findOrFail($validated['car_id']);
-        if ($car->user_id !== $request->user()->id && !$request->user()->hasRole('admin')) {
+        if ($car->user_id !== $user->id && !$user->hasRole('admin')) {
             return back()->withErrors([
                 'car_id' => 'You can only create tickets for your own cars'
             ])->withInput();
@@ -145,17 +158,26 @@ class TicketController extends Controller
 
         $ticket->load(['user', 'mechanic', 'car', 'problems']);
 
+        // Determine permissions
+        $isOwner = $ticket->user_id === $user->id;
+        $isAdmin = $user->hasRole('admin');
+        $isMechanic = $user->hasRole('mechanic');
+
         return Inertia::render('Tickets/Show', [
-            'ticket' => $ticket
+            'ticket' => $ticket,
+            'canEdit' => ($isOwner && $ticket->status === 'open') || $isAdmin || $isMechanic,
+            'canDelete' => ($isOwner && $ticket->status === 'open') || $isAdmin,
+            'canClose' => ($isOwner || $isAdmin) && $ticket->status !== 'closed',
         ]);
     }
 
     /**
      * Show the form for editing the specified ticket.
      */
-    public function edit(Ticket $ticket)
+    public function edit(Request $request, Ticket $ticket)
     {
-        $user = auth()->user();
+        /** @var \App\Models\User $user */
+        $user = $request->user();
 
         // Check authorization
         if (!$user->hasAnyRole(['mechanic', 'admin']) && $ticket->user_id !== $user->id) {

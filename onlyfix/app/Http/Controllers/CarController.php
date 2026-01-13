@@ -55,9 +55,17 @@ class CarController extends Controller
     /**
      * Show the form for creating a new car.
      */
-    public function create()
+    public function create(Request $request)
     {
-        $users = auth()->user()->hasRole('admin')
+        $user = $request->user();
+        
+        // Mechanics can view but not create cars
+        if ($user->hasRole('mechanic') && !$user->hasRole('admin')) {
+            abort(403, 'Mechanics cannot create cars');
+        }
+
+        /** @var \App\Models\User $user */
+        $users = $user->hasRole('admin')
             ? User::select('id', 'name', 'email')->get()
             : null;
 
@@ -71,6 +79,13 @@ class CarController extends Controller
      */
     public function store(Request $request)
     {
+        $user = $request->user();
+        
+        // Mechanics can view but not create cars
+        if ($user->hasRole('mechanic') && !$user->hasRole('admin')) {
+            abort(403, 'Mechanics cannot create cars');
+        }
+
         $validated = $request->validate([
             'make' => 'required|string|max:255',
             'model' => 'required|string|max:255',
@@ -113,18 +128,26 @@ class CarController extends Controller
 
         $car->load(['user', 'tickets.problems']);
 
+        // Determine permissions
+        $isOwner = $car->user_id === $user->id;
+        $isAdmin = $user->hasRole('admin');
+
         return Inertia::render('Cars/Show', [
-            'car' => $car
+            'car' => $car,
+            'canEdit' => $isOwner || $isAdmin,
+            'canDelete' => $isOwner || $isAdmin,
         ]);
     }
 
     /**
      * Show the form for editing the specified car.
      */
-    public function edit(Car $car)
+    public function edit(Request $request, Car $car)
     {
+        $user = $request->user();
+        /** @var \App\Models\User $user */
         // Authorization check
-        if (!auth()->user()->hasRole('admin') && $car->user_id !== auth()->id()) {
+        if (!$user->hasRole('admin') && $car->user_id !== $user->id) {
             abort(403, 'Unauthorized');
         }
 
