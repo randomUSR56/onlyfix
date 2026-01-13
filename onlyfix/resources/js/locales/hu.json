@@ -231,6 +231,224 @@
       "steering": "Kormányzás",
       "body": "Karosszéria",
       "other": "Egyéb"
+    },
+    "items": {
+      "Engine oil leak": {
+        "name": "Motorolaj szivárgás",
+        "description": "Olaj szivárog a motor alkatrészeiből"
+      },
+      "Engine overheating": {
+        "name": "Motor túlmelegedés",
+        "description": "A motor hőmérséklete meghaladja a normál tartományt"
+      },
+      "Check engine light on": {
+        "name": "Motorfigyelmeztető lámpa világít",
+        "description": "A műszerfal figyelmeztető lámpája világít"
+      },
+      "Engine misfire": {
+        "name": "Motor begyújtási hiba",
+        "description": "A motor egyenetlenül jár vagy begyújtási hibát mutat"
+      },
+      "Poor fuel economy": {
+        "name": "Magas üzemanyag-fogyasztás",
+        "description": "A jármű túlzott üzemanyagot fogyaszt"
+      },
+      "Engine making strange noise": {
+        "name": "Furcsa motorhang",
+        "description": "Szokatlan hangok a motorból"
+      },
+      "Hard to start engine": {
+        "name": "Nehezen indul a motor",
+        "description": "A motor többszöri próbálkozásra indul csak be"
+      },
+      "Transmission slipping": {
+        "name": "Váltó csúszás",
+        "description": "A váltó nem kapcsol megfelelően a fokozatok között"
+      },
+      "Hard shifting": {
+        "name": "Nehéz váltás",
+        "description": "Nehézség a sebességek váltásakor"
+      },
+      "Transmission fluid leak": {
+        "name": "Váltóolaj szivárgás",
+        "description": "Piros folyadék szivárog a váltóból"
+      },
+      "Grinding noise when shifting": {
+        "name": "Csikorgó hang váltáskor",
+        "description": "Szokatlan csikorgó hang sebességváltáskor"
+      },
+      "Delayed engagement": {
+        "name": "Késleltetett kapcsolás",
+        "description": "A váltó késlekedik a kapcsolás előtt"
+      },
+      "Battery dead": {
+        "name": "Lemerült akkumulátor",
+        "description": "Az akkumulátor nem tartja a töltést"
+      },
+      "Alternator failure": {
+        "name": "Generátor hiba",
+        "description": "A generátor nem tölti megfelelően az akkumulátort"
+      },
+      "Starter motor issues": {
+        "name": "Önindító problémák",
+        "description": "Az önindító nem kapcsol be vagy kattog"
+      },
+      "Headlights not working": {
+        "name": "Fényszórók nem működnek",
+        "description": "Egyik vagy mindkét fényszóró nem működik"
+      },
+      "Dashboard lights malfunction": {
+        "name": "Műszerfal lámpák hibája",
+        "description": "A figyelmeztető lámpák nem működnek megfelelően"
+      },
+      "Power windows not working": {
+        "name": "Elektromos ablakok nem működnek",
+        "description": "Az elektromos ablakok nem működnek"
+      },
+      "Central locking failure": {
+        "name": "Központi zár hiba",
+        "description": "Az ajtózárak nem reagálnak a távirányítóra vagy kapcsolóra"
+      },
+      "Squeaking brakes": {
+        "name": "Csikorgó fékek",
+        "description": "Magas hangú zaj fékezéskor"
+      },
+      "Grinding brakes": {
+        "name": "Súrlódó fékek",
+        "description": "Fém-fém súrlódási hang fékezéskor"
+      },
+      "Soft brake pedal": {
+        "name": "Puha fékpedál",
+        "description": "A fékpedál szivacsos érzésű vagy a padlóig megy"
+      },
+      "Brake pulls to one side": {
+        "name": "Fék egyik oldalra húz",
+        "description": "A jármű fékezéskor balra vagy jobbra húz"
+      },
+      "ABS light on": {
+        "name": "ABS lámpa világít",
+        "description": "A blokkolásgátló rendszer figyelmeztető lámpája világít"
+      },
+      "Brake fluid leak": {
+        "name": "Fékfolyadék szivárgás",
+        "description": "Fékfolyadék szivárog a rendszerből"
+      },
+      "Parking brake stuck": {
+        "name": "Kézifék beragadt",
+        "description": "A rögzítőfék nem enged ki megfelelően"
+      },
+      "Rough ride": {
+        "name": "Kemény menetérzet",
+        "description": "A jármű keményen veszi az egyenetlenségeket"
+      },
+      "Uneven tire wear": {
+        "name": "Egyenetlen gumiabroncs kopás",
+        "description": "A gumiabroncsok egyenetlenül kopnak"
+      },
+      "Clunking noise over bumps": {
+        "name": "Koppanó zaj egyenetlenségeken",
+        "description": "Hangos koppanás egyenetlen felületen haladva"
+      },
+      "Vehicle sits lower on one side": {
+        "name": "Jármű egyik oldalon alacsonyabb",
+        "description": "Egyenetlen járműmagasság, ami futómű hibára utal"
+      },
+      "Excessive bouncing": {
+        "name": "Túlzott hintázás",
+        "description": "A jármű tovább hintázik az egyenetlenségek után"
+      },
+      "Nose dives when braking": {
+        "name": "Orr lemerül fékezéskor",
+        "description": "Az első rész túlzottan lesüllyed fékezéskor"
+      },
+      "Hard to turn steering wheel": {
+        "name": "Nehéz kormányozni",
+        "description": "Túlzott erő szükséges a kormányzáshoz"
+      },
+      "Loose steering": {
+        "name": "Laza kormányzás",
+        "description": "A kormánykeréknek túl nagy a játéka"
+      },
+      "Steering wheel vibration": {
+        "name": "Kormánykerék vibráció",
+        "description": "A kormány remeg vagy vibrál vezetés közben"
+      },
+      "Power steering fluid leak": {
+        "name": "Szervokormány folyadék szivárgás",
+        "description": "Szervokormány folyadék szivárog a rendszerből"
+      },
+      "Steering wheel off-center": {
+        "name": "Kormánykerék nem középen",
+        "description": "A kormány nem egyenes egyenes haladásnál"
+      },
+      "Whining noise when turning": {
+        "name": "Nyikorgó hang kanyarodáskor",
+        "description": "Magas hangú nyikorgás kormányzáskor"
+      },
+      "Rust damage": {
+        "name": "Rozsdakár",
+        "description": "Korrózió a karosszéria elemeken"
+      },
+      "Dent repair needed": {
+        "name": "Horpadás javítás szükséges",
+        "description": "Ütéstől behorpadt karosszéria elem"
+      },
+      "Paint scratches": {
+        "name": "Festék karcolások",
+        "description": "Felszíni festéksérülés, javítás szükséges"
+      },
+      "Door alignment issues": {
+        "name": "Ajtóbeállítási problémák",
+        "description": "Az ajtók nem záródnak vagy nem állnak megfelelően"
+      },
+      "Windshield crack": {
+        "name": "Szélvédő repedés",
+        "description": "Repedés vagy szilánk a szélvédő üvegen"
+      },
+      "Hood latch broken": {
+        "name": "Motorháztető zár elromlott",
+        "description": "A motorháztető nem záródik megfelelően"
+      },
+      "Air conditioning not cooling": {
+        "name": "Klíma nem hűt",
+        "description": "A légkondi meleg levegőt fúj vagy nem működik"
+      },
+      "Heater not working": {
+        "name": "Fűtés nem működik",
+        "description": "A fűtési rendszer nem termel meleg levegőt"
+      },
+      "Window won't roll up/down": {
+        "name": "Ablak nem megy le/fel",
+        "description": "Az elektromos ablak beragadt vagy nem működik"
+      },
+      "Exhaust leak": {
+        "name": "Kipufogó szivárgás",
+        "description": "A kipufogórendszer gázt ereszt"
+      },
+      "Unusual exhaust smoke": {
+        "name": "Szokatlan kipufogófüst",
+        "description": "Fekete, fehér vagy kék füst a kipufogóból"
+      },
+      "Fuel gauge not working": {
+        "name": "Üzemanyagmérő nem működik",
+        "description": "Az üzemanyagszint jelző nem mutat helyesen"
+      },
+      "Wiper blades need replacement": {
+        "name": "Ablaktörlő lapát csere szükséges",
+        "description": "Az ablaktörlők csíkoznak vagy nem tisztítanak megfelelően"
+      },
+      "Oil change needed": {
+        "name": "Olajcsere szükséges",
+        "description": "Rendszeres olaj- és szűrőcsere szükséges"
+      },
+      "Tire rotation needed": {
+        "name": "Kerékcsere szükséges",
+        "description": "A gumiabroncsokat forgatni kell az egyenletes kopás érdekében"
+      },
+      "General inspection": {
+        "name": "Általános átvizsgálás",
+        "description": "Átfogó járműbiztonsági ellenőrzés"
+      }
     }
   },
   "tickets": {

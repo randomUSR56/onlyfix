@@ -83,6 +83,17 @@ const problemsByCategory = computed(() => {
     return grouped;
 });
 
+// Translate problem name and description
+const translateProblem = (problem: Problem) => {
+    const translationKey = `problems.items.${problem.name}`;
+    const translatedName = t(`${translationKey}.name`, problem.name);
+    const translatedDescription = t(`${translationKey}.description`, problem.description || '');
+    return {
+        name: translatedName === `${translationKey}.name` ? problem.name : translatedName,
+        description: translatedDescription === `${translationKey}.description` ? problem.description : translatedDescription,
+    };
+};
+
 const toggleProblem = (problemId: number) => {
     const index = form.problem_ids.indexOf(problemId);
     if (index === -1) {
@@ -217,9 +228,9 @@ const submit = () => {
                                                     @update:checked="toggleProblem(problem.id)"
                                                 />
                                                 <div class="flex-1 min-w-0">
-                                                    <p class="font-medium text-sm">{{ problem.name }}</p>
+                                                    <p class="font-medium text-sm">{{ translateProblem(problem).name }}</p>
                                                     <p v-if="problem.description" class="text-xs text-muted-foreground line-clamp-2">
-                                                        {{ problem.description }}
+                                                        {{ translateProblem(problem).description }}
                                                     </p>
                                                 </div>
                                             </div>

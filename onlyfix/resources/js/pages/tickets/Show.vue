@@ -108,6 +108,17 @@ const getPriorityBadgeClass = (priority: string) => {
     return classes[priority] || 'bg-gray-100 text-gray-800';
 };
 
+// Translate problem name and description
+const translateProblem = (problem: Problem) => {
+    const translationKey = `problems.items.${problem.name}`;
+    const translatedName = t(`${translationKey}.name`, problem.name);
+    const translatedDescription = t(`${translationKey}.description`, problem.description || '');
+    return {
+        name: translatedName === `${translationKey}.name` ? problem.name : translatedName,
+        description: translatedDescription === `${translationKey}.description` ? problem.description : translatedDescription,
+    };
+};
+
 const getStatusIcon = (status: string) => {
     const icons: Record<string, any> = {
         open: AlertCircle,
@@ -279,12 +290,12 @@ const canCloseTicket = computed(() =>
                                 >
                                     <div class="flex items-start justify-between mb-2">
                                         <div>
-                                            <h4 class="font-medium">{{ problem.name }}</h4>
+                                            <h4 class="font-medium">{{ translateProblem(problem).name }}</h4>
                                             <p class="text-xs text-muted-foreground">{{ $t(`problems.categories.${problem.category}`) }}</p>
                                         </div>
                                     </div>
                                     <p v-if="problem.description" class="text-sm text-muted-foreground mb-2">
-                                        {{ problem.description }}
+                                        {{ translateProblem(problem).description }}
                                     </p>
                                     <div v-if="problem.pivot?.notes" class="p-2 rounded bg-background border-l-2 border-primary">
                                         <p class="text-sm">
