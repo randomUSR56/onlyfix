@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Ticket;
 use App\Models\Car;
 use App\Models\Problem;
+use App\Models\Ticket;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Inertia\Inertia;
@@ -61,7 +61,7 @@ class TicketController extends Controller
 
         return Inertia::render('Tickets/Index', [
             'tickets' => $tickets,
-            'filters' => $request->only(['status', 'priority', 'mechanic_id', 'user_id', 'car_id'])
+            'filters' => $request->only(['status', 'priority', 'mechanic_id', 'user_id', 'car_id']),
         ]);
     }
 
@@ -74,7 +74,7 @@ class TicketController extends Controller
         $user = $request->user();
 
         // Mechanics can only accept tickets, not create them
-        if ($user->hasRole('mechanic') && !$user->hasRole('admin')) {
+        if ($user->hasRole('mechanic') && ! $user->hasRole('admin')) {
             abort(403, 'Mechanics cannot create tickets');
         }
 
@@ -88,7 +88,7 @@ class TicketController extends Controller
 
         return Inertia::render('Tickets/Create', [
             'cars' => $cars,
-            'problems' => $problems
+            'problems' => $problems,
         ]);
     }
 
@@ -98,9 +98,9 @@ class TicketController extends Controller
     public function store(Request $request)
     {
         $user = $request->user();
-        
+
         // Mechanics can only accept tickets, not create them
-        if ($user->hasRole('mechanic') && !$user->hasRole('admin')) {
+        if ($user->hasRole('mechanic') && ! $user->hasRole('admin')) {
             abort(403, 'Mechanics cannot create tickets');
         }
 
@@ -116,9 +116,9 @@ class TicketController extends Controller
 
         // Verify the car belongs to the user
         $car = Car::findOrFail($validated['car_id']);
-        if ($car->user_id !== $user->id && !$user->hasRole('admin')) {
+        if ($car->user_id !== $user->id && ! $user->hasRole('admin')) {
             return back()->withErrors([
-                'car_id' => 'You can only create tickets for your own cars'
+                'car_id' => 'You can only create tickets for your own cars',
             ])->withInput();
         }
 
@@ -152,7 +152,7 @@ class TicketController extends Controller
         $user = $request->user();
 
         // Check authorization
-        if (!$user->hasAnyRole(['mechanic', 'admin']) && $ticket->user_id !== $user->id) {
+        if (! $user->hasAnyRole(['mechanic', 'admin']) && $ticket->user_id !== $user->id) {
             abort(403, 'Unauthorized');
         }
 
@@ -180,7 +180,7 @@ class TicketController extends Controller
         $user = $request->user();
 
         // Check authorization
-        if (!$user->hasAnyRole(['mechanic', 'admin']) && $ticket->user_id !== $user->id) {
+        if (! $user->hasAnyRole(['mechanic', 'admin']) && $ticket->user_id !== $user->id) {
             abort(403, 'Unauthorized');
         }
 
@@ -195,7 +195,7 @@ class TicketController extends Controller
         return Inertia::render('Tickets/Edit', [
             'ticket' => $ticket->load(['user', 'mechanic', 'car', 'problems']),
             'cars' => $cars,
-            'problems' => $problems
+            'problems' => $problems,
         ]);
     }
 
@@ -207,7 +207,7 @@ class TicketController extends Controller
         $user = $request->user();
 
         // Check authorization
-        if (!$user->hasAnyRole(['mechanic', 'admin']) && $ticket->user_id !== $user->id) {
+        if (! $user->hasAnyRole(['mechanic', 'admin']) && $ticket->user_id !== $user->id) {
             abort(403, 'Unauthorized');
         }
 
@@ -222,21 +222,30 @@ class TicketController extends Controller
         ]);
 
         // Regular users can only update their own open tickets
-        if (!$user->hasAnyRole(['mechanic', 'admin'])) {
+        if (! $user->hasAnyRole(['mechanic', 'admin'])) {
             if ($ticket->user_id !== $user->id) {
                 abort(403, 'Unauthorized');
             }
             if ($ticket->status !== 'open') {
                 return back()->withErrors([
-                    'status' => 'You can only update tickets that are still open'
+                    'status' => 'You can only update tickets that are still open',
                 ]);
             }
             // Regular users can't change status
             unset($validated['status']);
         }
 
+        // Track status change for notification
+        $oldStatus = $ticket->status;
+
         // Update basic fields
         $ticket->update(array_diff_key($validated, array_flip(['problem_ids', 'problem_notes'])));
+
+        // Send notification if status changed
+        if (isset($validated['status']) && $oldStatus !== $ticket->status) {
+            $ticket->load(['user']);
+            $ticket->notifyStatusChange($oldStatus, $ticket->status);
+        }
 
         // Update problems if provided
         if (isset($validated['problem_ids'])) {
@@ -261,7 +270,7 @@ class TicketController extends Controller
         $user = $request->user();
 
         // Only admins or ticket owners (if status is open) can delete
-        if (!$user->hasRole('admin')) {
+        if (! $user->hasRole('admin')) {
             if ($ticket->user_id !== $user->id || $ticket->status !== 'open') {
                 abort(403, 'Unauthorized');
             }
@@ -280,21 +289,26 @@ class TicketController extends Controller
     {
         $user = $request->user();
 
-        if (!$user->hasAnyRole(['mechanic', 'admin'])) {
+        if (! $user->hasAnyRole(['mechanic', 'admin'])) {
             abort(403, 'Unauthorized');
         }
 
         if ($ticket->status !== 'open') {
             return back()->withErrors([
-                'ticket' => 'This ticket has already been accepted'
+                'ticket' => 'This ticket has already been accepted',
             ]);
         }
+
+        $oldStatus = $ticket->status;
 
         $ticket->update([
             'mechanic_id' => $user->id,
             'status' => 'assigned',
             'accepted_at' => now(),
         ]);
+
+        $ticket->load(['user']);
+        $ticket->notifyStatusChange($oldStatus, 'assigned');
 
         return redirect()->route('tickets.show', $ticket)
             ->with('success', 'Ticket accepted successfully');
@@ -307,25 +321,30 @@ class TicketController extends Controller
     {
         $user = $request->user();
 
-        if (!$user->hasAnyRole(['mechanic', 'admin'])) {
+        if (! $user->hasAnyRole(['mechanic', 'admin'])) {
             abort(403, 'Unauthorized');
         }
 
-        if ($ticket->mechanic_id !== $user->id && !$user->hasRole('admin')) {
+        if ($ticket->mechanic_id !== $user->id && ! $user->hasRole('admin')) {
             return back()->withErrors([
-                'ticket' => 'You can only start work on tickets assigned to you'
+                'ticket' => 'You can only start work on tickets assigned to you',
             ]);
         }
 
-        if (!in_array($ticket->status, ['assigned', 'open'])) {
+        if (! in_array($ticket->status, ['assigned', 'open'])) {
             return back()->withErrors([
-                'ticket' => 'Invalid ticket status'
+                'ticket' => 'Invalid ticket status',
             ]);
         }
+
+        $oldStatus = $ticket->status;
 
         $ticket->update([
             'status' => 'in_progress',
         ]);
+
+        $ticket->load(['user']);
+        $ticket->notifyStatusChange($oldStatus, 'in_progress');
 
         return redirect()->route('tickets.show', $ticket)
             ->with('success', 'Work started on ticket');
@@ -338,26 +357,31 @@ class TicketController extends Controller
     {
         $user = $request->user();
 
-        if (!$user->hasAnyRole(['mechanic', 'admin'])) {
+        if (! $user->hasAnyRole(['mechanic', 'admin'])) {
             abort(403, 'Unauthorized');
         }
 
-        if ($ticket->mechanic_id !== $user->id && !$user->hasRole('admin')) {
+        if ($ticket->mechanic_id !== $user->id && ! $user->hasRole('admin')) {
             return back()->withErrors([
-                'ticket' => 'You can only complete tickets assigned to you'
+                'ticket' => 'You can only complete tickets assigned to you',
             ]);
         }
 
         if ($ticket->status === 'completed' || $ticket->status === 'closed') {
             return back()->withErrors([
-                'ticket' => 'This ticket is already completed or closed'
+                'ticket' => 'This ticket is already completed or closed',
             ]);
         }
+
+        $oldStatus = $ticket->status;
 
         $ticket->update([
             'status' => 'completed',
             'completed_at' => now(),
         ]);
+
+        $ticket->load(['user']);
+        $ticket->notifyStatusChange($oldStatus, 'completed');
 
         return redirect()->route('tickets.show', $ticket)
             ->with('success', 'Ticket marked as completed');
@@ -371,19 +395,24 @@ class TicketController extends Controller
         $user = $request->user();
 
         // Ticket owner or admin can close
-        if ($ticket->user_id !== $user->id && !$user->hasRole('admin')) {
+        if ($ticket->user_id !== $user->id && ! $user->hasRole('admin')) {
             abort(403, 'Unauthorized');
         }
 
         if ($ticket->status === 'closed') {
             return back()->withErrors([
-                'ticket' => 'This ticket is already closed'
+                'ticket' => 'This ticket is already closed',
             ]);
         }
+
+        $oldStatus = $ticket->status;
 
         $ticket->update([
             'status' => 'closed',
         ]);
+
+        $ticket->load(['user']);
+        $ticket->notifyStatusChange($oldStatus, 'closed');
 
         return redirect()->route('tickets.show', $ticket)
             ->with('success', 'Ticket closed');
@@ -396,7 +425,7 @@ class TicketController extends Controller
     {
         $user = $request->user();
 
-        if (!$user->hasAnyRole(['mechanic', 'admin'])) {
+        if (! $user->hasAnyRole(['mechanic', 'admin'])) {
             abort(403, 'Unauthorized');
         }
 
@@ -414,7 +443,7 @@ class TicketController extends Controller
             'completed_today' => Ticket::whereDate('completed_at', today())->count(),
         ];
 
-        if ($user->hasRole('mechanic') && !$user->hasRole('admin')) {
+        if ($user->hasRole('mechanic') && ! $user->hasRole('admin')) {
             $stats['my_assigned_tickets'] = Ticket::where('mechanic_id', $user->id)
                 ->whereIn('status', ['assigned', 'in_progress'])
                 ->count();
@@ -424,7 +453,7 @@ class TicketController extends Controller
         }
 
         return Inertia::render('Statistics/Tickets', [
-            'statistics' => $stats
+            'statistics' => $stats,
         ]);
     }
 }
