@@ -2,10 +2,12 @@
 
 namespace App\Models;
 
+use App\Notifications\TicketStatusChanged;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Support\Facades\Notification;
 
 class Ticket extends Model
 {
@@ -119,7 +121,7 @@ class Ticket extends Model
      */
     public function isAssigned(): bool
     {
-        return !is_null($this->mechanic_id);
+        return ! is_null($this->mechanic_id);
     }
 
     /**
@@ -191,5 +193,32 @@ class Ticket extends Model
     public function close(): void
     {
         $this->update(['status' => 'closed']);
+    }
+
+    /**
+     * Send status change notifications to the ticket owner and all admin users.
+     */
+    public function notifyStatusChange(string $oldStatus, string $newStatus): void
+    {
+        $notification = new TicketStatusChanged($this, $oldStatus, $newStatus);
+
+        // Collect recipients: ticket owner + all admins
+        $recipients = collect();
+
+        // Always notify the ticket owner
+        if ($this->user) {
+            $recipients->push($this->user);
+        }
+
+        // Notify all admin (sysadmin) users
+        $admins = User::role('admin')->get();
+        foreach ($admins as $admin) {
+            // Avoid duplicate if the ticket owner is also an admin
+            if (! $recipients->contains('id', $admin->id)) {
+                $recipients->push($admin);
+            }
+        }
+
+        Notification::send($recipients, $notification);
     }
 }
