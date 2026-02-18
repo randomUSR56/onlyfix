@@ -156,6 +156,36 @@ if (Test-Path "onlyfix\.env") {
     }
 }
 
+# Check Node.js
+Write-Info "📦 Checking Node.js..."
+try {
+    $nodeVersion = node --version 2>&1
+    if ($LASTEXITCODE -eq 0) {
+        Write-Success "✅ Node.js installed: $nodeVersion"
+        
+        # Install NPM dependencies on host (for IntelliSense)
+        Write-Info "📦 Installing NPM dependencies on host (for VS Code IntelliSense)..."
+        Push-Location "onlyfix"
+        try {
+            npm install 2>&1 | Out-Null
+            if ($LASTEXITCODE -eq 0) {
+                Write-Success "✅ NPM dependencies installed on host`n"
+            } else {
+                Write-Warning "⚠️  NPM install failed (non-critical): $($Error[0])`n"
+            }
+        } catch {
+            Write-Warning "⚠️  NPM install failed (non-critical): $_`n"
+        }
+        Pop-Location
+    } else {
+        throw "Node command failed"
+    }
+} catch {
+    Write-Warning "⚠️  Node.js not installed!"
+    Write-Info "Install Node.js: https://nodejs.org/`n"
+    Write-Warning "Note: Docker will still work, but VS Code IntelliSense may not work properly.`n"
+}
+
 # Summary
 Write-Success "🎉 Setup completed!`n"
 Write-Info "Next steps:"

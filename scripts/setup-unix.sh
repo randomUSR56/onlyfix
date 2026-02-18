@@ -211,6 +211,28 @@ else
     fi
 fi
 
+# Check Node.js
+echo -e "${CYAN}📦 Checking Node.js...${NC}"
+
+if command -v node &> /dev/null; then
+    NODE_VERSION=$(node --version)
+    echo -e "${GREEN}✅ Node.js installed: $NODE_VERSION${NC}"
+    
+    # Install NPM dependencies on host (for IntelliSense)
+    echo -e "${CYAN}📦 Installing NPM dependencies on host (for VS Code IntelliSense)...${NC}"
+    cd onlyfix
+    if npm install &> /dev/null; then
+        echo -e "${GREEN}✅ NPM dependencies installed on host${NC}\n"
+    else
+        echo -e "${YELLOW}⚠️  NPM install failed (non-critical)${NC}\n"
+    fi
+    cd ..
+else
+    echo -e "${YELLOW}⚠️  Node.js not installed!${NC}"
+    echo -e "${CYAN}Install: https://nodejs.org/${NC}\n"
+    echo -e "${YELLOW}Note: Docker will still work, but VS Code IntelliSense may not work properly.${NC}\n"
+fi
+
 # Summary
 echo -e "${GREEN}🎉 Setup completed!${NC}\n"
 echo -e "${CYAN}Next steps:${NC}"
