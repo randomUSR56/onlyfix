@@ -28,3 +28,23 @@ Homestead.json
 .env.production
 .phpactor.json
 auth.json
+
+# Docker logs (keep directory structure)
+docker/logs/**
+!docker/logs/**/.gitkeep
+!docker/logs/README.md
+
+# Docker environment overrides
+.env.local
+.env.*.local
+
+# OS
+.DS_Store
+Thumbs.db
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
