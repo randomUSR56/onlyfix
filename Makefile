@@ -107,9 +107,10 @@ ps: ## List running containers
 ##@ Laravel
 
 install: ## Install Composer and NPM dependencies
-	@echo Installing dependencies...
+	@echo Installing Composer dependencies...
 	@docker-compose exec app composer install
-	@docker-compose exec node npm install
+	@echo Restarting node container to install NPM dependencies...
+	@docker-compose restart node
 	@echo Dependencies installed
 
 key: ## Generate Laravel app key
