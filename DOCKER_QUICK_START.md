@@ -19,11 +19,15 @@ sudo make init
 1. ✅ Loopback interfaces (127.0.1.1-5) - Linux/macOS only
 2. ✅ Hosts file entries (all platforms)
 3. ✅ Docker containers (7 services)
-4. ✅ Composer dependencies
-5. ✅ NPM dependencies
+4. ✅ Composer dependencies (Docker container)
+5. ✅ NPM dependencies (Docker container + host for IntelliSense)
 6. ✅ Laravel app key
 7. ✅ Database migrations
 8. ✅ Storage links
+
+**Note:** NPM packages are installed both:
+- In Docker container (for running the app)
+- On host machine (for VS Code TypeScript IntelliSense)
 
 ---
 

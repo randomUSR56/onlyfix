@@ -178,6 +178,23 @@ docker-compose exec app chown -R www-data:www-data /var/www/html/storage
 docker-compose exec app chmod -R 775 /var/www/html/storage
 ```
 
+### TypeScript errors in VS Code
+
+If you see TypeScript errors like "Cannot find module 'vite'":
+
+**Cause:** NPM packages not installed on host machine (only in Docker container).
+
+**Solution:** The setup script should have installed them automatically. If not:
+
+```bash
+cd onlyfix
+npm install
+```
+
+Then reload VS Code: `Ctrl+Shift+P` → "Developer: Reload Window"
+
+**Note:** This is for IntelliSense only. The Docker container has its own `node_modules`.
+
 ---
 
 ## Log Locations
