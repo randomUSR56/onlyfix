@@ -40,7 +40,7 @@ try {
 }
 
 # OnlyFix hosts entries
-$hostsEntries = @"
+$hostsEntries = @'
 
 # OnlyFix Project - Docker Services
 127.0.1.1       onlyfix.local
@@ -48,7 +48,7 @@ $hostsEntries = @"
 127.0.1.3       mailpit.onlyfix.local
 127.0.1.4       node.onlyfix.local
 127.0.1.5       phpmyadmin.onlyfix.local
-"@
+'@
 
 # Check if entries already exist
 $hostsContent = Get-Content $hostsPath -Raw
