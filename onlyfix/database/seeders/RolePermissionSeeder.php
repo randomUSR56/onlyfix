@@ -38,13 +38,13 @@ class RolePermissionSeeder extends Seeder
         ];
 
         foreach ($permissions as $permission) {
-            Permission::create(['name' => $permission]);
+            Permission::firstOrCreate(['name' => $permission]);
         }
 
         // Create roles and assign permissions
 
         // User role - basic ticket operations on own tickets
-        $userRole = Role::create(['name' => 'user']);
+        $userRole = Role::firstOrCreate(['name' => 'user']);
         $userRole->givePermissionTo([
             'view own tickets',
             'create tickets',
@@ -53,7 +53,7 @@ class RolePermissionSeeder extends Seeder
         ]);
 
         // Mechanic role - can view and manage all tickets
-        $mechanicRole = Role::create(['name' => 'mechanic']);
+        $mechanicRole = Role::firstOrCreate(['name' => 'mechanic']);
         $mechanicRole->givePermissionTo([
             'view own tickets',
             'create tickets',
@@ -65,7 +65,7 @@ class RolePermissionSeeder extends Seeder
         ]);
 
         // Admin role - has all permissions
-        $adminRole = Role::create(['name' => 'admin']);
+        $adminRole = Role::firstOrCreate(['name' => 'admin']);
         $adminRole->givePermissionTo(Permission::all());
     }
 }

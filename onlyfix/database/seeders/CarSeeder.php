@@ -62,11 +62,15 @@ class CarSeeder extends Seeder
         ];
 
         foreach ($testCars as $car) {
-            Car::create($car);
+            Car::firstOrCreate(['license_plate' => $car['license_plate']], $car);
         }
 
-        // Create additional random cars for each user
+        // Create additional random cars for each user (skip if they already have cars)
         foreach ($users as $user) {
+            if (Car::where('user_id', $user->id)->exists()) {
+                continue;
+            }
+
             // Give each user 1-3 additional cars
             $carCount = rand(1, 3);
             Car::factory()->count($carCount)->create([

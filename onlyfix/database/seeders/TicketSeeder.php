@@ -27,6 +27,11 @@ class TicketSeeder extends Seeder
             return;
         }
 
+        if (Ticket::exists()) {
+            $this->command->warn('Tickets already exist, skipping.');
+            return;
+        }
+
         // Combine mechanics and admins as potential assignees
         $allMechanics = $mechanics->merge($adminUsers);
 
