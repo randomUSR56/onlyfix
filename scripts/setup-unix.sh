@@ -176,39 +176,90 @@ for domain in "${DOMAINS[@]}"; do
     fi
 done
 
-# Check Docker
+# Check Docker (non-fatal - setup continues even without Docker)
 echo -e "\n${CYAN}🐳 Checking Docker...${NC}"
 
-if command -v docker &> /dev/null; then
-    DOCKER_VERSION=$(docker --version)
-    echo -e "${GREEN}✅ Docker installed: $DOCKER_VERSION${NC}"
-    
-    if command -v docker-compose &> /dev/null; then
-        COMPOSE_VERSION=$(docker-compose --version)
-        echo -e "${GREEN}✅ Docker Compose installed: $COMPOSE_VERSION${NC}\n"
-    else
-        echo -e "${RED}❌ Docker Compose not installed!${NC}"
-        echo -e "${YELLOW}Install: https://docs.docker.com/compose/install/${NC}\n"
-        exit 1
-    fi
-else
-    echo -e "${RED}❌ Docker not installed or not running!${NC}"
-    echo -e "${YELLOW}Install: https://docs.docker.com/get-docker/${NC}\n"
-    exit 1
+set +e  # Disable exit-on-error for Docker detection
+DOCKER_OK=false
+
+# Try to find docker in PATH or known locations
+DOCKER_CMD=""
+if command -v docker &> /dev/null && docker --version &> /dev/null; then
+    DOCKER_CMD="docker"
+elif [ -x "/usr/local/bin/docker" ] && /usr/local/bin/docker --version &> /dev/null; then
+    DOCKER_CMD="/usr/local/bin/docker"
+elif [ -x "$HOME/.docker/bin/docker" ] && "$HOME/.docker/bin/docker" --version &> /dev/null; then
+    DOCKER_CMD="$HOME/.docker/bin/docker"
 fi
+
+if [ -n "$DOCKER_CMD" ]; then
+    DOCKER_VERSION=$($DOCKER_CMD --version 2>/dev/null || true)
+    if [ -n "$DOCKER_VERSION" ]; then
+        echo -e "${GREEN}✅ Docker installed: $DOCKER_VERSION${NC}"
+
+        # Check if Docker daemon is running
+        if $DOCKER_CMD info &> /dev/null; then
+            echo -e "${GREEN}✅ Docker daemon is running${NC}"
+        else
+            echo -e "${YELLOW}⚠️  Docker daemon is NOT running!${NC}"
+            echo -e "${YELLOW}   Please start Docker Desktop before running 'make build'${NC}"
+        fi
+
+        # Check docker-compose or docker compose
+        if command -v docker-compose &> /dev/null; then
+            COMPOSE_VERSION=$(docker-compose --version 2>/dev/null || true)
+            echo -e "${GREEN}✅ Docker Compose installed: $COMPOSE_VERSION${NC}\n"
+            DOCKER_OK=true
+        elif $DOCKER_CMD compose version &> /dev/null; then
+            COMPOSE_VERSION=$($DOCKER_CMD compose version 2>/dev/null || true)
+            echo -e "${GREEN}✅ Docker Compose (plugin) installed: $COMPOSE_VERSION${NC}\n"
+            DOCKER_OK=true
+        else
+            echo -e "${YELLOW}⚠️  Docker Compose not found${NC}"
+            echo -e "${YELLOW}   Install: https://docs.docker.com/compose/install/${NC}\n"
+        fi
+    else
+        echo -e "${YELLOW}⚠️  Docker binary found but not working (broken symlink?)${NC}"
+    fi
+fi
+
+if [ "$DOCKER_OK" = false ]; then
+    echo -e "${YELLOW}⚠️  Docker is not available on this system${NC}"
+    echo -e "${CYAN}   Docker is required for the development environment.${NC}"
+    echo -e "${CYAN}   Install options:${NC}"
+    if [ "$PLATFORM" = "macOS" ] && command -v brew &> /dev/null; then
+        echo -e "${YELLOW}     brew install --cask docker${NC}"
+    fi
+    echo -e "${YELLOW}     https://docs.docker.com/get-docker/${NC}"
+    echo -e "${CYAN}   After installing, start Docker Desktop and re-run: make init${NC}\n"
+fi
+
+set -e  # Re-enable exit-on-error
 
 # Check .env file
 echo -e "${CYAN}⚙️  Checking .env file...${NC}"
+
+# Get the actual user (even when running with sudo)
+REAL_USER="${SUDO_USER:-$USER}"
+REAL_GROUP=$(id -gn "$REAL_USER" 2>/dev/null || echo "staff")
 
 if [ -f "onlyfix/.env" ]; then
     echo -e "${GREEN}✅ .env file exists${NC}\n"
 else
     if [ -f "onlyfix/.env.example" ]; then
         cp "onlyfix/.env.example" "onlyfix/.env"
+        chown "$REAL_USER:$REAL_GROUP" "onlyfix/.env" 2>/dev/null || true
         echo -e "${GREEN}✅ .env file created from .env.example${NC}\n"
     else
         echo -e "${YELLOW}⚠️  .env.example not found!${NC}\n"
     fi
+fi
+
+# Fix ownership of project files if running as sudo
+if [ -n "$SUDO_USER" ]; then
+    echo -e "${CYAN}🔧 Fixing file ownership (sudo detected)...${NC}"
+    chown -R "$REAL_USER:$REAL_GROUP" "onlyfix/" 2>/dev/null || true
+    echo -e "${GREEN}✅ File ownership restored to $REAL_USER${NC}\n"
 fi
 
 # Check Node.js

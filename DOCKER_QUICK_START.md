@@ -1,76 +1,128 @@
 # OnlyFix Docker Setup - Quick Reference
 
+## Előfeltételek
+
+| Szükséges | Telepítés |
+|-----------|-----------|
+| **Git** | [git-scm.com](https://git-scm.com/) |
+| **Docker Desktop** | [docker.com/get-docker](https://docs.docker.com/get-docker/) vagy `brew install --cask docker` (macOS) |
+
+> **Fontos:** Docker Desktop-nak **futnia kell** mielőtt a `make init`-et elindítod!
+
+**Opcionális** (VS Code IntelliSense-hez):
+- Node.js 20+ — [nodejs.org](https://nodejs.org/)
+
+---
+
 ## One-Command Setup
 
-### Windows (PowerShell Admin)
-```powershell
+```bash
+git clone https://github.com/randomUSR56/onlyfix.git
+cd onlyfix
 make init
 ```
 
-### Linux/macOS (Terminal)
+A `make init` automatikusan `sudo`-t kér a hosts fájl és loopback interfészek beállításához.
+**NEM kell `sudo make init`-et használni** — a parancs maga kezeli a jogosultságokat.
+
+---
+
+## Mit csinál a `make init`?
+
+| Lépés | Leírás |
+|-------|--------|
+| 1. `setup` | Loopback IP-k (127.0.1.1–5), `/etc/hosts` bejegyzések, DNS cache ürítés, `.env` másolás |
+| 2. `build` | Docker image-ek build-elése (PHP 8.3-FPM, Nginx, Node.js, MySQL 8.0, stb.) |
+| 3. `start` | 7 Docker konténer indítása |
+| 4. `install` | Composer + NPM csomagok telepítése (konténereken belül) |
+| 5. `key` | Laravel alkalmazás kulcs generálása |
+| 6. `migrate` | Adatbázis migrációk futtatása (MySQL) |
+| 7. `seed` | Teszt adatok betöltése (felhasználók, autók, jegyek) |
+| 8. `storage` | Storage link létrehozása |
+| 9. `wayfinder` | TypeScript route definíciók generálása |
+
+---
+
+## Teszt Fiókok
+
+| Szerepkör | Email | Jelszó |
+|-----------|-------|--------|
+| **Admin** | `admin@example.com` | `password` |
+| **Szerelő** | `mechanic@example.com` | `password` |
+| **Felhasználó** | `test@example.com` | `password` |
+
+---
+
+## Hozzáférési URL-ek
+
+| Szolgáltatás | URL | Leírás |
+|-------------|-----|--------|
+| **Alkalmazás** | http://onlyfix.local | Fő webalkalmazás |
+| **Mailpit** | http://mailpit.onlyfix.local:8025 | Email tesztelés |
+| **phpMyAdmin** | http://phpmyadmin.onlyfix.local:8080 | Adatbázis kezelő |
+| **Vite HMR** | http://node.onlyfix.local:5173 | Frontend hot reload |
+| **MySQL** | db.onlyfix.local:3306 | Adatbázis közvetlen elérés |
+
+---
+
+## Adatbázis
+
+| Paraméter | Érték |
+|-----------|-------|
+| Host (konténerből) | `db` |
+| Host (hostról) | `db.onlyfix.local:3306` |
+| Adatbázis | `onlyfix` |
+| Felhasználó | `onlyfix` |
+| Jelszó | `onlyfixSecurePass456!` |
+| Root jelszó | `rootSecurePassword123!` |
+
+---
+
+## Napi Fejlesztés
+
 ```bash
-sudo make init
+make start          # Konténerek indítása
+make stop           # Konténerek leállítása
+make logs           # Logok megtekintése (Ctrl+C kilépés)
+make ps             # Futó konténerek listázása
+
+make shell          # Bash a PHP konténerben
+make shell-node     # Shell a Node konténerben
+make tinker         # Laravel Tinker (REPL)
+
+make migrate        # Migrációk futtatása
+make fresh          # Adatbázis újraépítés + seed
+make cache-clear    # Összes cache törlése
+make test           # Tesztek futtatása
 ```
 
 ---
 
-## What Gets Installed
+## Hibaelhárítás
 
-1. ✅ Loopback interfaces (127.0.1.1-5) - Linux/macOS only
-2. ✅ Hosts file entries (all platforms)
-3. ✅ Docker containers (7 services)
-4. ✅ Composer dependencies (Docker container)
-5. ✅ NPM dependencies (Docker container + host for IntelliSense)
-6. ✅ Laravel app key
-7. ✅ Database migrations
-8. ✅ Storage links
-
-**Note:** NPM packages are installed both:
-- In Docker container (for running the app)
-- On host machine (for VS Code TypeScript IntelliSense)
-
----
-
-## Access URLs
-
-| Service | URL | Port |
-|---------|-----|------|
-| **App** | http://onlyfix.local | 80 |
-| **Mailpit** | http://mailpit.onlyfix.local:8025 | 8025 |
-| **phpMyAdmin** | http://phpmyadmin.onlyfix.local:8080 | 8080 |
-| **Vite HMR** | http://node.onlyfix.local:5173 | 5173 |
-| **MySQL** | db.onlyfix.local:3306 | 3306 |
-
----
-
-## Database Credentials
-
-**MySQL:**
-- Host: `db` (inside Docker) or `db.onlyfix.local:3306` (from host)
-- Database: `onlyfix`
-- User: `onlyfix`
-- Password: `onlyfixSecurePass456!`
-- Root Password: `rootSecurePassword123!`
-
-**phpMyAdmin:**
-- URL: http://phpmyadmin.onlyfix.local:8080
-- Server: `db`
-- User: `onlyfix`
-- Password: `onlyfixSecurePass456!`
-
----
-
-## Common Commands
-
+### Docker nem fut
 ```bash
-make start          # Start containers
-make stop           # Stop containers
-make logs           # View logs
-make shell          # Open shell in app container
-make tinker         # Laravel Tinker
-make migrate        # Run migrations
-make queue-listen   # Start queue (dev mode)
-make cache-clear    # Clear all caches
+make check-docker   # Ellenőrzi, hogy Docker elérhető-e
+```
+Indítsd el a Docker Desktop-ot, majd próbáld újra.
+
+### Üres oldal / JS hiba
+```bash
+docker compose restart node   # Vite dev server újraindítás
+```
+Böngészőben: `Cmd+Shift+R` (macOS) vagy `Ctrl+Shift+R` (Linux/Windows)
+
+### Adatbázis problémák
+```bash
+make fresh          # Teljes adatbázis újraépítés teszt adatokkal
 ```
 
-See `DOCKER.md` for full documentation.
+### Teljes újrakezdés
+```bash
+make clean          # Konténerek + adatok törlése
+make init           # Mindent újra
+```
+
+---
+
+Részletes dokumentáció: `DOCKER.md`

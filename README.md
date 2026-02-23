@@ -43,38 +43,55 @@ An open source project under MIT license where we perform CRUD operations about 
 
 ### Előfeltételek
 
-- PHP 8.2 vagy újabb
-- Composer
-- Node.js és npm
 - Git
+- Docker Desktop ([telepítés](https://docs.docker.com/get-docker/) vagy macOS-en: `brew install --cask docker`)
 
-### Telepítés
+> Opcionális: Node.js 20+ a host gépen (VS Code IntelliSense-hez)
 
-1. **Projekt klónozása**
+### Telepítés (Docker — ajánlott)
 
 ```bash
+# 1. Klónozás
 git clone https://github.com/randomUSR56/onlyfix.git
-cd onlyfix/onlyfix
+cd onlyfix
+
+# 2. Indítsd el a Docker Desktop-ot, majd:
+make init
 ```
 
-2. **Automatikus telepítés (ajánlott)**
+Ez a parancs **mindent automatikusan elvégez**:
+- Hálózat konfiguráció (loopback IP-k, hosts bejegyzések)
+- Docker image-ek build-elése és konténerek indítása
+- Composer + NPM csomagok telepítése
+- Laravel kulcs generálás, migrációk, seed (teszt adatok)
+- Storage link és TypeScript route generálás
+
+> A `make init` automatikusan `sudo`-t kér ahol szükséges. **NEM kell `sudo make init`-et írni.**
+
+### Teszt Fiókok
+
+| Szerepkör | Email | Jelszó |
+|-----------|-------|--------|
+| Admin | `admin@example.com` | `password` |
+| Szerelő | `mechanic@example.com` | `password` |
+| Felhasználó | `test@example.com` | `password` |
+
+### Hozzáférési URL-ek
+
+| Szolgáltatás | URL |
+|-------------|-----|
+| Alkalmazás | http://onlyfix.local |
+| Mailpit | http://mailpit.onlyfix.local:8025 |
+| phpMyAdmin | http://phpmyadmin.onlyfix.local:8080 |
+
+Részletes Docker dokumentáció: [DOCKER_QUICK_START.md](DOCKER_QUICK_START.md)
+
+### Telepítés (helyi, Docker nélkül)
+
+Ehhez szükséges: PHP 8.2+, Composer, Node.js, MySQL.
 
 ```bash
-composer setup
-```
-
-Ez a parancs elvégzi a következőket:
-
-- Composer csomagok telepítése
-- `.env` fájl létrehozása (ha nem létezik)
-- Alkalmazás kulcs generálása
-- Adatbázis migrációk futtatása
-- NPM csomagok telepítése
-- Frontend build készítése
-
-3. **Manuális telepítés (alternatíva)**
-
-```bash
+cd onlyfix
 # Backend függőségek telepítése
 composer install
 
