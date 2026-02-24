@@ -149,10 +149,10 @@ const formatDate = (dateString: string) => {
                                 </div>
                                 <div class="col-span-3 text-sm text-muted-foreground">
                                     <span v-if="user.roles.includes('mechanic')">
-                                        {{ user.tickets_count || 0 }} jegy
+                                        {{ $t('users.ticketsCount', { count: user.tickets_count || 0 }) }}
                                     </span>
                                     <span v-else>
-                                        {{ user.cars_count || 0 }} autó
+                                        {{ $t('users.carsCount', { count: user.cars_count || 0 }) }}
                                     </span>
                                 </div>
                                 <div class="col-span-1 text-right">
@@ -228,7 +228,10 @@ const formatDate = (dateString: string) => {
                                         </Badge>
                                     </div>
                                     <span class="text-muted-foreground">
-                                        {{ user.roles.includes('mechanic') ? `${user.tickets_count || 0} jegy` : `${user.cars_count || 0} autó` }}
+                                        {{ user.roles.includes('mechanic') 
+                                            ? $t('users.ticketsCount', { count: user.tickets_count || 0 }) 
+                                            : $t('users.carsCount', { count: user.cars_count || 0 }) 
+                                        }}
                                     </span>
                                 </div>
                             </div>

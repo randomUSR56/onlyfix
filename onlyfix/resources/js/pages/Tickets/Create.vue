@@ -176,8 +176,8 @@ onMounted(() => {
                         <!-- Admin Only: User Selection -->
                         <Card v-if="isAdmin && users?.length">
                             <CardHeader>
-                                <CardTitle>Ügyfél kiválasztása</CardTitle>
-                                <CardDescription>Kihez tartozik ez a javítási jegy?</CardDescription>
+                                <CardTitle>{{ $t('admin.ticket.selectUser') }}</CardTitle>
+                                <CardDescription>{{ $t('admin.ticket.selectUserDescription') }}</CardDescription>
                             </CardHeader>
                             <CardContent>
                                 <select
@@ -185,7 +185,7 @@ onMounted(() => {
                                     @change="form.car_id = null"
                                     class="flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-sm transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
                                 >
-                                    <option :value="null">Válasszon ügyfelet...</option>
+                                    <option :value="null">{{ $t('admin.ticket.selectUserPlaceholder') }}</option>
                                     <option v-for="user in users" :key="user.id" :value="user.id">
                                         {{ user.name }} ({{ user.email }})
                                     </option>
@@ -197,15 +197,15 @@ onMounted(() => {
                         <!-- Admin Only: Mechanic Assignment -->
                         <Card v-if="isAdmin && mechanics?.length">
                             <CardHeader>
-                                <CardTitle>Szerelő kijelölése</CardTitle>
-                                <CardDescription>Ki fogja végezni a javítást? (Választható)</CardDescription>
+                                <CardTitle>{{ $t('admin.ticket.assignMechanic') }}</CardTitle>
+                                <CardDescription>{{ $t('admin.ticket.assignMechanicDescription') }}</CardDescription>
                             </CardHeader>
                             <CardContent>
                                 <select
                                     v-model="form.mechanic_id"
                                     class="flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-sm transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
                                 >
-                                    <option :value="null">Nincs kijelölt szerelő</option>
+                                    <option :value="null">{{ $t('admin.ticket.assignMechanicPlaceholder') }}</option>
                                     <option v-for="mech in mechanics" :key="mech.id" :value="mech.id">
                                         {{ mech.name }}
                                     </option>
