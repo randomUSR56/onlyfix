@@ -4,6 +4,8 @@ import vue from '@vitejs/plugin-vue';
 import laravel from 'laravel-vite-plugin';
 import { defineConfig } from 'vite';
 
+const isDocker = process.env.DOCKER === '1';
+
 export default defineConfig({
     plugins: [
         laravel({
@@ -12,9 +14,7 @@ export default defineConfig({
             refresh: true,
         }),
         tailwindcss(),
-        wayfinder({
-            formVariants: true,
-        }),
+        ...(!isDocker ? [wayfinder({ formVariants: true })] : []),
         vue({
             template: {
                 transformAssetUrls: {
@@ -24,4 +24,23 @@ export default defineConfig({
             },
         }),
     ],
+    server: {
+        host: '0.0.0.0',
+        port: 5173,
+        strictPort: true,
+        hmr: {
+            host: process.env.VITE_HMR_HOST || 'node.onlyfix.local',
+            protocol: 'ws',
+            port: 5173,
+        },
+        watch: {
+            usePolling: true,
+            interval: 1000,
+        },
+    },
+    resolve: {
+        alias: {
+            '@': '/resources/js',
+        },
+    },
 });

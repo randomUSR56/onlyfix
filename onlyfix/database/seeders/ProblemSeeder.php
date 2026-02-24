@@ -85,22 +85,26 @@ class ProblemSeeder extends Seeder
         ];
 
         foreach ($problems as $problem) {
-            Problem::create($problem);
+            Problem::firstOrCreate(['name' => $problem['name']], $problem);
         }
 
         // Create a few inactive problems (historical)
-        Problem::create([
-            'name' => 'Carburetor issues',
-            'category' => 'engine',
-            'description' => 'Old problem type - carburetors no longer common',
-            'is_active' => false,
-        ]);
+        Problem::firstOrCreate(
+            ['name' => 'Carburetor issues'],
+            [
+                'category' => 'engine',
+                'description' => 'Old problem type - carburetors no longer common',
+                'is_active' => false,
+            ]
+        );
 
-        Problem::create([
-            'name' => 'Cassette player repair',
-            'category' => 'other',
-            'description' => 'Obsolete entertainment system',
-            'is_active' => false,
-        ]);
+        Problem::firstOrCreate(
+            ['name' => 'Cassette player repair'],
+            [
+                'category' => 'other',
+                'description' => 'Obsolete entertainment system',
+                'is_active' => false,
+            ]
+        );
     }
 }

@@ -24,41 +24,52 @@ class DatabaseSeeder extends Seeder
         // 2. Create test users with different roles
         $this->command->info('👤 Creating users...');
 
-        $admin = User::factory()->create([
-            'name' => 'Admin User',
-            'email' => 'admin@example.com',
-        ]);
+        $admin = User::firstOrCreate(
+            ['email' => 'admin@example.com'],
+            ['name' => 'Admin User', 'password' => 'password', 'email_verified_at' => now()]
+        );
         $admin->assignRole('admin');
 
-        $mechanic = User::factory()->create([
-            'name' => 'Mechanic User',
-            'email' => 'mechanic@example.com',
-        ]);
+        $mechanic = User::firstOrCreate(
+            ['email' => 'mechanic@example.com'],
+            ['name' => 'Mechanic User', 'password' => 'password', 'email_verified_at' => now()]
+        );
         $mechanic->assignRole('mechanic');
 
         // Create additional mechanics
-        $mechanic2 = User::factory()->create([
-            'name' => 'Sarah Johnson',
-            'email' => 'sarah.johnson@example.com',
-        ]);
+        $mechanic2 = User::firstOrCreate(
+            ['email' => 'sarah.johnson@example.com'],
+            ['name' => 'Sarah Johnson', 'password' => 'password', 'email_verified_at' => now()]
+        );
         $mechanic2->assignRole('mechanic');
 
-        $mechanic3 = User::factory()->create([
-            'name' => 'Mike Davis',
-            'email' => 'mike.davis@example.com',
-        ]);
+        $mechanic3 = User::firstOrCreate(
+            ['email' => 'mike.davis@example.com'],
+            ['name' => 'Mike Davis', 'password' => 'password', 'email_verified_at' => now()]
+        );
         $mechanic3->assignRole('mechanic');
 
-        $user = User::factory()->create([
-            'name' => 'Test User',
-            'email' => 'test@example.com',
-        ]);
+        $user = User::firstOrCreate(
+            ['email' => 'test@example.com'],
+            ['name' => 'Test User', 'password' => 'password', 'email_verified_at' => now()]
+        );
         $user->assignRole('user');
 
-        // Create additional regular users
-        User::factory()->count(10)->create()->each(function ($user) {
-            $user->assignRole('user');
-        });
+        // Create additional regular users if they don't exist
+        for ($i = 1; $i <= 10; $i++) {
+            $email = "user{$i}@example.com";
+            $u = User::firstOrCreate(
+                ['email' => $email],
+                [
+                    'name' => "Regular User {$i}",
+                    'password' => 'password',
+                    'email_verified_at' => now()
+                ]
+            );
+            if (!$u->hasRole('user')) {
+                $u->assignRole('user');
+            }
+        }
 
         $this->command->info('✅ Users created successfully!');
 
