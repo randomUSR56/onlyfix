@@ -23,6 +23,7 @@ import { useAuth } from '@/composables/useAuth';
 
 const { t } = useI18n();
 const { isAdmin } = useAuth();
+const { props: pageProps } = usePage();
 
 const props = defineProps<{
     cars: Car[];
@@ -48,7 +49,7 @@ const breadcrumbs: BreadcrumbItem[] = [
 ];
 
 const form = useForm({
-    user_id: null as number | null,
+    user_id: isAdmin.value ? null : (pageProps.auth.user.id as number),
     car_id: props.preselectedCarId || null as number | null,
     mechanic_id: null as number | null,
     description: '',
