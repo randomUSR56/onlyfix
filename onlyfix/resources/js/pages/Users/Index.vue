@@ -123,7 +123,7 @@ const formatDate = (dateString: string) => {
                             <div class="grid grid-cols-12 gap-4 px-4 py-2 text-xs font-medium text-muted-foreground border-b mb-2">
                                 <div class="col-span-5">{{ $t('users.form.name') }} / {{ $t('users.form.email') }}</div>
                                 <div class="col-span-3">{{ $t('users.role') }}</div>
-                                <div class="col-span-3">Javítások / Autók</div>
+                                <div class="col-span-3">{{ $t('adminDashboard.completedRepairs') }} / {{ $t('nav.myCars') }}</div>
                                 <div class="col-span-1 text-right"></div>
                             </div>
                             <div v-for="user in users.data" :key="user.id" class="grid grid-cols-12 gap-4 items-center px-4 py-3 hover:bg-muted/50 rounded-lg transition-colors border-b last:border-0">

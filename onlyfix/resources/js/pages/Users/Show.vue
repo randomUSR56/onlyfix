@@ -92,7 +92,7 @@ const getRoleBadgeVariant = (role: string) => {
                 <div class="space-y-6">
                     <Card>
                         <CardHeader>
-                            <CardTitle>Információk</CardTitle>
+                            <CardTitle>{{ $t('users.show.info') }}</CardTitle>
                         </CardHeader>
                         <CardContent class="space-y-4">
                             <div class="flex items-center gap-3 text-sm">
@@ -101,22 +101,22 @@ const getRoleBadgeVariant = (role: string) => {
                             </div>
                             <div class="flex items-center gap-3 text-sm">
                                 <Calendar class="h-4 w-4 text-muted-foreground" />
-                                <span>Regisztrálva: {{ formatDate(user.created_at) }}</span>
+                                <span>{{ $t('users.show.registeredAt') }}: {{ formatDate(user.created_at) }}</span>
                             </div>
                             <div class="flex items-center gap-3 text-sm">
                                 <Shield class="h-4 w-4 text-muted-foreground" />
-                                <span>Fiók állapota: {{ user.email_verified_at ? 'Megerősítve' : 'Nincs megerősítve' }}</span>
+                                <span>{{ $t('users.show.accountStatus') }}: {{ user.email_verified_at ? $t('users.show.verified') : $t('users.show.unverified') }}</span>
                             </div>
                         </CardContent>
                     </Card>
 
                     <Card v-if="user.roles.includes('mechanic')">
                         <CardHeader>
-                            <CardTitle>Szakmai adatok</CardTitle>
+                            <CardTitle>{{ $t('users.show.professionalData') }}</CardTitle>
                         </CardHeader>
                         <CardContent>
                             <div class="flex items-center justify-between text-sm">
-                                <span>Összes javítás:</span>
+                                <span>{{ $t('users.show.totalRepairs') }}:</span>
                                 <span class="font-bold">{{ user.tickets?.length || 0 }}</span>
                             </div>
                         </CardContent>
@@ -129,8 +129,8 @@ const getRoleBadgeVariant = (role: string) => {
                     <Card v-if="!user.roles.includes('mechanic')">
                         <CardHeader class="flex flex-row items-center justify-between">
                             <div>
-                                <CardTitle>Regisztrált autók</CardTitle>
-                                <CardDescription>A felhasználóhoz rendelt járművek</CardDescription>
+                                <CardTitle>{{ $t('users.show.registeredCars') }}</CardTitle>
+                                <CardDescription>{{ $t('users.show.registeredCarsDescription') }}</CardDescription>
                             </div>
                             <Badge variant="outline">{{ user.cars?.length || 0 }}</Badge>
                         </CardHeader>
@@ -145,12 +145,12 @@ const getRoleBadgeVariant = (role: string) => {
                                         </div>
                                     </div>
                                     <Link :href="`/cars/${car.id}`">
-                                        <Button variant="ghost" size="sm">Részletek</Button>
+                                        <Button variant="ghost" size="sm">{{ $t('users.show.details') }}</Button>
                                     </Link>
                                 </div>
                             </div>
                             <p v-else class="text-sm text-muted-foreground italic text-center py-4">
-                                Nincsenek regisztrált autók.
+                                {{ $t('users.show.noCars') }}.
                             </p>
                         </CardContent>
                     </Card>
@@ -159,9 +159,9 @@ const getRoleBadgeVariant = (role: string) => {
                     <Card>
                         <CardHeader class="flex flex-row items-center justify-between">
                             <div>
-                                <CardTitle>Javítási jegyek</CardTitle>
+                                <CardTitle>{{ $t('users.show.repairTickets') }}</CardTitle>
                                 <CardDescription>
-                                    {{ user.roles.includes('mechanic') ? 'Hozzárendelt feladatok' : 'Saját kérések' }}
+                                    {{ user.roles.includes('mechanic') ? $t('users.show.assignedTasks') : $t('users.show.ownRequests') }}
                                 </CardDescription>
                             </div>
                             <Badge variant="outline">{{ user.tickets?.length || 0 }}</Badge>
@@ -172,17 +172,17 @@ const getRoleBadgeVariant = (role: string) => {
                                     <div class="flex items-center gap-3">
                                         <ClipboardList class="h-5 w-5 text-muted-foreground" />
                                         <div>
-                                            <p class="font-medium text-sm">#{{ ticket.id }} - {{ ticket.status }}</p>
+                                            <p class="font-medium text-sm">#{{ ticket.id }} - {{ $t(`tickets.status.${ticket.status}`) }}</p>
                                             <p class="text-xs text-muted-foreground">{{ formatDate(ticket.created_at) }}</p>
                                         </div>
                                     </div>
                                     <Link :href="`/tickets/${ticket.id}`">
-                                        <Button variant="ghost" size="sm">Megtekintés</Button>
+                                        <Button variant="ghost" size="sm">{{ $t('common.view') }}</Button>
                                     </Link>
                                 </div>
                             </div>
                             <p v-else class="text-sm text-muted-foreground italic text-center py-4">
-                                Nincsenek jegyek.
+                                {{ $t('users.show.noTickets') }}.
                             </p>
                         </CardContent>
                     </Card>

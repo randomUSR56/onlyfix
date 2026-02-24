@@ -201,7 +201,10 @@
       "monthlyRevenue": "Havi forgalom"
     },
     "recentUsers": "Legutóbbi felhasználók",
-    "systemStatus": "Rendszerállapot"
+    "recentUsersDescription": "Legutóbb regisztrált tagok",
+    "systemStatus": "Rendszerállapot",
+    "activeWorkflows": "Aktív munkafolyamat",
+    "completedRepairs": "Lezárt javítások"
   },
   "cars": {
     "pageTitle": "Autóim",
@@ -622,7 +625,24 @@
     },
     "empty": "Nem találhatók felhasználók a megadott feltételekkel.",
     "ticketsCount": "{count} jegy",
-    "carsCount": "{count} autó"
+    "carsCount": "{count} autó",
+    "show": {
+      "info": "Információk",
+      "registeredAt": "Regisztrálva",
+      "accountStatus": "Fiók állapota",
+      "verified": "Megerősítve",
+      "unverified": "Nincs megerősítve",
+      "professionalData": "Szakmai adatok",
+      "totalRepairs": "Összes javítás",
+      "registeredCars": "Regisztrált autók",
+      "registeredCarsDescription": "A felhasználóhoz rendelt járművek",
+      "noCars": "Nincsenek regisztrált autók",
+      "repairTickets": "Javítási jegyek",
+      "assignedTasks": "Hozzárendelt feladatok",
+      "ownRequests": "Saját kérések",
+      "noTickets": "Nincsenek jegyek",
+      "details": "Részletek"
+    }
   },
   "admin": {
     "ticket": {

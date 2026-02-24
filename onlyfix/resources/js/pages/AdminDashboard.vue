@@ -112,7 +112,7 @@ const formatDate = (dateString: string) => {
                     </CardHeader>
                     <CardContent>
                         <div class="text-2xl font-bold">{{ stats.in_progress_tickets }}</div>
-                        <p class="text-xs text-muted-foreground">Aktív munkafolyamat</p>
+                        <p class="text-xs text-muted-foreground">{{ $t('adminDashboard.activeWorkflows') }}</p>
                     </CardContent>
                 </Card>
                 <Card>
@@ -122,7 +122,7 @@ const formatDate = (dateString: string) => {
                     </CardHeader>
                     <CardContent>
                         <div class="text-2xl font-bold">{{ stats.completed_tickets }}</div>
-                        <p class="text-xs text-muted-foreground">Lezárt javítások</p>
+                        <p class="text-xs text-muted-foreground">{{ $t('adminDashboard.completedRepairs') }}</p>
                     </CardContent>
                 </Card>
             </div>
@@ -174,7 +174,7 @@ const formatDate = (dateString: string) => {
                     <CardHeader class="flex flex-row items-center justify-between">
                         <div>
                             <CardTitle>{{ $t('adminDashboard.recentUsers') }}</CardTitle>
-                            <CardDescription>Legutóbb regisztrált tagok</CardDescription>
+                            <CardDescription>{{ $t('adminDashboard.recentUsersDescription') }}</CardDescription>
                         </div>
                         <Link href="/users">
                             <Button variant="ghost" size="sm">
