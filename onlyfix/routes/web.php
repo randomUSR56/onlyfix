@@ -19,8 +19,36 @@ Route::middleware(['auth', 'verified'])->group(function () {
         /** @var \App\Models\User $user */
         $user = $request->user();
         
+        // Admin Dashboard
+        if ($user->hasRole('admin')) {
+            $stats = [
+                'total_users' => \App\Models\User::count(),
+                'total_mechanics' => \App\Models\User::role('mechanic')->count(),
+                'total_tickets' => Ticket::count(),
+                'open_tickets' => Ticket::where('status', 'open')->count(),
+                'in_progress_tickets' => Ticket::where('status', 'in_progress')->count(),
+                'completed_tickets' => Ticket::where('status', 'completed')->count(),
+            ];
+
+            $recentTickets = Ticket::with(['car', 'user'])
+                ->orderBy('created_at', 'desc')
+                ->take(5)
+                ->get();
+
+            $recentUsers = \App\Models\User::with('roles')
+                ->orderBy('created_at', 'desc')
+                ->take(6)
+                ->get();
+
+            return Inertia::render('AdminDashboard', [
+                'stats' => $stats,
+                'recentTickets' => $recentTickets,
+                'recentUsers' => $recentUsers,
+            ]);
+        }
+        
         // Mechanic Dashboard
-        if ($user->hasRole('mechanic') || $user->hasRole('admin')) {
+        if ($user->hasRole('mechanic')) {
             $stats = [
                 'available_tickets' => Ticket::where('status', 'open')
                     ->whereNull('mechanic_id')

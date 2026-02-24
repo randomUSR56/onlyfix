@@ -356,6 +356,39 @@
       "description": "Once you close this ticket, it will be marked as resolved. Are you satisfied with the service?"
     }
   },
+  "users": {
+    "pageTitle": "Users",
+    "title": "User Management",
+    "subtitle": "Manage system users and their permissions",
+    "addUser": "Add User",
+    "searchPlaceholder": "Search by name or email...",
+    "role": "Role",
+    "roles": {
+      "admin": "Administrator",
+      "mechanic": "Mechanic",
+      "user": "Customer"
+    },
+    "form": {
+      "name": "Name",
+      "email": "Email Address",
+      "password": "Password",
+      "passwordConfirmation": "Confirm Password",
+      "role": "Select Role"
+    },
+    "create": {
+      "title": "Create New User",
+      "submitButton": "Create User"
+    },
+    "edit": {
+      "title": "Edit User",
+      "submitButton": "Save Changes"
+    },
+    "delete": {
+      "title": "Delete User",
+      "description": "Are you sure you want to delete user {name}? This action cannot be undone."
+    },
+    "empty": "No users found matching your criteria."
+  },
   "settings": {
     "profile": {
       "pageTitle": "Profile settings",

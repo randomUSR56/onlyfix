@@ -17,13 +17,17 @@ import {
     Wrench, Info
 } from 'lucide-vue-next';
 import { computed } from 'vue';
+import { useAuth } from '@/composables/useAuth';
 
 const { t } = useI18n();
+const { isAdmin, isMechanic } = useAuth();
 
 const props = defineProps<{
     ticket: Ticket;
     cars: Car[];
     problems: Problem[];
+    users?: User[];
+    mechanics?: User[];
 }>();
 
 const breadcrumbs: BreadcrumbItem[] = [
@@ -55,12 +59,29 @@ props.ticket.problems?.forEach((p: Problem) => {
 });
 
 const form = useForm({
+    user_id: props.ticket.user_id,
+    mechanic_id: props.ticket.mechanic_id,
+    status: props.ticket.status,
     car_id: props.ticket.car_id,
     description: props.ticket.description,
     priority: props.ticket.priority as 'low' | 'medium' | 'high' | 'urgent',
     problem_ids: initialProblemIds,
     problem_notes: initialProblemNotes,
 });
+
+// Filter cars based on selected user if admin
+const filteredCars = computed(() => {
+    if (!isAdmin.value || !form.user_id) return props.cars;
+    return props.cars.filter(car => car.user_id === form.user_id);
+});
+
+const statusOptions = [
+    { value: 'open', label: t('tickets.status.open') },
+    { value: 'assigned', label: t('tickets.status.assigned') },
+    { value: 'in_progress', label: t('tickets.status.in_progress') },
+    { value: 'completed', label: t('tickets.status.completed') },
+    { value: 'closed', label: t('tickets.status.closed') },
+];
 
 const priorities = [
     { value: 'low', label: t('tickets.priority.low'), class: 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400' },
@@ -144,6 +165,65 @@ const submit = () => {
                 <div class="grid gap-6 lg:grid-cols-3">
                     <!-- Left Column - Main Form -->
                     <div class="lg:col-span-2 space-y-6">
+                        <!-- Admin Only: User Selection -->
+                        <Card v-if="isAdmin && users?.length">
+                            <CardHeader>
+                                <CardTitle>Ügyfél kiválasztása</CardTitle>
+                                <CardDescription>Kihez tartozik ez a javítási jegy?</CardDescription>
+                            </CardHeader>
+                            <CardContent>
+                                <select
+                                    v-model="form.user_id"
+                                    @change="form.car_id = null"
+                                    class="flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-sm transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
+                                >
+                                    <option v-for="user in users" :key="user.id" :value="user.id">
+                                        {{ user.name }} ({{ user.email }})
+                                    </option>
+                                </select>
+                                <InputError :message="form.errors.user_id" class="mt-2" />
+                            </CardContent>
+                        </Card>
+
+                        <!-- Admin & Mechanic: Status Update -->
+                        <Card v-if="isAdmin || isMechanic">
+                            <CardHeader>
+                                <CardTitle>{{ $t('tickets.status.label') }}</CardTitle>
+                                <CardDescription>A javítási folyamat állapota</CardDescription>
+                            </CardHeader>
+                            <CardContent>
+                                <select
+                                    v-model="form.status"
+                                    class="flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-sm transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
+                                >
+                                    <option v-for="option in statusOptions" :key="option.value" :value="option.value">
+                                        {{ option.label }}
+                                    </option>
+                                </select>
+                                <InputError :message="form.errors.status" class="mt-2" />
+                            </CardContent>
+                        </Card>
+
+                        <!-- Admin Only: Mechanic Assignment -->
+                        <Card v-if="isAdmin && mechanics?.length">
+                            <CardHeader>
+                                <CardTitle>Szerelő kijelölése</CardTitle>
+                                <CardDescription>Ki végzi a javítást?</CardDescription>
+                            </CardHeader>
+                            <CardContent>
+                                <select
+                                    v-model="form.mechanic_id"
+                                    class="flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-sm transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
+                                >
+                                    <option :value="null">Nincs kijelölt szerelő</option>
+                                    <option v-for="mech in mechanics" :key="mech.id" :value="mech.id">
+                                        {{ mech.name }}
+                                    </option>
+                                </select>
+                                <InputError :message="form.errors.mechanic_id" class="mt-2" />
+                            </CardContent>
+                        </Card>
+
                         <!-- Select Car -->
                         <Card>
                             <CardHeader>
@@ -160,7 +240,7 @@ const submit = () => {
                             <CardContent>
                                 <div class="grid gap-3 sm:grid-cols-2">
                                     <div
-                                        v-for="car in cars"
+                                        v-for="car in filteredCars"
                                         :key="car.id"
                                         class="relative flex items-center gap-3 p-4 rounded-lg border-2 cursor-pointer transition-all"
                                         :class="form.car_id === car.id 

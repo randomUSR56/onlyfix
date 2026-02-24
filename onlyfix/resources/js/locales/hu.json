@@ -189,6 +189,20 @@
     },
     "acceptTicket": "Elfogadás"
   },
+  "adminDashboard": {
+    "pageTitle": "Admin irányítópult",
+    "title": "Adminisztrátori vezérlőpult",
+    "welcome": "Üdvözöljük, Adminisztrátor!",
+    "subtitle": "Rendszerszintű áttekintés és kezelés.",
+    "stats": {
+      "totalUsers": "Összes felhasználó",
+      "activeMechanics": "Aktív szerelők",
+      "pendingTickets": "Függőben lévő jegyek",
+      "monthlyRevenue": "Havi forgalom"
+    },
+    "recentUsers": "Legutóbbi felhasználók",
+    "systemStatus": "Rendszerállapot"
+  },
   "cars": {
     "pageTitle": "Autóim",
     "title": "Autóim",
@@ -573,6 +587,52 @@
     "close": {
       "title": "Jegy lezárása",
       "description": "A jegy lezárásával azt megoldottnak jelöli. Elégedett a szolgáltatással?"
+    }
+  },
+  "users": {
+    "pageTitle": "Felhasználók",
+    "title": "Felhasználók kezelése",
+    "subtitle": "Rendszerfelhasználók és jogosultságok kezelése",
+    "addUser": "Új felhasználó",
+    "searchPlaceholder": "Keresés név vagy e-mail alapján...",
+    "role": "Szerepkör",
+    "roles": {
+      "admin": "Adminisztrátor",
+      "mechanic": "Szerelő",
+      "user": "Ügyfél"
+    },
+    "form": {
+      "name": "Név",
+      "email": "E-mail cím",
+      "password": "Jelszó",
+      "passwordConfirmation": "Jelszó megerősítése",
+      "role": "Szerepkör kiválasztása"
+    },
+    "create": {
+      "title": "Új felhasználó létrehozása",
+      "submitButton": "Felhasználó létrehozása"
+    },
+    "edit": {
+      "title": "Felhasználó szerkesztése",
+      "submitButton": "Változások mentése"
+    },
+    "delete": {
+      "title": "Felhasználó törlése",
+      "description": "Biztosan törölni szeretné {name} felhasználót? Ez a művelet nem vonható vissza."
+    },
+    "empty": "Nem találhatók felhasználók a megadott feltételekkel.",
+    "ticketsCount": "{count} jegy",
+    "carsCount": "{count} autó"
+  },
+  "admin": {
+    "ticket": {
+      "selectUser": "Ügyfél kiválasztása",
+      "selectUserDescription": "Kihez tartozik ez a javítási jegy?",
+      "selectUserPlaceholder": "Válasszon ügyfelet...",
+      "assignMechanic": "Szerelő kijelölése",
+      "assignMechanicDescription": "Ki fogja végezni a javítást?",
+      "assignMechanicPlaceholder": "Nincs kijelölt szerelő",
+      "statusDescription": "A javítási folyamat állapota"
     }
   },
   "settings": {

@@ -86,9 +86,21 @@ class TicketController extends Controller
         // Get active problems
         $problems = Problem::where('is_active', true)->get();
 
+        // Get all mechanics for admin
+        $mechanics = $user->hasRole('admin')
+            ? \App\Models\User::role('mechanic')->get()
+            : [];
+
+        // Get all users for admin
+        $users = $user->hasRole('admin')
+            ? \App\Models\User::role('user')->get()
+            : [];
+
         return Inertia::render('Tickets/Create', [
             'cars' => $cars,
             'problems' => $problems,
+            'mechanics' => $mechanics,
+            'users' => $users,
         ]);
     }
 
@@ -104,7 +116,7 @@ class TicketController extends Controller
             abort(403, 'Mechanics cannot create tickets');
         }
 
-        $validated = $request->validate([
+        $rules = [
             'car_id' => 'required|exists:cars,id',
             'description' => 'required|string',
             'priority' => 'sometimes|in:low,medium,high,urgent',
@@ -112,24 +124,42 @@ class TicketController extends Controller
             'problem_ids.*' => 'exists:problems,id',
             'problem_notes' => 'sometimes|array',
             'problem_notes.*' => 'nullable|string',
-        ]);
+        ];
 
-        // Verify the car belongs to the user
+        // Admins can assign user and mechanic
+        if ($user->hasRole('admin')) {
+            $rules['user_id'] = 'sometimes|exists:users,id';
+            $rules['mechanic_id'] = 'sometimes|nullable|exists:users,id';
+        }
+
+        $validated = $request->validate($rules);
+
+        // Verify the car belongs to the user (unless admin specifies a user_id for that car)
         $car = Car::findOrFail($validated['car_id']);
-        if ($car->user_id !== $user->id && ! $user->hasRole('admin')) {
+        $targetUserId = $validated['user_id'] ?? $user->id;
+
+        if ($car->user_id !== (int)$targetUserId && ! $user->hasRole('admin')) {
             return back()->withErrors([
                 'car_id' => 'You can only create tickets for your own cars',
             ])->withInput();
         }
 
         // Create ticket
-        $ticket = Ticket::create([
-            'user_id' => $request->user()->id,
+        $ticketData = [
+            'user_id' => $targetUserId,
             'car_id' => $validated['car_id'],
             'description' => $validated['description'],
             'priority' => $validated['priority'] ?? 'medium',
             'status' => 'open',
-        ]);
+        ];
+
+        if (isset($validated['mechanic_id'])) {
+            $ticketData['mechanic_id'] = $validated['mechanic_id'];
+            $ticketData['status'] = 'assigned';
+            $ticketData['accepted_at'] = now();
+        }
+
+        $ticket = Ticket::create($ticketData);
 
         // Attach problems with optional notes
         $problemData = [];
@@ -192,10 +222,22 @@ class TicketController extends Controller
         // Get active problems
         $problems = Problem::where('is_active', true)->get();
 
+        // Get all mechanics for admin
+        $mechanics = $user->hasRole('admin')
+            ? \App\Models\User::role('mechanic')->get()
+            : [];
+
+        // Get all users for admin
+        $users = $user->hasRole('admin')
+            ? \App\Models\User::role('user')->get()
+            : [];
+
         return Inertia::render('Tickets/Edit', [
             'ticket' => $ticket->load(['user', 'mechanic', 'car', 'problems']),
             'cars' => $cars,
             'problems' => $problems,
+            'mechanics' => $mechanics,
+            'users' => $users,
         ]);
     }
 
@@ -211,7 +253,7 @@ class TicketController extends Controller
             abort(403, 'Unauthorized');
         }
 
-        $validated = $request->validate([
+        $rules = [
             'description' => 'sometimes|string',
             'priority' => 'sometimes|in:low,medium,high,urgent',
             'status' => 'sometimes|in:open,assigned,in_progress,completed,closed',
@@ -219,7 +261,15 @@ class TicketController extends Controller
             'problem_ids.*' => 'exists:problems,id',
             'problem_notes' => 'sometimes|array',
             'problem_notes.*' => 'nullable|string',
-        ]);
+        ];
+
+        // Admins can update user and mechanic
+        if ($user->hasRole('admin')) {
+            $rules['user_id'] = 'sometimes|exists:users,id';
+            $rules['mechanic_id'] = 'sometimes|nullable|exists:users,id';
+        }
+
+        $validated = $request->validate($rules);
 
         // Regular users can only update their own open tickets
         if (! $user->hasAnyRole(['mechanic', 'admin'])) {
@@ -237,6 +287,14 @@ class TicketController extends Controller
 
         // Track status change for notification
         $oldStatus = $ticket->status;
+
+        // Handle mechanic assignment change
+        if (isset($validated['mechanic_id']) && $validated['mechanic_id'] != $ticket->mechanic_id) {
+            if (empty($validated['status']) || $validated['status'] === 'open') {
+                $validated['status'] = 'assigned';
+                $ticket->accepted_at = now();
+            }
+        }
 
         // Update basic fields
         $ticket->update(array_diff_key($validated, array_flip(['problem_ids', 'problem_notes'])));
@@ -257,6 +315,10 @@ class TicketController extends Controller
             }
             $ticket->problems()->sync($problemData);
         }
+
+        return redirect()->route('tickets.show', $ticket)
+            ->with('success', 'Ticket updated successfully');
+    }
 
         return redirect()->route('tickets.show', $ticket)
             ->with('success', 'Ticket updated successfully');

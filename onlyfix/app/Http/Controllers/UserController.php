@@ -20,7 +20,8 @@ class UserController extends Controller
             abort(403, 'Unauthorized');
         }
 
-        $query = User::with('roles');
+        $query = User::with('roles')
+            ->withCount(['cars', 'assignedTickets as tickets_count']);
 
         // Filter by role
         if ($request->has('role')) {

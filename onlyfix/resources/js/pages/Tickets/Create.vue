@@ -19,12 +19,16 @@ import {
     AlertTriangle, Wrench, Plus, Info
 } from 'lucide-vue-next';
 import { ref, computed, onMounted } from 'vue';
+import { useAuth } from '@/composables/useAuth';
 
 const { t } = useI18n();
+const { isAdmin } = useAuth();
 
 const props = defineProps<{
     cars: Car[];
     problems: Problem[];
+    users?: User[];
+    mechanics?: User[];
     preselectedCarId?: number;
 }>();
 
@@ -44,11 +48,19 @@ const breadcrumbs: BreadcrumbItem[] = [
 ];
 
 const form = useForm({
+    user_id: null as number | null,
     car_id: props.preselectedCarId || null as number | null,
+    mechanic_id: null as number | null,
     description: '',
     priority: 'medium' as 'low' | 'medium' | 'high' | 'urgent',
     problem_ids: [] as number[],
     problem_notes: {} as Record<number, string>,
+});
+
+// Filter cars based on selected user if admin
+const filteredCars = computed(() => {
+    if (!isAdmin.value || !form.user_id) return props.cars;
+    return props.cars.filter(car => car.user_id === form.user_id);
 });
 
 const priorities = [
@@ -161,6 +173,47 @@ onMounted(() => {
                 <div class="grid gap-6 lg:grid-cols-3">
                     <!-- Left Column - Main Form -->
                     <div class="lg:col-span-2 space-y-6">
+                        <!-- Admin Only: User Selection -->
+                        <Card v-if="isAdmin && users?.length">
+                            <CardHeader>
+                                <CardTitle>Ügyfél kiválasztása</CardTitle>
+                                <CardDescription>Kihez tartozik ez a javítási jegy?</CardDescription>
+                            </CardHeader>
+                            <CardContent>
+                                <select
+                                    v-model="form.user_id"
+                                    @change="form.car_id = null"
+                                    class="flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-sm transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
+                                >
+                                    <option :value="null">Válasszon ügyfelet...</option>
+                                    <option v-for="user in users" :key="user.id" :value="user.id">
+                                        {{ user.name }} ({{ user.email }})
+                                    </option>
+                                </select>
+                                <InputError :message="form.errors.user_id" class="mt-2" />
+                            </CardContent>
+                        </Card>
+
+                        <!-- Admin Only: Mechanic Assignment -->
+                        <Card v-if="isAdmin && mechanics?.length">
+                            <CardHeader>
+                                <CardTitle>Szerelő kijelölése</CardTitle>
+                                <CardDescription>Ki fogja végezni a javítást? (Választható)</CardDescription>
+                            </CardHeader>
+                            <CardContent>
+                                <select
+                                    v-model="form.mechanic_id"
+                                    class="flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-sm transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
+                                >
+                                    <option :value="null">Nincs kijelölt szerelő</option>
+                                    <option v-for="mech in mechanics" :key="mech.id" :value="mech.id">
+                                        {{ mech.name }}
+                                    </option>
+                                </select>
+                                <InputError :message="form.errors.mechanic_id" class="mt-2" />
+                            </CardContent>
+                        </Card>
+
                         <!-- Select Car -->
                         <Card>
                             <CardHeader>
@@ -177,7 +230,7 @@ onMounted(() => {
                             <CardContent>
                                 <div class="grid gap-3 sm:grid-cols-2">
                                     <div
-                                        v-for="car in cars"
+                                        v-for="car in filteredCars"
                                         :key="car.id"
                                         class="relative flex items-center gap-3 p-4 rounded-lg border-2 cursor-pointer transition-all"
                                         :class="form.car_id === car.id 

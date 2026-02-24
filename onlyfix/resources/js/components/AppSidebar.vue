@@ -16,7 +16,7 @@ import * as carsRoutes from '@/routes/cars';
 import * as ticketsRoutes from '@/routes/tickets';
 import { type NavItem } from '@/types';
 import { Link, usePage } from '@inertiajs/vue3';
-import { LayoutGrid, Car, Ticket, Settings, HelpCircle, Wrench, Inbox } from 'lucide-vue-next';
+import { LayoutGrid, Car, Ticket, Settings, HelpCircle, Wrench, Inbox, Users as UsersIcon } from 'lucide-vue-next';
 import AppLogo from './AppLogo.vue';
 import { useI18n } from 'vue-i18n';
 import { computed } from 'vue';
@@ -67,10 +67,34 @@ const mechanicNavItems = computed<NavItem[]>(() => [
     },
 ]);
 
-// Use mechanic nav items if user is mechanic or admin
-const mainNavItems = computed(() => 
-    isMechanic.value || isAdmin.value ? mechanicNavItems.value : userNavItems.value
-);
+// Navigation items for admins
+const adminNavItems = computed<NavItem[]>(() => [
+    {
+        title: t('nav.dashboard'),
+        href: dashboard(),
+        icon: LayoutGrid,
+        isActive: currentUrl.value === '/dashboard',
+    },
+    {
+        title: t('nav.allTickets'),
+        href: ticketsRoutes.index(),
+        icon: Inbox,
+        isActive: currentUrl.value.startsWith('/tickets'),
+    },
+    {
+        title: t('users.pageTitle'),
+        href: '/users',
+        icon: UsersIcon,
+        isActive: currentUrl.value.startsWith('/users'),
+    },
+]);
+
+// Use appropriate nav items based on role
+const mainNavItems = computed(() => {
+    if (isAdmin.value) return adminNavItems.value;
+    if (isMechanic.value) return mechanicNavItems.value;
+    return userNavItems.value;
+});
 
 const footerNavItems = computed<NavItem[]>(() => [
     {
