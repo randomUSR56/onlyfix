@@ -124,9 +124,9 @@ ps: ## List running containers
 install: ## Install Composer and NPM dependencies
 	@echo Installing Composer dependencies...
 	@$(DOCKER_COMPOSE) exec app composer install
-	@echo Restarting node container to install NPM dependencies...
+	@echo "Starting NPM install in node container (this may take a minute)..."
 	@$(DOCKER_COMPOSE) restart node
-	@echo Dependencies installed
+	@echo "Dependencies setup started. Note: Vite dev server will be ready after NPM install finishes."
 
 key: ## Generate Laravel app key
 	@$(DOCKER_COMPOSE) exec app php artisan key:generate
@@ -194,8 +194,7 @@ endif
 	@$(MAKE) start
 	@$(MAKE) install
 	@$(MAKE) key
-	@$(MAKE) migrate
-	@$(MAKE) seed
+	@$(MAKE) fresh
 	@$(MAKE) storage
 	@echo "Generating Wayfinder routes..."
 	@$(DOCKER_COMPOSE) exec app php artisan wayfinder:generate --with-form

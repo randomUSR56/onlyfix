@@ -55,10 +55,21 @@ class DatabaseSeeder extends Seeder
         );
         $user->assignRole('user');
 
-        // Create additional regular users
-        User::factory()->count(10)->create()->each(function ($user) {
-            $user->assignRole('user');
-        });
+        // Create additional regular users if they don't exist
+        for ($i = 1; $i <= 10; $i++) {
+            $email = "user{$i}@example.com";
+            $u = User::firstOrCreate(
+                ['email' => $email],
+                [
+                    'name' => "Regular User {$i}",
+                    'password' => 'password',
+                    'email_verified_at' => now()
+                ]
+            );
+            if (!$u->hasRole('user')) {
+                $u->assignRole('user');
+            }
+        }
 
         $this->command->info('✅ Users created successfully!');
 
