@@ -320,10 +320,6 @@ class TicketController extends Controller
             ->with('success', 'Ticket updated successfully');
     }
 
-        return redirect()->route('tickets.show', $ticket)
-            ->with('success', 'Ticket updated successfully');
-    }
-
     /**
      * Remove the specified ticket.
      */
