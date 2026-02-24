@@ -3,7 +3,8 @@ import AppLayout from '@/layouts/AppLayout.vue';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { type BreadcrumbItem, type Ticket, type User } from '@/types';
+import { type BreadcrumbItem } from '@/types';
+import { type Ticket, type User } from '@/types/models';
 import { Head, Link } from '@inertiajs/vue3';
 import { useI18n } from 'vue-i18n';
 import { 
