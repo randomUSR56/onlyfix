@@ -2,9 +2,6 @@
 
 An open source project under MIT license where we perform CRUD operations about issues that a user experiences with their vehicle (ticket-style). The project is accessible on all major platforms such as mobile, desktop and web. A longer and more detailed description can be found in the repository's README.md file.
 
-# Admin
-Az onlyfix szoftvercsomag tartalmaz egy adminisztrátori segédprogramot is amely elérhető a következő GitHub hivatkozáson: https://github.com/randomUSR56/Admin
-
 ## Technológiai Stack
 
 ### Backend
