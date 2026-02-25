@@ -140,11 +140,11 @@ const formatDate = (dateString: string) => {
                                     <div class="flex gap-1 flex-wrap">
                                         <Badge 
                                             v-for="role in user.roles" 
-                                            :key="role" 
-                                            :variant="getRoleBadgeVariant(role)"
+                                            :key="typeof role === 'string' ? role : (role as any).name" 
+                                            :variant="getRoleBadgeVariant(typeof role === 'string' ? role : (role as any).name)"
                                             class="text-[10px] px-1.5 py-0"
                                         >
-                                            {{ $t(`users.roles.${role}`) }}
+                                            {{ typeof role === 'string' ? $t(`users.roles.${role}`) : $t(`users.roles.${(role as any).name}`) }}
                                         </Badge>
                                     </div>
                                 </div>

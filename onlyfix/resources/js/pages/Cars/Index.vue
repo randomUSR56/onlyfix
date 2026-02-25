@@ -102,7 +102,9 @@ const formatDate = (dateString: string) => {
             <!-- Header -->
             <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
                 <div>
-                    <h1 class="text-2xl font-bold tracking-tight">{{ $t('cars.title') }}</h1>
+                    <h1 class="text-2xl font-bold tracking-tight">
+                        {{ isAdmin || isMechanic ? $t('cars.allVehicles') : $t('cars.title') }}
+                    </h1>
                     <p class="text-muted-foreground">{{ $t('cars.subtitle') }}</p>
                 </div>
                 <Link v-if="canCreateCar" :href="carsRoutes.create().url">

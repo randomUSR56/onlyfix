@@ -92,7 +92,7 @@ const formatDate = (dateString: string) => {
                     </CardHeader>
                     <CardContent>
                         <div class="text-2xl font-bold">{{ stats.total_users }}</div>
-                        <p class="text-xs text-muted-foreground">{{ stats.total_mechanics }} {{ $t('users.roles.mechanic').toLowerCase() }}</p>
+                        <p class="text-xs text-muted-foreground">{{ stats.total_mechanics }} {{ $t('users.roles.mechanic') }}</p>
                     </CardContent>
                 </Card>
                 <Card>
@@ -193,7 +193,7 @@ const formatDate = (dateString: string) => {
                                     <p class="text-xs text-muted-foreground truncate">{{ user.email }}</p>
                                 </div>
                                 <Badge variant="outline" class="text-[10px]">
-                                    {{ $t(`users.roles.${user.roles[0] || 'user'}`) }}
+                                    {{ typeof user.roles[0] === 'string' ? $t(`users.roles.${user.roles[0]}`) : $t('users.roles.user') }}
                                 </Badge>
                             </div>
                         </div>

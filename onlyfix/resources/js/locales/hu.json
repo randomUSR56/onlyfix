@@ -217,6 +217,7 @@
     "vin": "Alvázszám",
     "registered": "Regisztrálva",
     "serviceHistory": "szervizjegy",
+    "allVehicles": "Összes jármű",
     "empty": {
       "title": "Nincsenek regisztrált autók",
       "description": "Adja hozzá első autóját szervizjegyek létrehozásához"

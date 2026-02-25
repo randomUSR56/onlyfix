@@ -347,8 +347,9 @@ class TicketController extends Controller
     {
         $user = $request->user();
 
-        if (! $user->hasAnyRole(['mechanic', 'admin'])) {
-            abort(403, 'Unauthorized');
+        // ONLY mechanics can accept tickets (as per new requirement)
+        if (! $user->hasRole('mechanic')) {
+            abort(403, 'Only mechanics can accept tickets');
         }
 
         if ($ticket->status !== 'open') {

@@ -189,6 +189,23 @@
     },
     "acceptTicket": "Accept"
   },
+  "adminDashboard": {
+    "pageTitle": "Admin Dashboard",
+    "title": "Administrator Control Panel",
+    "welcome": "Welcome, Administrator!",
+    "subtitle": "System-wide overview and management.",
+    "stats": {
+      "totalUsers": "Total Users",
+      "activeMechanics": "Active Mechanics",
+      "pendingTickets": "Pending Tickets",
+      "monthlyRevenue": "Monthly Revenue"
+    },
+    "recentUsers": "Recent Users",
+    "recentUsersDescription": "Latest registered members",
+    "systemStatus": "System Status",
+    "activeWorkflows": "Active Workflows",
+    "completedRepairs": "Completed Repairs"
+  },
   "cars": {
     "pageTitle": "My Cars",
     "title": "My Cars",
@@ -200,6 +217,7 @@
     "vin": "VIN",
     "registered": "Registered",
     "serviceHistory": "service tickets",
+    "allVehicles": "All Vehicles",
     "empty": {
       "title": "No cars registered",
       "description": "Add your first car to start creating service tickets"
@@ -387,7 +405,37 @@
       "title": "Delete User",
       "description": "Are you sure you want to delete user {name}? This action cannot be undone."
     },
-    "empty": "No users found matching your criteria."
+    "empty": "No users found matching your criteria.",
+    "ticketsCount": "{count} ticket | {count} tickets",
+    "carsCount": "{count} car | {count} cars",
+    "show": {
+      "info": "Information",
+      "registeredAt": "Registered at",
+      "accountStatus": "Account Status",
+      "verified": "Verified",
+      "unverified": "Unverified",
+      "professionalData": "Professional Data",
+      "totalRepairs": "Total Repairs",
+      "registeredCars": "Registered Cars",
+      "registeredCarsDescription": "Vehicles assigned to this user",
+      "noCars": "No registered cars",
+      "repairTickets": "Repair Tickets",
+      "assignedTasks": "Assigned Tasks",
+      "ownRequests": "Own Requests",
+      "noTickets": "No tickets found",
+      "details": "Details"
+    }
+  },
+  "admin": {
+    "ticket": {
+      "selectUser": "Select Customer",
+      "selectUserDescription": "Who does this repair ticket belong to?",
+      "selectUserPlaceholder": "Choose a customer...",
+      "assignMechanic": "Assign Mechanic",
+      "assignMechanicDescription": "Who will perform the repair?",
+      "assignMechanicPlaceholder": "No mechanic assigned",
+      "statusDescription": "The status of the repair process"
+    }
   },
   "settings": {
     "profile": {

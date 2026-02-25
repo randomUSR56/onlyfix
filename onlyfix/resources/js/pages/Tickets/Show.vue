@@ -86,7 +86,7 @@ const completeTicket = () => {
 
 // Mechanic action permissions
 const canAcceptTicket = computed(() => 
-    (isMechanic.value || isAdmin.value) && props.ticket.status === 'open'
+    isMechanic.value && props.ticket.status === 'open'
 );
 
 const canStartWork = computed(() => 
