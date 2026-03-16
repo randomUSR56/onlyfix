@@ -11,10 +11,10 @@ beforeEach(function () {
 });
 
 describe('Web Routes - Public', function () {
-    test('welcome page is accessible', function () {
+    test('welcome page redirects to login', function () {
         $response = $this->get('/');
 
-        $response->assertStatus(200);
+        $response->assertRedirect('/login');
     });
 
     test('dashboard requires authentication', function () {
