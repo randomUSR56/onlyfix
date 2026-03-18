@@ -8,7 +8,7 @@ import { type BreadcrumbItem } from '@/types';
 import { type User, type PaginatedData } from '@/types/models';
 import { Head, Link, router } from '@inertiajs/vue3';
 import { useI18n } from 'vue-i18n';
-import { ref, watch } from 'vue';
+import { ref, watch, onUnmounted } from 'vue';
 import { UserPlus, Search, Mail, Shield, User as UserIcon, MoreHorizontal, Edit, Trash2 } from 'lucide-vue-next';
 import {
     DropdownMenu,
@@ -37,6 +37,10 @@ const breadcrumbs: BreadcrumbItem[] = [
 const search = ref(props.filters.search || '');
 const roleFilter = ref(props.filters.role || '');
 
+const getRoleName = (role: string | { name: string }) => {
+    return typeof role === 'string' ? role : role.name;
+};
+
 const getRoleBadgeVariant = (role: string) => {
     const variants: Record<string, 'default' | 'secondary' | 'destructive' | 'outline'> = {
         admin: 'destructive',
@@ -56,18 +60,27 @@ const updateFilters = () => {
     });
 };
 
+let searchTimer: ReturnType<typeof setTimeout> | null = null;
+
 watch([search, roleFilter], () => {
-    // Debounce search
-    const timer = setTimeout(() => {
+    if (searchTimer) clearTimeout(searchTimer);
+    searchTimer = setTimeout(() => {
         updateFilters();
     }, 300);
-    return () => clearTimeout(timer);
+});
+
+onUnmounted(() => {
+    if (searchTimer) clearTimeout(searchTimer);
 });
 
 const deleteUser = (user: User) => {
     if (confirm(t('users.delete.description', { name: user.name }))) {
         router.delete(`/users/${user.id}`);
     }
+};
+
+const decodePaginationLabel = (label: string) => {
+    return label.replace(/&laquo;/g, '\u00AB').replace(/&raquo;/g, '\u00BB').replace(/&amp;/g, '&');
 };
 
 const formatDate = (dateString: string) => {
@@ -219,13 +232,13 @@ const formatDate = (dateString: string) => {
                                 </div>
                                 <div class="flex items-center justify-between pt-2 border-t text-sm">
                                     <div class="flex gap-1">
-                                        <Badge 
-                                            v-for="role in user.roles" 
-                                            :key="role" 
-                                            :variant="getRoleBadgeVariant(role)"
+                                        <Badge
+                                            v-for="role in user.roles"
+                                            :key="getRoleName(role)"
+                                            :variant="getRoleBadgeVariant(getRoleName(role))"
                                             class="text-[10px]"
                                         >
-                                            {{ $t(`users.roles.${role}`) }}
+                                            {{ $t(`users.roles.${getRoleName(role)}`) }}
                                         </Badge>
                                     </div>
                                     <span class="text-muted-foreground">
@@ -240,15 +253,16 @@ const formatDate = (dateString: string) => {
 
                         <!-- Pagination -->
                         <div v-if="users.last_page > 1" class="flex items-center justify-center gap-2 mt-6">
-                            <Button 
-                                v-for="link in users.links" 
+                            <Button
+                                v-for="link in users.links"
                                 :key="link.label"
                                 :variant="link.active ? 'default' : 'outline'"
                                 size="sm"
                                 :disabled="!link.url"
                                 @click="link.url && router.get(link.url)"
-                                v-html="link.label"
-                            />
+                            >
+                                {{ decodePaginationLabel(link.label) }}
+                            </Button>
                         </div>
                     </div>
 
