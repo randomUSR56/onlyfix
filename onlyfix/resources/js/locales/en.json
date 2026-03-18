@@ -36,7 +36,8 @@
     "myCars": "My Cars",
     "myTickets": "My Tickets",
     "allTickets": "All Tickets",
-    "help": "Help & Support"
+    "help": "Help & Support",
+    "platform": "Platform"
   },
   "welcome": {
     "pageTitle": "Welcome",
@@ -438,7 +439,10 @@
     }
   },
   "settings": {
+    "title": "Settings",
+    "description": "Manage your profile and account settings",
     "profile": {
+      "label": "Profile",
       "pageTitle": "Profile settings",
       "breadcrumb": "Profile settings",
       "title": "Profile information",
@@ -454,6 +458,7 @@
       "saved": "Saved."
     },
     "password": {
+      "label": "Password",
       "pageTitle": "Password settings",
       "breadcrumb": "Password settings",
       "title": "Update password",
@@ -468,12 +473,14 @@
       "saved": "Saved."
     },
     "appearance": {
+      "label": "Appearance",
       "pageTitle": "Appearance settings",
       "breadcrumb": "Appearance settings",
       "title": "Appearance settings",
       "description": "Update your account's appearance settings"
     },
     "twoFactor": {
+      "label": "Two-Factor Auth",
       "pageTitle": "Two-factor authentication",
       "breadcrumb": "Two-factor authentication",
       "title": "Two-factor authentication",
@@ -507,5 +514,10 @@
     "quickTicket": "Quick ticket creation for car issues",
     "realTimeUpdates": "Real-time repair status updates",
     "directCommunication": "Direct communication with mechanics"
+  },
+  "appearance": {
+    "light": "Light",
+    "dark": "Dark",
+    "system": "System"
   }
 }

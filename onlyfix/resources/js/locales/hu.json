@@ -36,7 +36,8 @@
     "myCars": "Autóim",
     "myTickets": "Jegyeim",
     "allTickets": "Összes jegy",
-    "help": "Súgó és támogatás"
+    "help": "Súgó és támogatás",
+    "platform": "Platform"
   },
   "welcome": {
     "pageTitle": "Üdvözöljük",
@@ -657,7 +658,10 @@
     }
   },
   "settings": {
+    "title": "Beállítások",
+    "description": "Profilod és fiókbeállításaid kezelése",
     "profile": {
+      "label": "Profil",
       "pageTitle": "Profil beállítások",
       "breadcrumb": "Profil beállítások",
       "title": "Profil információk",
@@ -673,6 +677,7 @@
       "saved": "Mentve."
     },
     "password": {
+      "label": "Jelszó",
       "pageTitle": "Jelszó beállítások",
       "breadcrumb": "Jelszó beállítások",
       "title": "Jelszó frissítése",
@@ -687,12 +692,14 @@
       "saved": "Mentve."
     },
     "appearance": {
+      "label": "Megjelenés",
       "pageTitle": "Megjelenés beállítások",
       "breadcrumb": "Megjelenés beállítások",
       "title": "Megjelenés beállítások",
       "description": "Frissítse fiókja megjelenési beállításait"
     },
     "twoFactor": {
+      "label": "Kétlépcsős hitelesítés",
       "pageTitle": "Kétfaktoros hitelesítés",
       "breadcrumb": "Kétfaktoros hitelesítés",
       "title": "Kétfaktoros hitelesítés",
@@ -726,5 +733,10 @@
     "quickTicket": "Gyors jegylétrehozás autóproblémákhoz",
     "realTimeUpdates": "Valós idejű javítási állapotfrissítések",
     "directCommunication": "Közvetlen kommunikáció a szerelőkkel"
+  },
+  "appearance": {
+    "light": "Világos",
+    "dark": "Sötét",
+    "system": "Rendszer"
   }
 }

@@ -18,19 +18,19 @@ const currentPath = computed(() => page.url);
 
 const sidebarNavItems: NavItem[] = [
     {
-        title: t('settings.profile'),
+        title: t('settings.profile.label'),
         href: editProfile(),
     },
     {
-        title: t('settings.password'),
+        title: t('settings.password.label'),
         href: editPassword(),
     },
     {
-        title: t('settings.twoFactor'),
+        title: t('settings.twoFactor.label'),
         href: show(),
     },
     {
-        title: t('settings.appearance'),
+        title: t('settings.appearance.label'),
         href: editAppearance(),
     },
 ];
