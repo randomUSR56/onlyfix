@@ -1,4 +1,4 @@
-.PHONY: help setup start stop restart down logs ps build install key migrate seed fresh storage cache-clear shell shell-node tinker test init clean prune hosts queue-listen queue-work queue-restart check-docker
+.PHONY: help setup start stop restart down logs ps build install key migrate seed fresh storage cache-clear shell shell-node tinker test init clean prune hosts queue-listen queue-work queue-restart check-docker boost
 
 PROJECT_NAME := onlyfix
 COMPOSE_FILE := docker-compose.yml
@@ -59,6 +59,7 @@ help: ## Show this help
 	@echo "  tinker         Open Laravel Tinker"
 	@echo "  test           Run tests"
 	@echo "  init           Complete project initialization"
+	@echo "  boost          Install/refresh Laravel Boost MCP inside the app container"
 	@echo "  clean          Remove containers and volumes"
 	@echo "  prune          Docker system prune"
 
@@ -213,6 +214,16 @@ endif
 	@echo "   Mechanic: mechanic@example.com / password"
 	@echo "   User:     test@example.com / password"
 	@echo ""
+	@$(MAKE) boost
+
+##@ Boost
+
+boost: ## Install/refresh Laravel Boost MCP inside the app container
+	@echo "Installing Laravel Boost MCP..."
+	@$(DOCKER_COMPOSE) exec app php artisan boost:install
+	@echo ""
+	@echo "✅ Boost installed. MCP server config: .vscode/mcp.json"
+	@echo "   Reload VS Code (Developer: Reload Window) to activate."
 
 ##@ Cleanup
 

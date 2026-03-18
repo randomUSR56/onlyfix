@@ -203,3 +203,14 @@ Then reload VS Code: `Ctrl+Shift+P` → "Developer: Reload Window"
 - **MySQL:** `docker/logs/mysql/`
 - **Laravel:** `onlyfix/storage/logs/`
 - **Container:** `docker-compose logs -f <service>`
+
+---
+
+## Laravel Boost / MCP Integration
+
+Laravel Boost's MCP server requires special setup in a Dockerized environment.
+The default `boost:install` flow breaks because the DB hostname `db` only resolves
+inside the Docker network.
+
+See **`BOOST_DOCKER.md`** for the full explanation, correct setup steps, and
+suggested improvements.
