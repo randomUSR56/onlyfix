@@ -16,7 +16,7 @@ const uniqueErrors = computed(() => Array.from(new Set(props.errors)));
 </script>
 
 <template>
-    <Alert variant="destructive">
+    <Alert v-if="uniqueErrors.length" variant="destructive">
         <AlertCircle class="size-4" />
         <AlertTitle>{{ title }}</AlertTitle>
         <AlertDescription>

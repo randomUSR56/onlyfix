@@ -5,9 +5,6 @@ import AuthHeroSection from '@/components/brand/AuthHeroSection.vue';
 import LanguageSwitcher from '@/components/LanguageSwitcher.vue';
 import { home } from '@/routes';
 import { Link } from '@inertiajs/vue3';
-import { useI18n } from 'vue-i18n';
-
-const { t } = useI18n();
 
 interface Props {
     title: string;

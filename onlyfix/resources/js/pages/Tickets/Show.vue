@@ -12,10 +12,10 @@ import type { Ticket, Problem } from '@/types/models';
 import { Head, Link, router } from '@inertiajs/vue3';
 import { useI18n } from 'vue-i18n';
 import { useAuth } from '@/composables/useAuth';
-import { 
+import {
     Ticket as TicketIcon, ArrowLeft, Edit, Trash2, Car as CarIcon,
-    Clock, CheckCircle2, AlertCircle, Wrench, User, Calendar,
-    MessageSquare, XCircle, Play, UserPlus
+    Clock, CheckCircle2, AlertCircle, Wrench, User,
+    MessageSquare, Play, UserPlus
 } from 'lucide-vue-next';
 import { ref, computed } from 'vue';
 import {
@@ -187,7 +187,7 @@ const statusTimeline = computed(() => {
         timeline.push({
             status: 'in_progress',
             label: t('tickets.timeline.inProgress'),
-            date: props.ticket.accepted_at,
+            date: props.ticket.updated_at,
             icon: Wrench,
             completed: true,
         });
