@@ -12,7 +12,7 @@ import { Head, Link, router } from '@inertiajs/vue3';
 import { useI18n } from 'vue-i18n';
 import { useAuth } from '@/composables/useAuth';
 import { Car as CarIcon, Plus, Search, Edit, Trash2, Eye, MoreHorizontal, Ticket } from 'lucide-vue-next';
-import { ref, watch, computed } from 'vue';
+import { ref, watch, computed, onUnmounted } from 'vue';
 import {
     DropdownMenu,
     DropdownMenuContent,
@@ -57,9 +57,9 @@ const deleteDialogOpen = ref(false);
 const carToDelete = ref<Car | null>(null);
 
 // Debounced search
-let searchTimeout: ReturnType<typeof setTimeout>;
+let searchTimeout: ReturnType<typeof setTimeout> | null = null;
 watch(searchQuery, (value) => {
-    clearTimeout(searchTimeout);
+    if (searchTimeout) clearTimeout(searchTimeout);
     searchTimeout = setTimeout(() => {
         router.get(carsRoutes.index().url, { search: value || undefined }, {
             preserveState: true,
@@ -67,6 +67,10 @@ watch(searchQuery, (value) => {
             replace: true,
         });
     }, 300);
+});
+
+onUnmounted(() => {
+    if (searchTimeout) clearTimeout(searchTimeout);
 });
 
 const confirmDelete = (car: Car) => {
@@ -83,6 +87,10 @@ const deleteCar = () => {
             },
         });
     }
+};
+
+const decodePaginationLabel = (label: string) => {
+    return label.replace(/&laquo;/g, '\u00AB').replace(/&raquo;/g, '\u00BB').replace(/&amp;/g, '&');
 };
 
 const formatDate = (dateString: string) => {
@@ -231,8 +239,9 @@ const formatDate = (dateString: string) => {
                     :disabled="!link.url || link.active"
                     :class="{ 'bg-primary text-primary-foreground': link.active }"
                     @click="link.url && router.get(link.url)"
-                    v-html="link.label"
-                />
+                >
+                    {{ decodePaginationLabel(link.label) }}
+                </Button>
             </div>
         </div>
 

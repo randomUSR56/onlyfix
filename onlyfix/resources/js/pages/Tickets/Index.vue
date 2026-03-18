@@ -15,7 +15,7 @@ import {
     Ticket as TicketIcon, Plus, Search, Eye, MoreHorizontal, Filter,
     Clock, CheckCircle2, AlertCircle, Wrench, Car as CarIcon, X, UserPlus
 } from 'lucide-vue-next';
-import { ref, watch, computed } from 'vue';
+import { ref, watch, computed, onUnmounted } from 'vue';
 import {
     DropdownMenu,
     DropdownMenuContent,
@@ -59,12 +59,16 @@ const statuses = ['open', 'assigned', 'in_progress', 'completed', 'closed'];
 const priorities = ['low', 'medium', 'high', 'urgent'];
 
 // Debounced search
-let searchTimeout: ReturnType<typeof setTimeout>;
+let searchTimeout: ReturnType<typeof setTimeout> | null = null;
 watch(searchQuery, (value) => {
-    clearTimeout(searchTimeout);
+    if (searchTimeout) clearTimeout(searchTimeout);
     searchTimeout = setTimeout(() => {
         applyFilters();
     }, 300);
+});
+
+onUnmounted(() => {
+    if (searchTimeout) clearTimeout(searchTimeout);
 });
 
 const applyFilters = () => {
@@ -143,6 +147,10 @@ const getStatusIcon = (status: string) => {
 // Mechanic can accept open tickets
 const canAcceptTicket = (ticket: Ticket) => {
     return (isMechanic.value || isAdmin.value) && ticket.status === 'open' && !ticket.mechanic_id;
+};
+
+const decodePaginationLabel = (label: string) => {
+    return label.replace(/&laquo;/g, '\u00AB').replace(/&raquo;/g, '\u00BB').replace(/&amp;/g, '&');
 };
 
 const acceptTicket = (ticketId: number) => {
@@ -352,8 +360,9 @@ const acceptTicket = (ticketId: number) => {
                     :disabled="!link.url || link.active"
                     :class="{ 'bg-primary text-primary-foreground': link.active }"
                     @click="link.url && router.get(link.url)"
-                    v-html="link.label"
-                />
+                >
+                    {{ decodePaginationLabel(link.label) }}
+                </Button>
             </div>
         </div>
     </AppLayout>
