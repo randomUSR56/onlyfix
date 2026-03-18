@@ -2,6 +2,10 @@
 
 An open source project under MIT license where we perform CRUD operations about issues that a user experiences with their vehicle (ticket-style). The project is accessible on all major platforms such as mobile, desktop and web. A longer and more detailed description can be found in the repository's README.md file.
 
+# Admin
+
+Az onlyfix szoftvercsomag tartalmaz egy (natív) adminisztrátori segédprogramot is amely elérhető a következő GitHub hivatkozáson: https://github.com/randomUSR56/Admin
+
 ## Technológiai Stack
 
 ### Backend
@@ -60,6 +64,7 @@ make init
 ```
 
 Ez a parancs **mindent automatikusan elvégez**:
+
 - Hálózat konfiguráció (loopback IP-k, hosts bejegyzések)
 - Docker image-ek build-elése és konténerek indítása
 - Composer + NPM csomagok telepítése
@@ -70,19 +75,19 @@ Ez a parancs **mindent automatikusan elvégez**:
 
 ### Teszt Fiókok
 
-| Szerepkör | Email | Jelszó |
-|-----------|-------|--------|
-| Admin | `admin@example.com` | `password` |
-| Szerelő | `mechanic@example.com` | `password` |
-| Felhasználó | `test@example.com` | `password` |
+| Szerepkör   | Email                  | Jelszó     |
+| ----------- | ---------------------- | ---------- |
+| Admin       | `admin@example.com`    | `password` |
+| Szerelő     | `mechanic@example.com` | `password` |
+| Felhasználó | `test@example.com`     | `password` |
 
 ### Hozzáférési URL-ek
 
-| Szolgáltatás | URL |
-|-------------|-----|
-| Alkalmazás | http://onlyfix.local |
-| Mailpit | http://mailpit.onlyfix.local:8025 |
-| phpMyAdmin | http://phpmyadmin.onlyfix.local:8080 |
+| Szolgáltatás | URL                                  |
+| ------------ | ------------------------------------ |
+| Alkalmazás   | http://onlyfix.local                 |
+| Mailpit      | http://mailpit.onlyfix.local:8025    |
+| phpMyAdmin   | http://phpmyadmin.onlyfix.local:8080 |
 
 Részletes Docker dokumentáció: [DOCKER_QUICK_START.md](DOCKER_QUICK_START.md)
 
