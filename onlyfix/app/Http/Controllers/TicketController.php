@@ -380,11 +380,11 @@ class TicketController extends Controller
     {
         $user = $request->user();
 
-        if (! $user->hasAnyRole(['mechanic', 'admin'])) {
-            abort(403, 'Unauthorized');
+        if (! $user->hasRole('mechanic')) {
+            abort(403, 'Only mechanics can start work on tickets');
         }
 
-        if ($ticket->mechanic_id !== $user->id && ! $user->hasRole('admin')) {
+        if ($ticket->mechanic_id !== $user->id) {
             return back()->withErrors([
                 'ticket' => 'You can only start work on tickets assigned to you',
             ]);
@@ -416,11 +416,11 @@ class TicketController extends Controller
     {
         $user = $request->user();
 
-        if (! $user->hasAnyRole(['mechanic', 'admin'])) {
-            abort(403, 'Unauthorized');
+        if (! $user->hasRole('mechanic')) {
+            abort(403, 'Only mechanics can complete tickets');
         }
 
-        if ($ticket->mechanic_id !== $user->id && ! $user->hasRole('admin')) {
+        if ($ticket->mechanic_id !== $user->id) {
             return back()->withErrors([
                 'ticket' => 'You can only complete tickets assigned to you',
             ]);

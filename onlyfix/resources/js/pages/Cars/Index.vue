@@ -31,8 +31,8 @@ import {
 const { t } = useI18n();
 const { isMechanic, isAdmin } = useAuth();
 
-// Mechanics can view but not create cars
-const canCreateCar = computed(() => !isMechanic.value || isAdmin.value);
+// Only regular users can create cars (admin manages but doesn't own cars, mechanics can't create)
+const canCreateCar = computed(() => !isMechanic.value && !isAdmin.value);
 
 const props = defineProps<{
     cars: PaginatedData<Car>;

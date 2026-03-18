@@ -50,8 +50,8 @@ export function useAuth() {
     // Check if user can manage users (admin only)
     const canManageUsers = computed(() => hasRole('admin'));
 
-    // Check if user can accept tickets (mechanic or admin)
-    const canAcceptTickets = computed(() => hasAnyRole(['mechanic', 'admin']));
+    // Check if user can accept tickets (mechanic only — admin manages, doesn't do mechanic work)
+    const canAcceptTickets = computed(() => hasRole('mechanic'));
 
     return {
         user,

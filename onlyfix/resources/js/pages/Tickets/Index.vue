@@ -144,9 +144,9 @@ const getStatusIcon = (status: string) => {
     return icons[status] || Clock;
 };
 
-// Mechanic can accept open tickets
+// Only mechanics can accept open tickets (admin manages but doesn't do mechanic work)
 const canAcceptTicket = (ticket: Ticket) => {
-    return (isMechanic.value || isAdmin.value) && ticket.status === 'open' && !ticket.mechanic_id;
+    return isMechanic.value && ticket.status === 'open' && !ticket.mechanic_id;
 };
 
 const decodePaginationLabel = (label: string) => {
