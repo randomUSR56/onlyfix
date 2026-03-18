@@ -14,20 +14,17 @@ import {
 import { dashboard } from '@/routes';
 import * as carsRoutes from '@/routes/cars';
 import * as ticketsRoutes from '@/routes/tickets';
+import * as usersRoutes from '@/routes/users';
 import { type NavItem } from '@/types';
-import { Link, usePage } from '@inertiajs/vue3';
-import { LayoutGrid, Car, Ticket, Settings, HelpCircle, Wrench, Inbox, Users as UsersIcon } from 'lucide-vue-next';
+import { Link } from '@inertiajs/vue3';
+import { LayoutGrid, Car, Ticket, Settings, HelpCircle, Inbox, Users as UsersIcon } from 'lucide-vue-next';
 import AppLogo from './AppLogo.vue';
 import { useI18n } from 'vue-i18n';
 import { computed } from 'vue';
 import { useAuth } from '@/composables/useAuth';
 
 const { t } = useI18n();
-const page = usePage();
 const { isMechanic, isAdmin } = useAuth();
-
-// Check current route for active state
-const currentUrl = computed(() => page.url);
 
 // Navigation items for regular users
 const userNavItems = computed<NavItem[]>(() => [
@@ -35,19 +32,16 @@ const userNavItems = computed<NavItem[]>(() => [
         title: t('nav.dashboard'),
         href: dashboard(),
         icon: LayoutGrid,
-        isActive: currentUrl.value === '/dashboard',
     },
     {
         title: t('nav.myTickets'),
         href: ticketsRoutes.index(),
         icon: Ticket,
-        isActive: currentUrl.value.startsWith('/tickets'),
     },
     {
         title: t('nav.myCars'),
         href: carsRoutes.index(),
         icon: Car,
-        isActive: currentUrl.value.startsWith('/cars'),
     },
 ]);
 
@@ -57,13 +51,11 @@ const mechanicNavItems = computed<NavItem[]>(() => [
         title: t('nav.dashboard'),
         href: dashboard(),
         icon: LayoutGrid,
-        isActive: currentUrl.value === '/dashboard',
     },
     {
         title: t('nav.allTickets'),
         href: ticketsRoutes.index(),
         icon: Inbox,
-        isActive: currentUrl.value.startsWith('/tickets'),
     },
 ]);
 
@@ -73,19 +65,16 @@ const adminNavItems = computed<NavItem[]>(() => [
         title: t('nav.dashboard'),
         href: dashboard(),
         icon: LayoutGrid,
-        isActive: currentUrl.value === '/dashboard',
     },
     {
         title: t('nav.allTickets'),
         href: ticketsRoutes.index(),
         icon: Inbox,
-        isActive: currentUrl.value.startsWith('/tickets'),
     },
     {
         title: t('users.pageTitle'),
-        href: '/users',
+        href: usersRoutes.index(),
         icon: UsersIcon,
-        isActive: currentUrl.value.startsWith('/users'),
     },
 ]);
 
