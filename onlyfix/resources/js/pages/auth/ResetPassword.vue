@@ -8,6 +8,9 @@ import AuthLayout from '@/layouts/AuthLayout.vue';
 import { Form, Head } from '@inertiajs/vue3';
 import { LoaderCircle } from 'lucide-vue-next';
 import { ref } from 'vue';
+import { useI18n } from 'vue-i18n';
+
+const { t } = useI18n();
 
 const props = defineProps<{
     token: string;
@@ -19,10 +22,10 @@ const inputEmail = ref(props.email);
 
 <template>
     <AuthLayout
-        title="Reset password"
-        description="Please enter your new password below"
+        :title="$t('auth.resetPassword.title')"
+        :description="$t('auth.resetPassword.description')"
     >
-        <Head title="Reset password" />
+        <Head :title="$t('auth.resetPassword.pageTitle')" />
 
         <Form
             v-bind="NewPasswordController.store.form()"
@@ -32,7 +35,7 @@ const inputEmail = ref(props.email);
         >
             <div class="grid gap-6">
                 <div class="grid gap-2">
-                    <Label for="email">Email</Label>
+                    <Label for="email">{{ $t('auth.resetPassword.emailLabel') }}</Label>
                     <Input
                         id="email"
                         type="email"
@@ -46,7 +49,7 @@ const inputEmail = ref(props.email);
                 </div>
 
                 <div class="grid gap-2">
-                    <Label for="password">Password</Label>
+                    <Label for="password">{{ $t('auth.resetPassword.passwordLabel') }}</Label>
                     <Input
                         id="password"
                         type="password"
@@ -54,14 +57,14 @@ const inputEmail = ref(props.email);
                         autocomplete="new-password"
                         class="mt-1 block w-full"
                         autofocus
-                        placeholder="Password"
+                        :placeholder="$t('auth.resetPassword.passwordLabel')"
                     />
                     <InputError :message="errors.password" />
                 </div>
 
                 <div class="grid gap-2">
                     <Label for="password_confirmation">
-                        Confirm Password
+                        {{ $t('auth.resetPassword.confirmPasswordLabel') }}
                     </Label>
                     <Input
                         id="password_confirmation"
@@ -69,7 +72,7 @@ const inputEmail = ref(props.email);
                         name="password_confirmation"
                         autocomplete="new-password"
                         class="mt-1 block w-full"
-                        placeholder="Confirm password"
+                        :placeholder="$t('auth.resetPassword.confirmPasswordLabel')"
                     />
                     <InputError :message="errors.password_confirmation" />
                 </div>
@@ -84,7 +87,7 @@ const inputEmail = ref(props.email);
                         v-if="processing"
                         class="h-4 w-4 animate-spin"
                     />
-                    Reset password
+                    {{ $t('auth.resetPassword.submitButton') }}
                 </Button>
             </div>
         </Form>
