@@ -46,6 +46,23 @@ class TicketController extends Controller
             $query->where('user_id', $user->id);
         }
 
+        // Search across ticket description, car info, and user name
+        if ($request->filled('search')) {
+            $search = $request->search;
+            $query->where(function ($q) use ($search) {
+                $q->where('description', 'like', "%{$search}%")
+                  ->orWhere('id', 'like', "%{$search}%")
+                  ->orWhereHas('car', function ($carQuery) use ($search) {
+                      $carQuery->where('make', 'like', "%{$search}%")
+                               ->orWhere('model', 'like', "%{$search}%")
+                               ->orWhere('license_plate', 'like', "%{$search}%");
+                  })
+                  ->orWhereHas('user', function ($userQuery) use ($search) {
+                      $userQuery->where('name', 'like', "%{$search}%");
+                  });
+            });
+        }
+
         // Sort by priority and created date
         // Using CASE for SQLite compatibility
         $query->orderByRaw("CASE priority
@@ -61,7 +78,7 @@ class TicketController extends Controller
 
         return Inertia::render('Tickets/Index', [
             'tickets' => $tickets,
-            'filters' => $request->only(['status', 'priority', 'mechanic_id', 'user_id', 'car_id']),
+            'filters' => $request->only(['search', 'status', 'priority', 'mechanic_id', 'user_id', 'car_id']),
         ]);
     }
 

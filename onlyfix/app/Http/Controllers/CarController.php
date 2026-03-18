@@ -48,7 +48,8 @@ class CarController extends Controller
         }
 
         return Inertia::render('Cars/Index', [
-            'cars' => $cars
+            'cars' => $cars,
+            'filters' => $request->only(['search', 'user_id']),
         ]);
     }
 
