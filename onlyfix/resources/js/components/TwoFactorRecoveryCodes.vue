@@ -13,8 +13,10 @@ import { regenerateRecoveryCodes } from '@/routes/two-factor';
 import { Form } from '@inertiajs/vue3';
 import { Eye, EyeOff, LockKeyhole, RefreshCw } from 'lucide-vue-next';
 import { nextTick, onMounted, ref } from 'vue';
+import { useI18n } from 'vue-i18n';
 
 const { recoveryCodesList, fetchRecoveryCodes, errors } = useTwoFactorAuth();
+const { t } = useI18n();
 const isRecoveryCodesVisible = ref<boolean>(false);
 const recoveryCodeSectionRef = ref<HTMLDivElement | null>(null);
 
@@ -42,11 +44,10 @@ onMounted(async () => {
     <Card class="w-full">
         <CardHeader>
             <CardTitle class="flex gap-3">
-                <LockKeyhole class="size-4" />2FA Recovery Codes
+                <LockKeyhole class="size-4" />{{ $t('settings.twoFactor.recoveryCodes.title') }}
             </CardTitle>
             <CardDescription>
-                Recovery codes let you regain access if you lose your 2FA
-                device. Store them in a secure password manager.
+                {{ $t('settings.twoFactor.recoveryCodes.description') }}
             </CardDescription>
         </CardHeader>
         <CardContent>
@@ -58,8 +59,7 @@ onMounted(async () => {
                         :is="isRecoveryCodesVisible ? EyeOff : Eye"
                         class="size-4"
                     />
-                    {{ isRecoveryCodesVisible ? 'Hide' : 'View' }} Recovery
-                    Codes
+                    {{ isRecoveryCodesVisible ? $t('settings.twoFactor.recoveryCodes.hideRecoveryCodes') : $t('settings.twoFactor.recoveryCodes.viewRecoveryCodes') }}
                 </Button>
 
                 <Form
@@ -75,7 +75,7 @@ onMounted(async () => {
                         type="submit"
                         :disabled="processing"
                     >
-                        <RefreshCw /> Regenerate Codes
+                        <RefreshCw /> {{ $t('settings.twoFactor.recoveryCodes.regenerateCodes') }}
                     </Button>
                 </Form>
             </div>
@@ -111,10 +111,7 @@ onMounted(async () => {
                         </div>
                     </div>
                     <p class="text-xs text-muted-foreground select-none">
-                        Each recovery code can be used once to access your
-                        account and will be removed after use. If you need more,
-                        click
-                        <span class="font-bold">Regenerate Codes</span> above.
+                        {{ $t('settings.twoFactor.recoveryCodes.usageNote', { regenerate: $t('settings.twoFactor.recoveryCodes.regenerateCodes') }) }}
                     </p>
                 </div>
             </div>

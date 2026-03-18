@@ -37,7 +37,8 @@
     "myTickets": "My Tickets",
     "allTickets": "All Tickets",
     "help": "Help & Support",
-    "platform": "Platform"
+    "platform": "Platform",
+    "navigationMenu": "Navigation Menu"
   },
   "welcome": {
     "pageTitle": "Welcome",
@@ -400,7 +401,8 @@
     },
     "edit": {
       "title": "Edit User",
-      "submitButton": "Save Changes"
+      "submitButton": "Save Changes",
+      "passwordOptionalHint": "(Only if you want to change it)"
     },
     "delete": {
       "title": "Delete User",
@@ -484,7 +486,33 @@
       "pageTitle": "Two-factor authentication",
       "breadcrumb": "Two-factor authentication",
       "title": "Two-factor authentication",
-      "description": "Add additional security to your account using two factor authentication"
+      "description": "Add additional security to your account using two factor authentication",
+      "badgeEnabled": "Enabled",
+      "badgeDisabled": "Disabled",
+      "disabledDescription": "When you enable two-factor authentication, you will be prompted for a secure pin during login. This pin can be retrieved from a TOTP-supported application on your phone.",
+      "enabledDescription": "With two-factor authentication enabled, you will be prompted for a secure, random pin during login, which you can retrieve from the TOTP-supported application on your phone.",
+      "continueSetup": "Continue Setup",
+      "enable2FA": "Enable 2FA",
+      "disable2FA": "Disable 2FA",
+      "modal": {
+        "enabledTitle": "Two-Factor Authentication Enabled",
+        "enabledDescription": "Two-factor authentication is now enabled. Scan the QR code or enter the setup key in your authenticator app.",
+        "verifyTitle": "Verify Authentication Code",
+        "verifyDescription": "Enter the 6-digit code from your authenticator app",
+        "setupTitle": "Enable Two-Factor Authentication",
+        "setupDescription": "To finish enabling two-factor authentication, scan the QR code or enter the setup key in your authenticator app",
+        "continue": "Continue",
+        "orEnterManually": "or, enter the code manually",
+        "confirm": "Confirm"
+      },
+      "recoveryCodes": {
+        "title": "2FA Recovery Codes",
+        "description": "Recovery codes let you regain access if you lose your 2FA device. Store them in a secure password manager.",
+        "hideRecoveryCodes": "Hide Recovery Codes",
+        "viewRecoveryCodes": "View Recovery Codes",
+        "regenerateCodes": "Regenerate Codes",
+        "usageNote": "Each recovery code can be used once to access your account and will be removed after use. If you need more, click {regenerate} above."
+      }
     },
     "deleteAccount": {
       "title": "Delete account",

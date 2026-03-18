@@ -37,7 +37,8 @@
     "myTickets": "Jegyeim",
     "allTickets": "Összes jegy",
     "help": "Súgó és támogatás",
-    "platform": "Platform"
+    "platform": "Platform",
+    "navigationMenu": "Navigációs menü"
   },
   "welcome": {
     "pageTitle": "Üdvözöljük",
@@ -619,7 +620,8 @@
     },
     "edit": {
       "title": "Felhasználó szerkesztése",
-      "submitButton": "Változások mentése"
+      "submitButton": "Változások mentése",
+      "passwordOptionalHint": "(Csak ha meg szeretné változtatni)"
     },
     "delete": {
       "title": "Felhasználó törlése",
@@ -703,7 +705,33 @@
       "pageTitle": "Kétfaktoros hitelesítés",
       "breadcrumb": "Kétfaktoros hitelesítés",
       "title": "Kétfaktoros hitelesítés",
-      "description": "További biztonság hozzáadása fiókjához kétfaktoros hitelesítéssel"
+      "description": "További biztonság hozzáadása fiókjához kétfaktoros hitelesítéssel",
+      "badgeEnabled": "Engedélyezve",
+      "badgeDisabled": "Letiltva",
+      "disabledDescription": "A kétfaktoros hitelesítés engedélyezésekor a bejelentkezés során egy biztonságos PIN-kódot kell megadnia. Ezt a PIN-kódot egy TOTP-kompatibilis alkalmazásból kérheti le telefonján.",
+      "enabledDescription": "A kétfaktoros hitelesítés engedélyezésével a bejelentkezéskor egy biztonságos, véletlenszerű PIN-kódot kell megadnia, amelyet telefonja TOTP-kompatibilis alkalmazásából kérhet le.",
+      "continueSetup": "Beállítás folytatása",
+      "enable2FA": "2FA engedélyezése",
+      "disable2FA": "2FA letiltása",
+      "modal": {
+        "enabledTitle": "Kétfaktoros hitelesítés engedélyezve",
+        "enabledDescription": "A kétfaktoros hitelesítés most engedélyezve van. Olvassa be a QR-kódot, vagy adja meg a beállítási kulcsot a hitelesítő alkalmazásában.",
+        "verifyTitle": "Hitelesítési kód ellenőrzése",
+        "verifyDescription": "Adja meg a hitelesítő alkalmazás 6 jegyű kódját",
+        "setupTitle": "Kétfaktoros hitelesítés engedélyezése",
+        "setupDescription": "A kétfaktoros hitelesítés befejezéséhez olvassa be a QR-kódot, vagy adja meg a beállítási kulcsot a hitelesítő alkalmazásában",
+        "continue": "Tovább",
+        "orEnterManually": "vagy adja meg a kódot kézzel",
+        "confirm": "Megerősítés"
+      },
+      "recoveryCodes": {
+        "title": "2FA helyreállítási kódok",
+        "description": "A helyreállítási kódok lehetővé teszik a hozzáférés visszaszerzését, ha elveszíti 2FA eszközét. Tárolja őket biztonságos jelszókezelőben.",
+        "hideRecoveryCodes": "Helyreállítási kódok elrejtése",
+        "viewRecoveryCodes": "Helyreállítási kódok megtekintése",
+        "regenerateCodes": "Kódok újragenerálása",
+        "usageNote": "Minden helyreállítási kód egyszer használható a fiókjához való hozzáféréshez, és használat után törlődik. Ha többre van szüksége, kattintson a fenti {regenerate} gombra."
+      }
     },
     "deleteAccount": {
       "title": "Fiók törlése",

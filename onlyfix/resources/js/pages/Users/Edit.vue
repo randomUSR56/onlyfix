@@ -97,7 +97,7 @@ const submit = () => {
 
                         <div class="p-4 border rounded-lg bg-muted/30 space-y-4">
                             <p class="text-sm font-medium text-muted-foreground">
-                                {{ $t('settings.password.description') }} (Csak ha meg szeretné változtatni)
+                                {{ $t('settings.password.description') }} {{ $t('users.edit.passwordOptionalHint') }}
                             </p>
                             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                                 <div class="space-y-2">
