@@ -11,14 +11,14 @@ import { dashboard } from '@/routes';
 import * as ticketsRoutes from '@/routes/tickets';
 import * as carsRoutes from '@/routes/cars';
 import { type BreadcrumbItem } from '@/types';
-import type { Car, Problem } from '@/types/models';
+import type { Car, Problem, User } from '@/types/models';
 import { Head, useForm, Link, usePage } from '@inertiajs/vue3';
 import { useI18n } from 'vue-i18n';
 import { 
     Ticket as TicketIcon, ArrowLeft, LoaderCircle, Car as CarIcon, 
     AlertTriangle, Wrench, Plus, Info
 } from 'lucide-vue-next';
-import { ref, computed, onMounted } from 'vue';
+import { computed, onMounted } from 'vue';
 import { useAuth } from '@/composables/useAuth';
 
 const { t } = useI18n();

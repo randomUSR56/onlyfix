@@ -9,7 +9,7 @@ import { Badge } from '@/components/ui/badge';
 import { dashboard } from '@/routes';
 import * as ticketsRoutes from '@/routes/tickets';
 import { type BreadcrumbItem } from '@/types';
-import type { Car, Problem, Ticket } from '@/types/models';
+import type { Car, Problem, Ticket, User } from '@/types/models';
 import { Head, useForm, Link } from '@inertiajs/vue3';
 import { useI18n } from 'vue-i18n';
 import { 
