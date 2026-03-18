@@ -2,10 +2,11 @@
 import AppLogoIcon from '@/components/AppLogoIcon.vue';
 import { home } from '@/routes';
 import { Link, usePage } from '@inertiajs/vue3';
+import { computed } from 'vue';
 
 const page = usePage();
-const name = page.props.name;
-const quote = page.props.quote;
+const name = computed(() => page.props.name);
+const quote = computed(() => page.props.quote);
 
 defineProps<{
     title?: string;
