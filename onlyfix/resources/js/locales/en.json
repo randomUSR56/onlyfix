@@ -23,7 +23,9 @@
     "view": "View",
     "viewAll": "View all",
     "clearFilters": "Clear filters",
-    "copyright": "© {year} OnlyFix. All rights reserved."
+    "copyright": "© {year} OnlyFix. All rights reserved.",
+    "somethingWentWrong": "Something went wrong.",
+    "success": "Success"
   },
   "nav": {
     "home": "Home",

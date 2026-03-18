@@ -15,7 +15,7 @@ const currentLocale = computed<SupportedLocale>(() => (i18n.global.locale as any
 
 const currentLocaleDisplay = computed(() => {
     const locale = availableLocales.find(l => l.code === currentLocale.value);
-    return locale?.nativeName || 'English';
+    return locale?.nativeName || currentLocale.value;
 });
 
 const localeFlags: Record<string, string> = {

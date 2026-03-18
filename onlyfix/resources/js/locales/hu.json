@@ -23,7 +23,9 @@
     "view": "Megtekintés",
     "viewAll": "Összes megtekintése",
     "clearFilters": "Szűrők törlése",
-    "copyright": "© {year} OnlyFix. Minden jog fenntartva."
+    "copyright": "© {year} OnlyFix. Minden jog fenntartva.",
+    "somethingWentWrong": "Hiba történt.",
+    "success": "Sikeres"
   },
   "nav": {
     "home": "Kezdőlap",
