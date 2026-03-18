@@ -3,6 +3,7 @@ import createServer from '@inertiajs/vue3/server';
 import { resolvePageComponent } from 'laravel-vite-plugin/inertia-helpers';
 import { createSSRApp, DefineComponent, h } from 'vue';
 import { renderToString } from 'vue/server-renderer';
+import { i18n } from './i18n';
 
 const appName = import.meta.env.VITE_APP_NAME || 'OnlyFix';
 
@@ -18,7 +19,9 @@ createServer(
                     import.meta.glob<DefineComponent>('./pages/**/*.vue'),
                 ),
             setup: ({ App, props, plugin }) =>
-                createSSRApp({ render: () => h(App, props) }).use(plugin),
+                createSSRApp({ render: () => h(App, props) })
+                    .use(plugin)
+                    .use(i18n),
         }),
     { cluster: true },
 );
