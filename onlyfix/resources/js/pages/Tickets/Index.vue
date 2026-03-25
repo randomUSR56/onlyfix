@@ -11,9 +11,11 @@ import type { Ticket, PaginatedData } from '@/types/models';
 import { Head, Link, router } from '@inertiajs/vue3';
 import { useI18n } from 'vue-i18n';
 import { useAuth } from '@/composables/useAuth';
-import { 
+import { useTicketHelpers } from '@/composables/useTicketHelpers';
+import { useFormatting } from '@/composables/useFormatting';
+import {
     Ticket as TicketIcon, Plus, Search, Eye, Filter,
-    Clock, CheckCircle2, AlertCircle, Wrench, Car as CarIcon, X, UserPlus
+    Clock, Wrench, Car as CarIcon, X, UserPlus
 } from 'lucide-vue-next';
 import { ref, watch, computed, onUnmounted } from 'vue';
 import {
@@ -27,6 +29,8 @@ import {
 
 const { t } = useI18n();
 const { isMechanic, isAdmin } = useAuth();
+const { getStatusBadgeVariant, getPriorityBadgeClass, getStatusIcon } = useTicketHelpers();
+const { formatDate, decodePaginationLabel } = useFormatting();
 
 // Mechanics can't create tickets, only users (and admins)
 const canCreateTicket = computed(() => !isMechanic.value || isAdmin.value);
@@ -104,53 +108,9 @@ const hasActiveFilters = computed(() =>
     searchQuery.value || statusFilter.value || priorityFilter.value
 );
 
-const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString(undefined, {
-        year: 'numeric',
-        month: 'short',
-        day: 'numeric',
-    });
-};
-
-const getStatusBadgeVariant = (status: string) => {
-    const variants: Record<string, 'default' | 'secondary' | 'destructive' | 'outline'> = {
-        open: 'destructive',
-        assigned: 'secondary',
-        in_progress: 'default',
-        completed: 'outline',
-        closed: 'outline',
-    };
-    return variants[status] || 'secondary';
-};
-
-const getPriorityBadgeClass = (priority: string) => {
-    const classes: Record<string, string> = {
-        urgent: 'bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-400',
-        high: 'bg-orange-100 text-orange-800 dark:bg-orange-900/30 dark:text-orange-400',
-        medium: 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-400',
-        low: 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400',
-    };
-    return classes[priority] || 'bg-gray-100 text-gray-800';
-};
-
-const getStatusIcon = (status: string) => {
-    const icons: Record<string, any> = {
-        open: AlertCircle,
-        assigned: Clock,
-        in_progress: Wrench,
-        completed: CheckCircle2,
-        closed: CheckCircle2,
-    };
-    return icons[status] || Clock;
-};
-
 // Only mechanics can accept open tickets (admin manages but doesn't do mechanic work)
 const canAcceptTicket = (ticket: Ticket) => {
     return isMechanic.value && ticket.status === 'open' && !ticket.mechanic_id;
-};
-
-const decodePaginationLabel = (label: string) => {
-    return label.replace(/&laquo;/g, '\u00AB').replace(/&raquo;/g, '\u00BB').replace(/&amp;/g, '&');
 };
 
 const acceptTicket = (ticketId: number) => {

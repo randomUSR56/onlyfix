@@ -18,9 +18,11 @@ import {
 } from 'lucide-vue-next';
 import { computed } from 'vue';
 import { useAuth } from '@/composables/useAuth';
+import { useTicketHelpers } from '@/composables/useTicketHelpers';
 
 const { t } = useI18n();
 const { isAdmin, isMechanic } = useAuth();
+const { translateProblem } = useTicketHelpers();
 
 const props = defineProps<{
     ticket: Ticket;
@@ -103,17 +105,6 @@ const problemsByCategory = computed(() => {
     });
     return grouped;
 });
-
-// Translate problem name and description
-const translateProblem = (problem: Problem) => {
-    const translationKey = `problems.items.${problem.name}`;
-    const translatedName = t(`${translationKey}.name`, problem.name);
-    const translatedDescription = t(`${translationKey}.description`, problem.description || '');
-    return {
-        name: translatedName === `${translationKey}.name` ? problem.name : translatedName,
-        description: translatedDescription === `${translationKey}.description` ? problem.description : translatedDescription,
-    };
-};
 
 const toggleProblem = (problemId: number): void => {
     const index = form.problem_ids.indexOf(problemId);

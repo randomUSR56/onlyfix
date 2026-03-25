@@ -10,9 +10,13 @@ import { type BreadcrumbItem } from '@/types';
 import type { DashboardStats, Ticket, Car } from '@/types/models';
 import { Head, Link } from '@inertiajs/vue3';
 import { useI18n } from 'vue-i18n';
-import { Car as CarIcon, Plus, ArrowRight, AlertCircle, Wrench, Clock, CheckCircle2 } from 'lucide-vue-next';
+import { useTicketHelpers } from '@/composables/useTicketHelpers';
+import { useFormatting } from '@/composables/useFormatting';
+import { Car as CarIcon, Plus, ArrowRight, Wrench, Clock, CheckCircle2 } from 'lucide-vue-next';
 
 const { t } = useI18n();
+const { getStatusBadgeVariant, getPriorityBadgeClass, getStatusIcon } = useTicketHelpers();
+const { formatDate } = useFormatting();
 
 const props = defineProps<{
     stats: DashboardStats;
@@ -27,39 +31,7 @@ const breadcrumbs: BreadcrumbItem[] = [
     },
 ];
 
-const getStatusBadgeVariant = (status: string) => {
-    const variants: Record<string, 'default' | 'secondary' | 'destructive' | 'outline'> = {
-        open: 'destructive',
-        assigned: 'secondary',
-        in_progress: 'default',
-        completed: 'outline',
-        closed: 'outline',
-    };
-    return variants[status] || 'secondary';
-};
 
-const getPriorityBadgeClass = (priority: string) => {
-    const classes: Record<string, string> = {
-        urgent: 'bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-400',
-        high: 'bg-orange-100 text-orange-800 dark:bg-orange-900/30 dark:text-orange-400',
-        medium: 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-400',
-        low: 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400',
-    };
-    return classes[priority] || 'bg-gray-100 text-gray-800';
-};
-
-const getStatusIcon = (status: string) => {
-    if (status === 'open') return AlertCircle;
-    if (status === 'assigned' || status === 'in_progress') return Wrench;
-    return CheckCircle2;
-};
-
-const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString(undefined, {
-        month: 'short',
-        day: 'numeric',
-    });
-};
 </script>
 
 <template>

@@ -8,6 +8,8 @@ import { type BreadcrumbItem } from '@/types';
 import { type User, type PaginatedData } from '@/types/models';
 import { Head, Link, router } from '@inertiajs/vue3';
 import { useI18n } from 'vue-i18n';
+import { useTicketHelpers } from '@/composables/useTicketHelpers';
+import { useFormatting } from '@/composables/useFormatting';
 import { ref, watch, onUnmounted } from 'vue';
 import { UserPlus, Search, User as UserIcon, MoreHorizontal, Edit, Trash2 } from 'lucide-vue-next';
 import {
@@ -18,6 +20,8 @@ import {
 } from '@/components/ui/dropdown-menu';
 
 const { t } = useI18n();
+const { getRoleBadgeVariant } = useTicketHelpers();
+const { decodePaginationLabel } = useFormatting();
 
 const props = defineProps<{
     users: PaginatedData<User>;
@@ -39,15 +43,6 @@ const roleFilter = ref(props.filters.role || '');
 
 const getRoleName = (role: string | { name: string }) => {
     return typeof role === 'string' ? role : role.name;
-};
-
-const getRoleBadgeVariant = (role: string) => {
-    const variants: Record<string, 'default' | 'secondary' | 'destructive' | 'outline'> = {
-        admin: 'destructive',
-        mechanic: 'default',
-        user: 'secondary',
-    };
-    return variants[role] || 'outline';
 };
 
 const updateFilters = () => {
@@ -77,14 +72,6 @@ const deleteUser = (user: User) => {
     if (confirm(t('users.delete.description', { name: user.name }))) {
         router.delete(`/users/${user.id}`);
     }
-};
-
-const decodePaginationLabel = (label: string) => {
-    return label.replace(/&laquo;/g, '\u00AB').replace(/&raquo;/g, '\u00BB').replace(/&amp;/g, '&');
-};
-
-const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString();
 };
 </script>
 

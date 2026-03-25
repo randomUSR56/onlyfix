@@ -12,9 +12,11 @@ import type { Ticket, Problem } from '@/types/models';
 import { Head, Link, router } from '@inertiajs/vue3';
 import { useI18n } from 'vue-i18n';
 import { useAuth } from '@/composables/useAuth';
+import { useTicketHelpers } from '@/composables/useTicketHelpers';
+import { useFormatting } from '@/composables/useFormatting';
 import {
     Ticket as TicketIcon, ArrowLeft, Edit, Trash2, Car as CarIcon,
-    Clock, CheckCircle2, AlertCircle, Wrench, User,
+    Clock, CheckCircle2, Wrench, User,
     MessageSquare, Play, UserPlus
 } from 'lucide-vue-next';
 import { ref, computed } from 'vue';
@@ -29,6 +31,8 @@ import {
 
 const { t } = useI18n();
 const { isMechanic, isAdmin, user } = useAuth();
+const { getStatusBadgeVariant, getPriorityBadgeClass, getStatusIcon, translateProblem } = useTicketHelpers();
+const { formatLongDate, formatDate } = useFormatting();
 
 const props = defineProps<{
     ticket: Ticket;
@@ -100,67 +104,6 @@ const canCompleteTicket = computed(() =>
     props.ticket.status === 'in_progress' &&
     props.ticket.mechanic_id === user.value?.id
 );
-
-const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString(undefined, {
-        year: 'numeric',
-        month: 'long',
-        day: 'numeric',
-        hour: '2-digit',
-        minute: '2-digit',
-    });
-};
-
-const formatShortDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString(undefined, {
-        year: 'numeric',
-        month: 'short',
-        day: 'numeric',
-    });
-};
-
-const getStatusBadgeVariant = (status: string) => {
-    const variants: Record<string, 'default' | 'secondary' | 'destructive' | 'outline'> = {
-        open: 'destructive',
-        assigned: 'secondary',
-        in_progress: 'default',
-        completed: 'outline',
-        closed: 'outline',
-    };
-    return variants[status] || 'secondary';
-};
-
-const getPriorityBadgeClass = (priority: string) => {
-    const classes: Record<string, string> = {
-        urgent: 'bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-400',
-        high: 'bg-orange-100 text-orange-800 dark:bg-orange-900/30 dark:text-orange-400',
-        medium: 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-400',
-        low: 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400',
-    };
-    return classes[priority] || 'bg-gray-100 text-gray-800';
-};
-
-// Translate problem name and description
-const translateProblem = (problem: Problem) => {
-    const translationKey = `problems.items.${problem.name}`;
-    const translatedName = t(`${translationKey}.name`, problem.name);
-    const translatedDescription = t(`${translationKey}.description`, problem.description || '');
-    return {
-        name: translatedName === `${translationKey}.name` ? problem.name : translatedName,
-        description: translatedDescription === `${translationKey}.description` ? problem.description : translatedDescription,
-    };
-};
-
-const getStatusIcon = (status: string) => {
-    const icons: Record<string, any> = {
-        open: AlertCircle,
-        assigned: Clock,
-        in_progress: Wrench,
-        completed: CheckCircle2,
-        closed: CheckCircle2,
-    };
-    return icons[status] || Clock;
-};
 
 const statusTimeline = computed(() => {
     const timeline = [];
@@ -261,7 +204,7 @@ const canCloseTicket = computed(() =>
                                 </span>
                             </div>
                             <p class="text-muted-foreground">
-                                {{ $t('tickets.show.createdOn') }} {{ formatShortDate(ticket.created_at) }}
+                                {{ $t('tickets.show.createdOn') }} {{ formatDate(ticket.created_at) }}
                             </p>
                         </div>
                     </div>
@@ -392,7 +335,7 @@ const canCloseTicket = computed(() =>
                                         </div>
                                         <div>
                                             <p class="font-medium">{{ item.label }}</p>
-                                            <p v-if="item.date" class="text-sm text-muted-foreground">{{ formatDate(item.date) }}</p>
+                                            <p v-if="item.date" class="text-sm text-muted-foreground">{{ formatLongDate(item.date) }}</p>
                                         </div>
                                     </div>
                                 </div>
@@ -483,15 +426,15 @@ const canCloseTicket = computed(() =>
                                 <Separator />
                                 <div class="flex justify-between">
                                     <span class="text-muted-foreground">{{ $t('tickets.show.created') }}</span>
-                                    <span>{{ formatShortDate(ticket.created_at) }}</span>
+                                    <span>{{ formatDate(ticket.created_at) }}</span>
                                 </div>
                                 <div v-if="ticket.accepted_at" class="flex justify-between">
                                     <span class="text-muted-foreground">{{ $t('tickets.show.accepted') }}</span>
-                                    <span>{{ formatShortDate(ticket.accepted_at) }}</span>
+                                    <span>{{ formatDate(ticket.accepted_at) }}</span>
                                 </div>
                                 <div v-if="ticket.completed_at" class="flex justify-between">
                                     <span class="text-muted-foreground">{{ $t('tickets.show.completed') }}</span>
-                                    <span>{{ formatShortDate(ticket.completed_at) }}</span>
+                                    <span>{{ formatDate(ticket.completed_at) }}</span>
                                 </div>
                             </div>
                         </CardContent>

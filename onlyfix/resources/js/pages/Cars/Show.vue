@@ -10,9 +10,9 @@ import { type BreadcrumbItem } from '@/types';
 import type { Car, Ticket } from '@/types/models';
 import { Head, Link, router } from '@inertiajs/vue3';
 import { useI18n } from 'vue-i18n';
-import { 
-    Car as CarIcon, ArrowLeft, Edit, Trash2, Calendar, Hash, Palette, 
-    FileText, Plus, Wrench, Clock, CheckCircle2, AlertCircle 
+import {
+    Car as CarIcon, ArrowLeft, Edit, Trash2, Calendar, Hash, Palette,
+    FileText, Plus, Wrench
 } from 'lucide-vue-next';
 import { ref } from 'vue';
 import {
@@ -23,8 +23,12 @@ import {
     DialogHeader,
     DialogTitle,
 } from '@/components/ui/dialog';
+import { useTicketHelpers } from '@/composables/useTicketHelpers';
+import { useFormatting } from '@/composables/useFormatting';
 
 const { t } = useI18n();
+const { getStatusBadgeVariant, getStatusIcon } = useTicketHelpers();
+const { formatDate } = useFormatting();
 
 const props = defineProps<{
     car: Car & { tickets?: Ticket[] };
@@ -55,36 +59,6 @@ const deleteCar = () => {
             deleteDialogOpen.value = false;
         },
     });
-};
-
-const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString(undefined, {
-        year: 'numeric',
-        month: 'long',
-        day: 'numeric',
-    });
-};
-
-const getStatusBadgeVariant = (status: string) => {
-    const variants: Record<string, 'default' | 'secondary' | 'destructive' | 'outline'> = {
-        open: 'destructive',
-        assigned: 'secondary',
-        in_progress: 'default',
-        completed: 'outline',
-        closed: 'outline',
-    };
-    return variants[status] || 'secondary';
-};
-
-const getStatusIcon = (status: string) => {
-    const icons: Record<string, any> = {
-        open: AlertCircle,
-        assigned: Clock,
-        in_progress: Wrench,
-        completed: CheckCircle2,
-        closed: CheckCircle2,
-    };
-    return icons[status] || Clock;
 };
 </script>
 

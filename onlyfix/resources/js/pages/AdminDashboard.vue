@@ -7,6 +7,8 @@ import { type BreadcrumbItem } from '@/types';
 import { type Ticket, type User } from '@/types/models';
 import { Head, Link } from '@inertiajs/vue3';
 import { useI18n } from 'vue-i18n';
+import { useTicketHelpers } from '@/composables/useTicketHelpers';
+import { useFormatting } from '@/composables/useFormatting';
 import {
     Users,
     ClipboardList,
@@ -19,6 +21,8 @@ import {
 } from 'lucide-vue-next';
 
 const { t } = useI18n();
+const { getStatusBadgeVariant } = useTicketHelpers();
+const { formatSimpleDate } = useFormatting();
 
 const props = defineProps<{
     stats: {
@@ -40,20 +44,7 @@ const breadcrumbs: BreadcrumbItem[] = [
     },
 ];
 
-const getStatusBadgeVariant = (status: string) => {
-    const variants: Record<string, 'default' | 'secondary' | 'destructive' | 'outline'> = {
-        open: 'destructive',
-        assigned: 'secondary',
-        in_progress: 'default',
-        completed: 'outline',
-        closed: 'outline',
-    };
-    return variants[status] || 'secondary';
-};
 
-const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString();
-};
 </script>
 
 <template>
@@ -161,7 +152,7 @@ const formatDate = (dateString: string) => {
                                     <Badge :variant="getStatusBadgeVariant(ticket.status)">
                                         {{ $t(`tickets.status.${ticket.status}`) }}
                                     </Badge>
-                                    <p class="text-[10px] text-muted-foreground mt-1">{{ formatDate(ticket.created_at) }}</p>
+                                    <p class="text-[10px] text-muted-foreground mt-1">{{ formatSimpleDate(ticket.created_at) }}</p>
                                 </div>
                             </div>
                         </div>

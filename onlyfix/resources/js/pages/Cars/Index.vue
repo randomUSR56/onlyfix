@@ -11,6 +11,7 @@ import type { Car, PaginatedData } from '@/types/models';
 import { Head, Link, router } from '@inertiajs/vue3';
 import { useI18n } from 'vue-i18n';
 import { useAuth } from '@/composables/useAuth';
+import { useFormatting } from '@/composables/useFormatting';
 import { Car as CarIcon, Plus, Search, Edit, Trash2, Eye, MoreHorizontal, Ticket } from 'lucide-vue-next';
 import { ref, watch, computed, onUnmounted } from 'vue';
 import {
@@ -30,6 +31,7 @@ import {
 
 const { t } = useI18n();
 const { isMechanic, isAdmin } = useAuth();
+const { formatDate, decodePaginationLabel } = useFormatting();
 
 // Only regular users can create cars (admin manages but doesn't own cars, mechanics can't create)
 const canCreateCar = computed(() => !isMechanic.value && !isAdmin.value);
@@ -87,18 +89,6 @@ const deleteCar = () => {
             },
         });
     }
-};
-
-const decodePaginationLabel = (label: string) => {
-    return label.replace(/&laquo;/g, '\u00AB').replace(/&raquo;/g, '\u00BB').replace(/&amp;/g, '&');
-};
-
-const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString(undefined, {
-        year: 'numeric',
-        month: 'short',
-        day: 'numeric',
-    });
 };
 </script>
 

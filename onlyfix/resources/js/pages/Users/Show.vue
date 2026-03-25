@@ -7,8 +7,12 @@ import { type BreadcrumbItem, type User } from '@/types';
 import { Head, Link, router } from '@inertiajs/vue3';
 import { useI18n } from 'vue-i18n';
 import { Mail, Calendar, Shield, Edit, Trash2, Car, ClipboardList } from 'lucide-vue-next';
+import { useTicketHelpers } from '@/composables/useTicketHelpers';
+import { useFormatting } from '@/composables/useFormatting';
 
 const { t } = useI18n();
+const { getRoleBadgeVariant } = useTicketHelpers();
+const { formatSimpleDate } = useFormatting();
 
 const props = defineProps<{
     user: User & { 
@@ -33,19 +37,6 @@ const deleteUser = () => {
     if (confirm(t('users.delete.description', { name: props.user.name }))) {
         router.delete(`/users/${props.user.id}`);
     }
-};
-
-const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString();
-};
-
-const getRoleBadgeVariant = (role: string) => {
-    const variants: Record<string, 'default' | 'secondary' | 'destructive' | 'outline'> = {
-        admin: 'destructive',
-        mechanic: 'default',
-        user: 'secondary',
-    };
-    return variants[role] || 'outline';
 };
 </script>
 
@@ -101,7 +92,7 @@ const getRoleBadgeVariant = (role: string) => {
                             </div>
                             <div class="flex items-center gap-3 text-sm">
                                 <Calendar class="h-4 w-4 text-muted-foreground" />
-                                <span>{{ $t('users.show.registeredAt') }}: {{ formatDate(user.created_at) }}</span>
+                                <span>{{ $t('users.show.registeredAt') }}: {{ formatSimpleDate(user.created_at) }}</span>
                             </div>
                             <div class="flex items-center gap-3 text-sm">
                                 <Shield class="h-4 w-4 text-muted-foreground" />
@@ -173,7 +164,7 @@ const getRoleBadgeVariant = (role: string) => {
                                         <ClipboardList class="h-5 w-5 text-muted-foreground" />
                                         <div>
                                             <p class="font-medium text-sm">#{{ ticket.id }} - {{ $t(`tickets.status.${ticket.status}`) }}</p>
-                                            <p class="text-xs text-muted-foreground">{{ formatDate(ticket.created_at) }}</p>
+                                            <p class="text-xs text-muted-foreground">{{ formatSimpleDate(ticket.created_at) }}</p>
                                         </div>
                                     </div>
                                     <Link :href="`/tickets/${ticket.id}`">
