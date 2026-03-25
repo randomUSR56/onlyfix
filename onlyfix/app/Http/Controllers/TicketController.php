@@ -271,6 +271,7 @@ class TicketController extends Controller
         }
 
         $rules = [
+            'car_id' => 'sometimes|exists:cars,id',
             'description' => 'sometimes|string',
             'priority' => 'sometimes|in:low,medium,high,urgent',
             'status' => 'sometimes|in:open,assigned,in_progress,completed,closed',

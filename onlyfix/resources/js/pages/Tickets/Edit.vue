@@ -4,7 +4,6 @@ import InputError from '@/components/InputError.vue';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Checkbox } from '@/components/ui/checkbox';
 import { Badge } from '@/components/ui/badge';
 import { dashboard } from '@/routes';
 import * as ticketsRoutes from '@/routes/tickets';
@@ -16,7 +15,7 @@ import {
     Ticket as TicketIcon, ArrowLeft, LoaderCircle, Car as CarIcon, 
     Wrench, Info
 } from 'lucide-vue-next';
-import { computed } from 'vue';
+import { computed, watch } from 'vue';
 import { useAuth } from '@/composables/useAuth';
 import { useTicketHelpers } from '@/composables/useTicketHelpers';
 
@@ -75,6 +74,12 @@ const form = useForm({
 const filteredCars = computed(() => {
     if (!isAdmin.value || !form.user_id) return props.cars;
     return props.cars.filter(car => car.user_id === form.user_id);
+});
+
+// Auto-select first available car when admin changes user
+watch(() => form.user_id, () => {
+    const cars = filteredCars.value;
+    form.car_id = cars.length ? cars[0].id : null;
 });
 
 const statusOptions = [
@@ -166,7 +171,6 @@ const submit = () => {
                             <CardContent>
                                 <select
                                     v-model="form.user_id"
-                                    @change="form.car_id = null"
                                     class="flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-sm transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
                                 >
                                     <option v-for="user in users" :key="user.id" :value="user.id">
@@ -289,16 +293,11 @@ const submit = () => {
                                         >
                                             <div
                                                 class="flex items-start gap-3 p-3 rounded-lg border cursor-pointer transition-all"
-                                                :class="isProblemSelected(problem.id) 
-                                                    ? 'border-primary bg-primary/5' 
+                                                :class="isProblemSelected(problem.id)
+                                                    ? 'border-primary bg-primary/5'
                                                     : 'border-border hover:border-primary/50'"
                                                 @click="toggleProblem(problem.id)"
                                             >
-                                                <Checkbox
-                                                    :checked="isProblemSelected(problem.id)"
-                                                    @click.stop
-                                                    @update:checked="toggleProblem(problem.id)"
-                                                />
                                                 <div class="flex-1 min-w-0">
                                                     <p class="font-medium text-sm">{{ translateProblem(problem).name }}</p>
                                                     <p v-if="problem.description" class="text-xs text-muted-foreground line-clamp-2">
