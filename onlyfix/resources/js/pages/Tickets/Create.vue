@@ -140,7 +140,7 @@ onMounted(() => {
             <!-- Header -->
             <div class="flex items-center gap-4">
                 <Link :href="ticketsRoutes.index().url">
-                    <Button variant="ghost" size="icon">
+                    <Button variant="ghost" size="icon" :aria-label="$t('common.goBack')">
                         <ArrowLeft class="h-5 w-5" />
                     </Button>
                 </Link>

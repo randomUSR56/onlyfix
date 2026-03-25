@@ -23,6 +23,8 @@
     "view": "View",
     "viewAll": "View all",
     "clearFilters": "Clear filters",
+    "goBack": "Go back",
+    "actions": "Actions",
     "copyright": "© {year} OnlyFix. All rights reserved.",
     "somethingWentWrong": "Something went wrong.",
     "success": "Success"
@@ -279,6 +281,224 @@
       "steering": "Steering",
       "body": "Body",
       "other": "Other"
+    },
+    "items": {
+      "Engine oil leak": {
+        "name": "Engine oil leak",
+        "description": "Oil is leaking from engine components"
+      },
+      "Engine overheating": {
+        "name": "Engine overheating",
+        "description": "Engine temperature exceeds normal operating range"
+      },
+      "Check engine light on": {
+        "name": "Check engine light on",
+        "description": "Dashboard warning light is illuminated"
+      },
+      "Engine misfire": {
+        "name": "Engine misfire",
+        "description": "Engine runs rough or shows misfiring symptoms"
+      },
+      "Poor fuel economy": {
+        "name": "Poor fuel economy",
+        "description": "Vehicle is consuming excessive fuel"
+      },
+      "Engine making strange noise": {
+        "name": "Engine making strange noise",
+        "description": "Unusual sounds coming from the engine"
+      },
+      "Hard to start engine": {
+        "name": "Hard to start engine",
+        "description": "Engine requires multiple attempts to start"
+      },
+      "Transmission slipping": {
+        "name": "Transmission slipping",
+        "description": "Transmission fails to engage gears properly"
+      },
+      "Hard shifting": {
+        "name": "Hard shifting",
+        "description": "Difficulty when shifting between gears"
+      },
+      "Transmission fluid leak": {
+        "name": "Transmission fluid leak",
+        "description": "Red fluid leaking from the transmission"
+      },
+      "Grinding noise when shifting": {
+        "name": "Grinding noise when shifting",
+        "description": "Unusual grinding sound when changing gears"
+      },
+      "Delayed engagement": {
+        "name": "Delayed engagement",
+        "description": "Transmission hesitates before engaging"
+      },
+      "Battery dead": {
+        "name": "Battery dead",
+        "description": "Battery does not hold charge"
+      },
+      "Alternator failure": {
+        "name": "Alternator failure",
+        "description": "Alternator is not charging the battery properly"
+      },
+      "Starter motor issues": {
+        "name": "Starter motor issues",
+        "description": "Starter motor fails to engage or clicks"
+      },
+      "Headlights not working": {
+        "name": "Headlights not working",
+        "description": "One or both headlights are not functioning"
+      },
+      "Dashboard lights malfunction": {
+        "name": "Dashboard lights malfunction",
+        "description": "Warning lights are not functioning properly"
+      },
+      "Power windows not working": {
+        "name": "Power windows not working",
+        "description": "Electric windows are not operating"
+      },
+      "Central locking failure": {
+        "name": "Central locking failure",
+        "description": "Door locks do not respond to remote or switch"
+      },
+      "Squeaking brakes": {
+        "name": "Squeaking brakes",
+        "description": "High-pitched noise when braking"
+      },
+      "Grinding brakes": {
+        "name": "Grinding brakes",
+        "description": "Metal-on-metal grinding sound when braking"
+      },
+      "Soft brake pedal": {
+        "name": "Soft brake pedal",
+        "description": "Brake pedal feels spongy or goes to floor"
+      },
+      "Brake pulls to one side": {
+        "name": "Brake pulls to one side",
+        "description": "Vehicle pulls left or right when braking"
+      },
+      "ABS light on": {
+        "name": "ABS light on",
+        "description": "Anti-lock brake system warning light is on"
+      },
+      "Brake fluid leak": {
+        "name": "Brake fluid leak",
+        "description": "Brake fluid is leaking from the system"
+      },
+      "Parking brake stuck": {
+        "name": "Parking brake stuck",
+        "description": "Parking brake does not release properly"
+      },
+      "Rough ride": {
+        "name": "Rough ride",
+        "description": "Vehicle rides harshly over bumps"
+      },
+      "Uneven tire wear": {
+        "name": "Uneven tire wear",
+        "description": "Tires are wearing unevenly"
+      },
+      "Clunking noise over bumps": {
+        "name": "Clunking noise over bumps",
+        "description": "Loud clunking when driving over uneven surfaces"
+      },
+      "Vehicle sits lower on one side": {
+        "name": "Vehicle sits lower on one side",
+        "description": "Uneven vehicle height indicating suspension issue"
+      },
+      "Excessive bouncing": {
+        "name": "Excessive bouncing",
+        "description": "Vehicle continues bouncing after bumps"
+      },
+      "Nose dives when braking": {
+        "name": "Nose dives when braking",
+        "description": "Front end dips excessively when braking"
+      },
+      "Hard to turn steering wheel": {
+        "name": "Hard to turn steering wheel",
+        "description": "Excessive force needed to steer"
+      },
+      "Loose steering": {
+        "name": "Loose steering",
+        "description": "Steering wheel has too much play"
+      },
+      "Steering wheel vibration": {
+        "name": "Steering wheel vibration",
+        "description": "Steering shakes or vibrates while driving"
+      },
+      "Power steering fluid leak": {
+        "name": "Power steering fluid leak",
+        "description": "Power steering fluid is leaking from the system"
+      },
+      "Steering wheel off-center": {
+        "name": "Steering wheel off-center",
+        "description": "Steering wheel is not straight when driving straight"
+      },
+      "Whining noise when turning": {
+        "name": "Whining noise when turning",
+        "description": "High-pitched whining when steering"
+      },
+      "Rust damage": {
+        "name": "Rust damage",
+        "description": "Corrosion on body panels"
+      },
+      "Dent repair needed": {
+        "name": "Dent repair needed",
+        "description": "Body panel dented from impact"
+      },
+      "Paint scratches": {
+        "name": "Paint scratches",
+        "description": "Surface paint damage requiring repair"
+      },
+      "Door alignment issues": {
+        "name": "Door alignment issues",
+        "description": "Doors do not close or align properly"
+      },
+      "Windshield crack": {
+        "name": "Windshield crack",
+        "description": "Crack or chip in windshield glass"
+      },
+      "Hood latch broken": {
+        "name": "Hood latch broken",
+        "description": "Hood does not close properly"
+      },
+      "Air conditioning not cooling": {
+        "name": "Air conditioning not cooling",
+        "description": "AC blows warm air or does not work"
+      },
+      "Heater not working": {
+        "name": "Heater not working",
+        "description": "Heating system does not produce warm air"
+      },
+      "Window won't roll up/down": {
+        "name": "Window won't roll up/down",
+        "description": "Electric window is stuck or not operating"
+      },
+      "Exhaust leak": {
+        "name": "Exhaust leak",
+        "description": "Exhaust system is leaking gases"
+      },
+      "Unusual exhaust smoke": {
+        "name": "Unusual exhaust smoke",
+        "description": "Black, white, or blue smoke from exhaust"
+      },
+      "Fuel gauge not working": {
+        "name": "Fuel gauge not working",
+        "description": "Fuel level indicator not reading correctly"
+      },
+      "Wiper blades need replacement": {
+        "name": "Wiper blades need replacement",
+        "description": "Wipers are streaking or not cleaning properly"
+      },
+      "Oil change needed": {
+        "name": "Oil change needed",
+        "description": "Regular oil and filter change required"
+      },
+      "Tire rotation needed": {
+        "name": "Tire rotation needed",
+        "description": "Tires need to be rotated for even wear"
+      },
+      "General inspection": {
+        "name": "General inspection",
+        "description": "Comprehensive vehicle safety check"
+      }
     }
   },
   "tickets": {

@@ -23,6 +23,8 @@
     "view": "Megtekintés",
     "viewAll": "Összes megtekintése",
     "clearFilters": "Szűrők törlése",
+    "goBack": "Vissza",
+    "actions": "Műveletek",
     "copyright": "© {year} OnlyFix. Minden jog fenntartva.",
     "somethingWentWrong": "Hiba történt.",
     "success": "Sikeres"

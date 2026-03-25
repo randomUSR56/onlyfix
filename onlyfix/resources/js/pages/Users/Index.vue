@@ -172,7 +172,7 @@ const formatDate = (dateString: string) => {
                                 <div class="col-span-1 text-right">
                                     <DropdownMenu>
                                         <DropdownMenuTrigger as-child>
-                                            <Button variant="ghost" size="icon" class="h-8 w-8">
+                                            <Button variant="ghost" size="icon" class="h-8 w-8" :aria-label="$t('common.actions')">
                                                 <MoreHorizontal class="h-4 w-4" />
                                             </Button>
                                         </DropdownMenuTrigger>
@@ -210,7 +210,7 @@ const formatDate = (dateString: string) => {
                                     </div>
                                     <DropdownMenu>
                                         <DropdownMenuTrigger as-child>
-                                            <Button variant="ghost" size="icon">
+                                            <Button variant="ghost" size="icon" :aria-label="$t('common.actions')">
                                                 <MoreHorizontal class="h-4 w-4" />
                                             </Button>
                                         </DropdownMenuTrigger>
