@@ -13,6 +13,7 @@ import {
 } from '@/components/ui/sidebar';
 import { dashboard } from '@/routes';
 import * as carsRoutes from '@/routes/cars';
+import * as helpRoutes from '@/routes/help';
 import * as ticketsRoutes from '@/routes/tickets';
 import * as usersRoutes from '@/routes/users';
 import { type NavItem } from '@/types';
@@ -88,7 +89,7 @@ const mainNavItems = computed(() => {
 const footerNavItems = computed<NavItem[]>(() => [
     {
         title: t('nav.help'),
-        href: '#',
+        href: helpRoutes.index(),
         icon: HelpCircle,
     },
     {

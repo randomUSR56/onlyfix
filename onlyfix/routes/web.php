@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\CarController;
+use App\Http\Controllers\HelpController;
 use App\Http\Controllers\ProblemController;
 use App\Http\Controllers\TicketController;
 use App\Http\Controllers\UserController;
@@ -202,6 +203,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::middleware(['role:mechanic|admin'])->group(function () {
         Route::get('/mechanics', [UserController::class, 'mechanics'])->name('mechanics.index');
     });
+
+    // Help
+    Route::get('/help', [HelpController::class, 'index'])->name('help.index');
 });
 
 require __DIR__.'/settings.php';
