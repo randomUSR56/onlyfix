@@ -7,12 +7,11 @@ import { type BreadcrumbItem } from '@/types';
 import { type Ticket, type User } from '@/types/models';
 import { Head, Link } from '@inertiajs/vue3';
 import { useI18n } from 'vue-i18n';
-import { 
-    Users, 
-    Wrench, 
-    ClipboardList, 
-    CheckCircle2, 
-    Clock, 
+import {
+    Users,
+    ClipboardList,
+    CheckCircle2,
+    Clock,
     AlertCircle,
     ArrowRight,
     UserPlus,

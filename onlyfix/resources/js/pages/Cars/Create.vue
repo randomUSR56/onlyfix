@@ -8,10 +8,9 @@ import { Label } from '@/components/ui/label';
 import { dashboard } from '@/routes';
 import * as carsRoutes from '@/routes/cars';
 import { type BreadcrumbItem } from '@/types';
-import { Head, useForm } from '@inertiajs/vue3';
+import { Head, useForm, Link } from '@inertiajs/vue3';
 import { useI18n } from 'vue-i18n';
 import { Car as CarIcon, Calendar, Hash, Palette, FileText, ArrowLeft, LoaderCircle } from 'lucide-vue-next';
-import { Link } from '@inertiajs/vue3';
 
 const { t } = useI18n();
 

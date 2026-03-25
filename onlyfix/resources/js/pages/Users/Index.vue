@@ -9,7 +9,7 @@ import { type User, type PaginatedData } from '@/types/models';
 import { Head, Link, router } from '@inertiajs/vue3';
 import { useI18n } from 'vue-i18n';
 import { ref, watch, onUnmounted } from 'vue';
-import { UserPlus, Search, Mail, Shield, User as UserIcon, MoreHorizontal, Edit, Trash2 } from 'lucide-vue-next';
+import { UserPlus, Search, User as UserIcon, MoreHorizontal, Edit, Trash2 } from 'lucide-vue-next';
 import {
     DropdownMenu,
     DropdownMenuContent,

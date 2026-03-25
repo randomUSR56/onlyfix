@@ -12,7 +12,7 @@ import { Head, Link, router } from '@inertiajs/vue3';
 import { useI18n } from 'vue-i18n';
 import { useAuth } from '@/composables/useAuth';
 import { 
-    Ticket as TicketIcon, Plus, Search, Eye, MoreHorizontal, Filter,
+    Ticket as TicketIcon, Plus, Search, Eye, Filter,
     Clock, CheckCircle2, AlertCircle, Wrench, Car as CarIcon, X, UserPlus
 } from 'lucide-vue-next';
 import { ref, watch, computed, onUnmounted } from 'vue';
@@ -26,7 +26,7 @@ import {
 } from '@/components/ui/dropdown-menu';
 
 const { t } = useI18n();
-const { isMechanic, isAdmin, user } = useAuth();
+const { isMechanic, isAdmin } = useAuth();
 
 // Mechanics can't create tickets, only users (and admins)
 const canCreateTicket = computed(() => !isMechanic.value || isAdmin.value);
