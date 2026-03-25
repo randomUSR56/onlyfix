@@ -10,6 +10,7 @@ import { Head, Link, router } from '@inertiajs/vue3';
 import { useI18n } from 'vue-i18n';
 import { useTicketHelpers } from '@/composables/useTicketHelpers';
 import { useFormatting } from '@/composables/useFormatting';
+import { getRoleName } from '@/composables/useAuth';
 import { ref, watch, onUnmounted } from 'vue';
 import * as usersRoutes from '@/routes/users';
 import { UserPlus, Search, User as UserIcon, MoreHorizontal, Edit, Trash2 } from 'lucide-vue-next';
@@ -41,10 +42,6 @@ const breadcrumbs: BreadcrumbItem[] = [
 
 const search = ref(props.filters.search || '');
 const roleFilter = ref(props.filters.role || '');
-
-const getRoleName = (role: string | { name: string }) => {
-    return typeof role === 'string' ? role : role.name;
-};
 
 const updateFilters = () => {
     router.get(usersRoutes.index().url, {
@@ -139,18 +136,18 @@ const deleteUser = (user: User) => {
                                 </div>
                                 <div class="col-span-3">
                                     <div class="flex gap-1 flex-wrap">
-                                        <Badge 
-                                            v-for="role in user.roles" 
-                                            :key="typeof role === 'string' ? role : (role as any).name" 
-                                            :variant="getRoleBadgeVariant(typeof role === 'string' ? role : (role as any).name)"
+                                        <Badge
+                                            v-for="role in user.roles"
+                                            :key="getRoleName(role)"
+                                            :variant="getRoleBadgeVariant(getRoleName(role))"
                                             class="text-[10px] px-1.5 py-0"
                                         >
-                                            {{ typeof role === 'string' ? $t(`users.roles.${role}`) : $t(`users.roles.${(role as any).name}`) }}
+                                            {{ $t(`users.roles.${getRoleName(role)}`) }}
                                         </Badge>
                                     </div>
                                 </div>
                                 <div class="col-span-3 text-sm text-muted-foreground">
-                                    <span v-if="user.roles.includes('mechanic')">
+                                    <span v-if="user.roles.some(r => getRoleName(r) === 'mechanic')">
                                         {{ $t('users.ticketsCount', { count: user.tickets_count || 0 }) }}
                                     </span>
                                     <span v-else>
@@ -230,7 +227,7 @@ const deleteUser = (user: User) => {
                                         </Badge>
                                     </div>
                                     <span class="text-muted-foreground">
-                                        {{ user.roles.includes('mechanic') 
+                                        {{ user.roles.some(r => getRoleName(r) === 'mechanic')
                                             ? $t('users.ticketsCount', { count: user.tickets_count || 0 }) 
                                             : $t('users.carsCount', { count: user.cars_count || 0 }) 
                                         }}

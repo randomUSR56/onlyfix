@@ -9,6 +9,7 @@ import { useI18n } from 'vue-i18n';
 import { Mail, Calendar, Shield, Edit, Trash2, Car, ClipboardList } from 'lucide-vue-next';
 import { useTicketHelpers } from '@/composables/useTicketHelpers';
 import { useFormatting } from '@/composables/useFormatting';
+import { getRoleName } from '@/composables/useAuth';
 import * as usersRoutes from '@/routes/users';
 import * as carsRoutes from '@/routes/cars';
 import * as ticketsRoutes from '@/routes/tickets';
@@ -57,12 +58,12 @@ const deleteUser = () => {
                     <div>
                         <h1 class="text-2xl font-bold tracking-tight">{{ user.name }}</h1>
                         <div class="flex gap-1 mt-1">
-                            <Badge 
-                                v-for="role in user.roles" 
-                                :key="role" 
-                                :variant="getRoleBadgeVariant(role)"
+                            <Badge
+                                v-for="role in user.roles"
+                                :key="getRoleName(role)"
+                                :variant="getRoleBadgeVariant(getRoleName(role))"
                             >
-                                {{ $t(`users.roles.${role}`) }}
+                                {{ $t(`users.roles.${getRoleName(role)}`) }}
                             </Badge>
                         </div>
                     </div>
@@ -104,7 +105,7 @@ const deleteUser = () => {
                         </CardContent>
                     </Card>
 
-                    <Card v-if="user.roles.includes('mechanic')">
+                    <Card v-if="user.roles.some(r => getRoleName(r) === 'mechanic')">
                         <CardHeader>
                             <CardTitle>{{ $t('users.show.professionalData') }}</CardTitle>
                         </CardHeader>
@@ -120,7 +121,7 @@ const deleteUser = () => {
                 <!-- Activity Column -->
                 <div class="md:col-span-2 space-y-6">
                     <!-- Cars Section (for users) -->
-                    <Card v-if="!user.roles.includes('mechanic')">
+                    <Card v-if="!user.roles.some(r => getRoleName(r) === 'mechanic')">
                         <CardHeader class="flex flex-row items-center justify-between">
                             <div>
                                 <CardTitle>{{ $t('users.show.registeredCars') }}</CardTitle>
@@ -155,7 +156,7 @@ const deleteUser = () => {
                             <div>
                                 <CardTitle>{{ $t('users.show.repairTickets') }}</CardTitle>
                                 <CardDescription>
-                                    {{ user.roles.includes('mechanic') ? $t('users.show.assignedTasks') : $t('users.show.ownRequests') }}
+                                    {{ user.roles.some(r => getRoleName(r) === 'mechanic') ? $t('users.show.assignedTasks') : $t('users.show.ownRequests') }}
                                 </CardDescription>
                             </div>
                             <Badge variant="outline">{{ user.tickets?.length || 0 }}</Badge>

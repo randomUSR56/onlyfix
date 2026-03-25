@@ -9,6 +9,7 @@ import { Head, Link } from '@inertiajs/vue3';
 import { useI18n } from 'vue-i18n';
 import { useTicketHelpers } from '@/composables/useTicketHelpers';
 import { useFormatting } from '@/composables/useFormatting';
+import { getRoleName } from '@/composables/useAuth';
 import { dashboard } from '@/routes';
 import * as usersRoutes from '@/routes/users';
 import * as ticketsRoutes from '@/routes/tickets';
@@ -186,7 +187,7 @@ const breadcrumbs: BreadcrumbItem[] = [
                                     <p class="text-xs text-muted-foreground truncate">{{ user.email }}</p>
                                 </div>
                                 <Badge variant="outline" class="text-[10px]">
-                                    {{ typeof user.roles[0] === 'string' ? $t(`users.roles.${user.roles[0]}`) : $t('users.roles.user') }}
+                                    {{ $t(`users.roles.${getRoleName(user.roles[0])}`) }}
                                 </Badge>
                             </div>
                         </div>

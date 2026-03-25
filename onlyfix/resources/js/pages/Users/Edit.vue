@@ -7,6 +7,7 @@ import { Label } from '@/components/ui/label';
 import { type BreadcrumbItem, type User } from '@/types';
 import { Head, useForm, Link } from '@inertiajs/vue3';
 import { useI18n } from 'vue-i18n';
+import { getRoleName } from '@/composables/useAuth';
 import InputError from '@/components/InputError.vue';
 import * as usersRoutes from '@/routes/users';
 
@@ -32,7 +33,7 @@ const form = useForm({
     email: props.user.email,
     password: '',
     password_confirmation: '',
-    role: props.user.roles[0] || 'user',
+    role: getRoleName(props.user.roles[0]) || 'user',
 });
 
 const submit = () => {
