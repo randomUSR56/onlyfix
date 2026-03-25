@@ -8,17 +8,18 @@ import { type BreadcrumbItem } from '@/types';
 import { Head, useForm, Link } from '@inertiajs/vue3';
 import { useI18n } from 'vue-i18n';
 import InputError from '@/components/InputError.vue';
+import * as usersRoutes from '@/routes/users';
 
 const { t } = useI18n();
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
         title: t('users.pageTitle'),
-        href: '/users',
+        href: usersRoutes.index().url,
     },
     {
         title: t('users.addUser'),
-        href: '/users/create',
+        href: usersRoutes.create().url,
     },
 ];
 
@@ -31,7 +32,7 @@ const form = useForm({
 });
 
 const submit = () => {
-    form.post('/users', {
+    form.post(usersRoutes.store().url, {
         onFinish: () => form.reset('password', 'password_confirmation'),
     });
 };
@@ -120,7 +121,7 @@ const submit = () => {
                         </div>
 
                         <div class="flex items-center justify-end gap-4">
-                            <Link href="/users">
+                            <Link :href="usersRoutes.index().url">
                                 <Button variant="ghost" type="button">
                                     {{ $t('common.cancel') }}
                                 </Button>

@@ -11,6 +11,7 @@ import { useI18n } from 'vue-i18n';
 import { useTicketHelpers } from '@/composables/useTicketHelpers';
 import { useFormatting } from '@/composables/useFormatting';
 import { ref, watch, onUnmounted } from 'vue';
+import * as usersRoutes from '@/routes/users';
 import { UserPlus, Search, User as UserIcon, MoreHorizontal, Edit, Trash2 } from 'lucide-vue-next';
 import {
     DropdownMenu,
@@ -34,7 +35,7 @@ const props = defineProps<{
 const breadcrumbs: BreadcrumbItem[] = [
     {
         title: t('users.pageTitle'),
-        href: '/users',
+        href: usersRoutes.index().url,
     },
 ];
 
@@ -46,7 +47,7 @@ const getRoleName = (role: string | { name: string }) => {
 };
 
 const updateFilters = () => {
-    router.get('/users', {
+    router.get(usersRoutes.index().url, {
         search: search.value,
         role: roleFilter.value,
     }, {
@@ -70,7 +71,7 @@ onUnmounted(() => {
 
 const deleteUser = (user: User) => {
     if (confirm(t('users.delete.description', { name: user.name }))) {
-        router.delete(`/users/${user.id}`);
+        router.delete(usersRoutes.destroy({ user: user.id }).url);
     }
 };
 </script>
@@ -85,7 +86,7 @@ const deleteUser = (user: User) => {
                     <h1 class="text-2xl font-bold tracking-tight">{{ $t('users.title') }}</h1>
                     <p class="text-sm text-muted-foreground">{{ $t('users.subtitle') }}</p>
                 </div>
-                <Link href="/users/create">
+                <Link :href="usersRoutes.create().url">
                     <Button>
                         <UserPlus class="mr-2 h-4 w-4" />
                         {{ $t('users.addUser') }}
@@ -164,11 +165,11 @@ const deleteUser = (user: User) => {
                                             </Button>
                                         </DropdownMenuTrigger>
                                         <DropdownMenuContent align="end">
-                                            <DropdownMenuItem @click="router.get(`/users/${user.id}`)">
+                                            <DropdownMenuItem @click="router.get(usersRoutes.show({ user: user.id }).url)">
                                                 <UserIcon class="mr-2 h-4 w-4" />
                                                 {{ $t('common.view') }}
                                             </DropdownMenuItem>
-                                            <DropdownMenuItem @click="router.get(`/users/${user.id}/edit`)">
+                                            <DropdownMenuItem @click="router.get(usersRoutes.edit({ user: user.id }).url)">
                                                 <Edit class="mr-2 h-4 w-4" />
                                                 {{ $t('common.edit') }}
                                             </DropdownMenuItem>
@@ -202,11 +203,11 @@ const deleteUser = (user: User) => {
                                             </Button>
                                         </DropdownMenuTrigger>
                                         <DropdownMenuContent align="end">
-                                            <DropdownMenuItem @click="router.get(`/users/${user.id}`)">
+                                            <DropdownMenuItem @click="router.get(usersRoutes.show({ user: user.id }).url)">
                                                 <UserIcon class="mr-2 h-4 w-4" />
                                                 {{ $t('common.view') }}
                                             </DropdownMenuItem>
-                                            <DropdownMenuItem @click="router.get(`/users/${user.id}/edit`)">
+                                            <DropdownMenuItem @click="router.get(usersRoutes.edit({ user: user.id }).url)">
                                                 <Edit class="mr-2 h-4 w-4" />
                                                 {{ $t('common.edit') }}
                                             </DropdownMenuItem>

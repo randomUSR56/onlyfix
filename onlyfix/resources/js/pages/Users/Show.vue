@@ -9,6 +9,7 @@ import { useI18n } from 'vue-i18n';
 import { Mail, Calendar, Shield, Edit, Trash2, Car, ClipboardList } from 'lucide-vue-next';
 import { useTicketHelpers } from '@/composables/useTicketHelpers';
 import { useFormatting } from '@/composables/useFormatting';
+import * as usersRoutes from '@/routes/users';
 
 const { t } = useI18n();
 const { getRoleBadgeVariant } = useTicketHelpers();
@@ -25,17 +26,17 @@ const props = defineProps<{
 const breadcrumbs: BreadcrumbItem[] = [
     {
         title: t('users.pageTitle'),
-        href: '/users',
+        href: usersRoutes.index().url,
     },
     {
         title: props.user.name,
-        href: `/users/${props.user.id}`,
+        href: usersRoutes.show({ user: props.user.id }).url,
     },
 ];
 
 const deleteUser = () => {
     if (confirm(t('users.delete.description', { name: props.user.name }))) {
-        router.delete(`/users/${props.user.id}`);
+        router.delete(usersRoutes.destroy({ user: props.user.id }).url);
     }
 };
 </script>
@@ -65,7 +66,7 @@ const deleteUser = () => {
                     </div>
                 </div>
                 <div class="flex gap-2">
-                    <Link :href="`/users/${user.id}/edit`">
+                    <Link :href="usersRoutes.edit({ user: user.id }).url">
                         <Button variant="outline">
                             <Edit class="mr-2 h-4 w-4" />
                             {{ $t('common.edit') }}

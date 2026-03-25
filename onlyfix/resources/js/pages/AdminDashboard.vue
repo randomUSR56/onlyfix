@@ -9,6 +9,9 @@ import { Head, Link } from '@inertiajs/vue3';
 import { useI18n } from 'vue-i18n';
 import { useTicketHelpers } from '@/composables/useTicketHelpers';
 import { useFormatting } from '@/composables/useFormatting';
+import { dashboard } from '@/routes';
+import * as usersRoutes from '@/routes/users';
+import * as ticketsRoutes from '@/routes/tickets';
 import {
     Users,
     ClipboardList,
@@ -40,7 +43,7 @@ const props = defineProps<{
 const breadcrumbs: BreadcrumbItem[] = [
     {
         title: t('adminDashboard.pageTitle'),
-        href: '/dashboard',
+        href: dashboard().url,
     },
 ];
 
@@ -58,13 +61,13 @@ const breadcrumbs: BreadcrumbItem[] = [
                     <p class="text-sm text-muted-foreground">{{ $t('adminDashboard.subtitle') }}</p>
                 </div>
                 <div class="flex gap-2">
-                    <Link href="/users/create">
+                    <Link :href="usersRoutes.create().url">
                         <Button variant="outline" size="sm">
                             <UserPlus class="mr-2 h-4 w-4" />
                             {{ $t('users.addUser') }}
                         </Button>
                     </Link>
-                    <Link href="/tickets/create">
+                    <Link :href="ticketsRoutes.create().url">
                         <Button size="sm">
                             <Plus class="mr-2 h-4 w-4" />
                             {{ $t('tickets.createTicket') }}
@@ -125,7 +128,7 @@ const breadcrumbs: BreadcrumbItem[] = [
                             <CardTitle>{{ $t('dashboard.recentTickets.title') }}</CardTitle>
                             <CardDescription>{{ $t('dashboard.recentTickets.description') }}</CardDescription>
                         </div>
-                        <Link href="/tickets">
+                        <Link :href="ticketsRoutes.index().url">
                             <Button variant="ghost" size="sm">
                                 {{ $t('common.viewAll') }}
                                 <ArrowRight class="ml-1 h-4 w-4" />
@@ -166,7 +169,7 @@ const breadcrumbs: BreadcrumbItem[] = [
                             <CardTitle>{{ $t('adminDashboard.recentUsers') }}</CardTitle>
                             <CardDescription>{{ $t('adminDashboard.recentUsersDescription') }}</CardDescription>
                         </div>
-                        <Link href="/users">
+                        <Link :href="usersRoutes.index().url">
                             <Button variant="ghost" size="sm">
                                 {{ $t('common.viewAll') }}
                             </Button>

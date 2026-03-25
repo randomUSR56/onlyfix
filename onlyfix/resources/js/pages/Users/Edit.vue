@@ -8,6 +8,7 @@ import { type BreadcrumbItem, type User } from '@/types';
 import { Head, useForm, Link } from '@inertiajs/vue3';
 import { useI18n } from 'vue-i18n';
 import InputError from '@/components/InputError.vue';
+import * as usersRoutes from '@/routes/users';
 
 const { t } = useI18n();
 
@@ -18,11 +19,11 @@ const props = defineProps<{
 const breadcrumbs: BreadcrumbItem[] = [
     {
         title: t('users.pageTitle'),
-        href: '/users',
+        href: usersRoutes.index().url,
     },
     {
         title: t('common.edit'),
-        href: `/users/${props.user.id}/edit`,
+        href: usersRoutes.edit({ user: props.user.id }).url,
     },
 ];
 
@@ -35,7 +36,7 @@ const form = useForm({
 });
 
 const submit = () => {
-    form.patch(`/users/${props.user.id}`, {
+    form.patch(usersRoutes.update({ user: props.user.id }).url, {
         onFinish: () => form.reset('password', 'password_confirmation'),
     });
 };
@@ -125,7 +126,7 @@ const submit = () => {
                         </div>
 
                         <div class="flex items-center justify-end gap-4">
-                            <Link href="/users">
+                            <Link :href="usersRoutes.index().url">
                                 <Button variant="ghost" type="button">
                                     {{ $t('common.cancel') }}
                                 </Button>
