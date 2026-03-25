@@ -109,10 +109,11 @@ const problemsByCategory = computed(() => {
 const toggleProblem = (problemId: number): void => {
     const index = form.problem_ids.indexOf(problemId);
     if (index === -1) {
-        form.problem_ids.push(problemId);
+        form.problem_ids = [...form.problem_ids, problemId];
     } else {
-        form.problem_ids.splice(index, 1);
-        delete form.problem_notes[problemId];
+        form.problem_ids = form.problem_ids.filter((id: number) => id !== problemId);
+        const { [problemId]: _, ...rest } = form.problem_notes;
+        form.problem_notes = rest;
     }
 };
 
