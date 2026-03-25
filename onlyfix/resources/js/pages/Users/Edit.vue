@@ -107,7 +107,7 @@ const submit = () => {
                                         id="password"
                                         v-model="form.password"
                                         type="password"
-                                        placeholder="••••••••"
+                                        :placeholder="$t('common.passwordPlaceholder')"
                                     />
                                     <InputError :message="form.errors.password" />
                                 </div>
@@ -118,7 +118,7 @@ const submit = () => {
                                         id="password_confirmation"
                                         v-model="form.password_confirmation"
                                         type="password"
-                                        placeholder="••••••••"
+                                        :placeholder="$t('common.passwordPlaceholder')"
                                     />
                                     <InputError :message="form.errors.password_confirmation" />
                                 </div>

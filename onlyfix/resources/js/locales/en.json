@@ -27,7 +27,10 @@
     "actions": "Actions",
     "copyright": "© {year} OnlyFix. All rights reserved.",
     "somethingWentWrong": "Something went wrong.",
-    "success": "Success"
+    "success": "Success",
+    "passwordPlaceholder": "--------",
+    "quoteOpen": "\u201c",
+    "quoteClose": "\u201d"
   },
   "nav": {
     "home": "Home",
@@ -568,7 +571,7 @@
       "description": "Description",
       "reportedProblems": "Reported Problems",
       "reportedProblemsDescription": "Issues selected by the customer",
-      "customerNote": "Customer note",
+      "customerNote": "Customer note:",
       "noProblems": "No problems reported",
       "timeline": "Timeline",
       "vehicleInfo": "Vehicle Information",
@@ -635,19 +638,19 @@
     "carsCount": "{count} car | {count} cars",
     "show": {
       "info": "Information",
-      "registeredAt": "Registered at",
-      "accountStatus": "Account Status",
+      "registeredAt": "Registered at:",
+      "accountStatus": "Account Status:",
       "verified": "Verified",
       "unverified": "Unverified",
       "professionalData": "Professional Data",
-      "totalRepairs": "Total Repairs",
+      "totalRepairs": "Total Repairs:",
       "registeredCars": "Registered Cars",
       "registeredCarsDescription": "Vehicles assigned to this user",
-      "noCars": "No registered cars",
+      "noCars": "No registered cars.",
       "repairTickets": "Repair Tickets",
       "assignedTasks": "Assigned Tasks",
       "ownRequests": "Own Requests",
-      "noTickets": "No tickets found",
+      "noTickets": "No tickets found.",
       "details": "Details"
     }
   },

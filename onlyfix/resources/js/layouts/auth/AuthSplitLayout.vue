@@ -3,6 +3,9 @@ import AppLogoIcon from '@/components/AppLogoIcon.vue';
 import { home } from '@/routes';
 import { Link, usePage } from '@inertiajs/vue3';
 import { computed } from 'vue';
+import { useI18n } from 'vue-i18n';
+
+const { t } = useI18n();
 
 const page = usePage();
 const name = computed(() => page.props.name);
@@ -31,7 +34,7 @@ defineProps<{
             </Link>
             <div v-if="quote" class="relative z-20 mt-auto">
                 <blockquote class="space-y-2">
-                    <p class="text-lg">&ldquo;{{ quote.message }}&rdquo;</p>
+                    <p class="text-lg">{{ $t('common.quoteOpen') }}{{ quote.message }}{{ $t('common.quoteClose') }}</p>
                     <footer class="text-sm text-neutral-300">
                         {{ quote.author }}
                     </footer>

@@ -10,6 +10,8 @@ import { Mail, Calendar, Shield, Edit, Trash2, Car, ClipboardList } from 'lucide
 import { useTicketHelpers } from '@/composables/useTicketHelpers';
 import { useFormatting } from '@/composables/useFormatting';
 import * as usersRoutes from '@/routes/users';
+import * as carsRoutes from '@/routes/cars';
+import * as ticketsRoutes from '@/routes/tickets';
 
 const { t } = useI18n();
 const { getRoleBadgeVariant } = useTicketHelpers();
@@ -93,11 +95,11 @@ const deleteUser = () => {
                             </div>
                             <div class="flex items-center gap-3 text-sm">
                                 <Calendar class="h-4 w-4 text-muted-foreground" />
-                                <span>{{ $t('users.show.registeredAt') }}: {{ formatSimpleDate(user.created_at) }}</span>
+                                <span>{{ $t('users.show.registeredAt') }} {{ formatSimpleDate(user.created_at) }}</span>
                             </div>
                             <div class="flex items-center gap-3 text-sm">
                                 <Shield class="h-4 w-4 text-muted-foreground" />
-                                <span>{{ $t('users.show.accountStatus') }}: {{ user.email_verified_at ? $t('users.show.verified') : $t('users.show.unverified') }}</span>
+                                <span>{{ $t('users.show.accountStatus') }} {{ user.email_verified_at ? $t('users.show.verified') : $t('users.show.unverified') }}</span>
                             </div>
                         </CardContent>
                     </Card>
@@ -108,7 +110,7 @@ const deleteUser = () => {
                         </CardHeader>
                         <CardContent>
                             <div class="flex items-center justify-between text-sm">
-                                <span>{{ $t('users.show.totalRepairs') }}:</span>
+                                <span>{{ $t('users.show.totalRepairs') }}</span>
                                 <span class="font-bold">{{ user.tickets?.length || 0 }}</span>
                             </div>
                         </CardContent>
@@ -136,13 +138,13 @@ const deleteUser = () => {
                                             <p class="text-xs text-muted-foreground">{{ car.license_plate }}</p>
                                         </div>
                                     </div>
-                                    <Link :href="`/cars/${car.id}`">
+                                    <Link :href="carsRoutes.show({ car: car.id }).url">
                                         <Button variant="ghost" size="sm">{{ $t('users.show.details') }}</Button>
                                     </Link>
                                 </div>
                             </div>
                             <p v-else class="text-sm text-muted-foreground italic text-center py-4">
-                                {{ $t('users.show.noCars') }}.
+                                {{ $t('users.show.noCars') }}
                             </p>
                         </CardContent>
                     </Card>
@@ -168,13 +170,13 @@ const deleteUser = () => {
                                             <p class="text-xs text-muted-foreground">{{ formatSimpleDate(ticket.created_at) }}</p>
                                         </div>
                                     </div>
-                                    <Link :href="`/tickets/${ticket.id}`">
+                                    <Link :href="ticketsRoutes.show({ ticket: ticket.id }).url">
                                         <Button variant="ghost" size="sm">{{ $t('common.view') }}</Button>
                                     </Link>
                                 </div>
                             </div>
                             <p v-else class="text-sm text-muted-foreground italic text-center py-4">
-                                {{ $t('users.show.noTickets') }}.
+                                {{ $t('users.show.noTickets') }}
                             </p>
                         </CardContent>
                     </Card>

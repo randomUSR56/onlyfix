@@ -27,7 +27,10 @@
     "actions": "Műveletek",
     "copyright": "© {year} OnlyFix. Minden jog fenntartva.",
     "somethingWentWrong": "Hiba történt.",
-    "success": "Sikeres"
+    "success": "Sikeres",
+    "passwordPlaceholder": "--------",
+    "quoteOpen": "\u201e",
+    "quoteClose": "\u201d"
   },
   "nav": {
     "home": "Kezdőlap",
@@ -569,7 +572,7 @@
       "description": "Leírás",
       "reportedProblems": "Bejelentett problémák",
       "reportedProblemsDescription": "Az ügyfél által kiválasztott problémák",
-      "customerNote": "Ügyfél megjegyzése",
+      "customerNote": "Ügyfél megjegyzése:",
       "noProblems": "Nincsenek bejelentett problémák",
       "timeline": "Idővonal",
       "vehicleInfo": "Jármű információk",
@@ -636,19 +639,19 @@
     "carsCount": "{count} autó",
     "show": {
       "info": "Információk",
-      "registeredAt": "Regisztrálva",
-      "accountStatus": "Fiók állapota",
+      "registeredAt": "Regisztrálva:",
+      "accountStatus": "Fiók állapota:",
       "verified": "Megerősítve",
       "unverified": "Nincs megerősítve",
       "professionalData": "Szakmai adatok",
-      "totalRepairs": "Összes javítás",
+      "totalRepairs": "Összes javítás:",
       "registeredCars": "Regisztrált autók",
       "registeredCarsDescription": "A felhasználóhoz rendelt járművek",
-      "noCars": "Nincsenek regisztrált autók",
+      "noCars": "Nincsenek regisztrált autók.",
       "repairTickets": "Javítási jegyek",
       "assignedTasks": "Hozzárendelt feladatok",
       "ownRequests": "Saját kérések",
-      "noTickets": "Nincsenek jegyek",
+      "noTickets": "Nincsenek jegyek.",
       "details": "Részletek"
     }
   },

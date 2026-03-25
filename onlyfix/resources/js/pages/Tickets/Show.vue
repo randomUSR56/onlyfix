@@ -300,7 +300,7 @@ const canCloseTicket = computed(() =>
                                     </p>
                                     <div v-if="problem.pivot?.notes" class="p-2 rounded bg-background border-l-2 border-primary">
                                         <p class="text-sm">
-                                            <span class="font-medium">{{ $t('tickets.show.customerNote') }}:</span>
+                                            <span class="font-medium">{{ $t('tickets.show.customerNote') }}</span>
                                             {{ problem.pivot.notes }}
                                         </p>
                                     </div>
