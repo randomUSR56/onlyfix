@@ -13,10 +13,8 @@ import { regenerateRecoveryCodes } from '@/routes/two-factor';
 import { Form } from '@inertiajs/vue3';
 import { Eye, EyeOff, LockKeyhole, RefreshCw } from 'lucide-vue-next';
 import { nextTick, onMounted, ref } from 'vue';
-import { useI18n } from 'vue-i18n';
 
 const { recoveryCodesList, fetchRecoveryCodes, errors } = useTwoFactorAuth();
-const { t } = useI18n();
 const isRecoveryCodesVisible = ref<boolean>(false);
 const recoveryCodeSectionRef = ref<HTMLDivElement | null>(null);
 

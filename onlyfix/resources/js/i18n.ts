@@ -62,6 +62,7 @@ export function setStoredLocale(locale: SupportedLocale): void {
 export type MessageSchema = typeof en;
 
 // Create i18n instance
+// eslint-disable-next-line @typescript-eslint/no-empty-object-type
 export const i18n: I18n<{ en: MessageSchema; hu: MessageSchema }, {}, {}, SupportedLocale, false> = createI18n({
     legacy: false,
     locale: getInitialLocale(),

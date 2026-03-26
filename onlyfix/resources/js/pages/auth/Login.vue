@@ -11,9 +11,6 @@ import { store } from '@/routes/login';
 import { request } from '@/routes/password';
 import { Form, Head } from '@inertiajs/vue3';
 import { LoaderCircle, Mail, Lock, ArrowRight } from 'lucide-vue-next';
-import { useI18n } from 'vue-i18n';
-
-const { t } = useI18n();
 
 defineProps<{
     status?: string;

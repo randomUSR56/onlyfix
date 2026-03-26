@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed } from 'vue';
-import { availableLocales, setLocale, getCurrentLocale, type SupportedLocale } from '@/i18n';
+import { availableLocales, setLocale, type SupportedLocale } from '@/i18n';
 import { i18n } from '@/i18n';
 import { Button } from '@/components/ui/button';
 import {
@@ -12,11 +12,6 @@ import {
 import { Globe } from 'lucide-vue-next';
 
 const currentLocale = computed<SupportedLocale>(() => (i18n.global.locale as any).value);
-
-const currentLocaleDisplay = computed(() => {
-    const locale = availableLocales.find(l => l.code === currentLocale.value);
-    return locale?.nativeName || currentLocale.value;
-});
 
 const localeFlags: Record<string, string> = {
     en: '\u{1F1EC}\u{1F1E7}',

@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import AppLayout from '@/layouts/AppLayout.vue';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { dashboard } from '@/routes';
@@ -18,7 +18,7 @@ const { t } = useI18n();
 const { getStatusBadgeVariant, getPriorityBadgeClass, getStatusIcon } = useTicketHelpers();
 const { formatDate } = useFormatting();
 
-const props = defineProps<{
+defineProps<{
     stats: DashboardStats;
     recentTickets: Ticket[];
     cars: (Car & { tickets_count?: number })[];

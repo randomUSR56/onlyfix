@@ -117,7 +117,8 @@ const toggleProblem = (problemId: number): void => {
         form.problem_ids = [...form.problem_ids, problemId];
     } else {
         form.problem_ids = form.problem_ids.filter((id: number) => id !== problemId);
-        const { [problemId]: _, ...rest } = form.problem_notes;
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        const { [problemId]: _ignored, ...rest } = form.problem_notes;
         form.problem_notes = rest;
     }
 };

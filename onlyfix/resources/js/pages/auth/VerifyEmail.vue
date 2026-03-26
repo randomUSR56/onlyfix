@@ -6,9 +6,6 @@ import AuthLayout from '@/layouts/AuthLayout.vue';
 import { logout } from '@/routes';
 import { Form, Head } from '@inertiajs/vue3';
 import { LoaderCircle } from 'lucide-vue-next';
-import { useI18n } from 'vue-i18n';
-
-const { t } = useI18n();
 
 defineProps<{
     status?: string;

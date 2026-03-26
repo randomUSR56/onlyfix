@@ -4,7 +4,6 @@ import InputError from '@/components/InputError.vue';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
 import { Badge } from '@/components/ui/badge';
 import { dashboard } from '@/routes';
 import * as ticketsRoutes from '@/routes/tickets';
@@ -98,7 +97,8 @@ const toggleProblem = (problemId: number) => {
         form.problem_ids = [...form.problem_ids, problemId];
     } else {
         form.problem_ids = form.problem_ids.filter((id: number) => id !== problemId);
-        const { [problemId]: _, ...rest } = form.problem_notes;
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        const { [problemId]: _ignored, ...rest } = form.problem_notes;
         form.problem_notes = rest;
     }
 };

@@ -24,7 +24,7 @@ interface MechanicStats {
     completed_tickets: number;
 }
 
-const props = defineProps<{
+defineProps<{
     stats: MechanicStats;
     availableTickets: Ticket[];
     myTickets: Ticket[];

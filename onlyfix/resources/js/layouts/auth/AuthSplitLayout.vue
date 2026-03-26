@@ -3,9 +3,6 @@ import AppLogoIcon from '@/components/AppLogoIcon.vue';
 import { home } from '@/routes';
 import { Link, usePage } from '@inertiajs/vue3';
 import { computed } from 'vue';
-import { useI18n } from 'vue-i18n';
-
-const { t } = useI18n();
 
 const page = usePage();
 const name = computed(() => page.props.name);

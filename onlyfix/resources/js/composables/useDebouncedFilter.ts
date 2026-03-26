@@ -1,4 +1,4 @@
-import { ref, watch, onUnmounted, type Ref, type WatchSource } from 'vue';
+import { watch, onUnmounted, type Ref, type WatchSource } from 'vue';
 import { router } from '@inertiajs/vue3';
 
 interface DebouncedFilterOptions {

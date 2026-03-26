@@ -8,7 +8,7 @@ import { dashboard } from '@/routes';
 import * as ticketsRoutes from '@/routes/tickets';
 import * as carsRoutes from '@/routes/cars';
 import { type BreadcrumbItem } from '@/types';
-import type { Ticket, Problem } from '@/types/models';
+import type { Ticket } from '@/types/models';
 import { Head, Link, router } from '@inertiajs/vue3';
 import { useI18n } from 'vue-i18n';
 import { useAuth } from '@/composables/useAuth';
@@ -30,7 +30,7 @@ import {
 } from '@/components/ui/dialog';
 
 const { t } = useI18n();
-const { isMechanic, isAdmin, user } = useAuth();
+const { isMechanic, user } = useAuth();
 const { getStatusBadgeVariant, getPriorityBadgeClass, getStatusIcon, translateProblem } = useTicketHelpers();
 const { formatLongDate, formatDate } = useFormatting();
 

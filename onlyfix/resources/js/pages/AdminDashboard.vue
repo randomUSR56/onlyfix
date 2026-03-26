@@ -28,7 +28,7 @@ const { t } = useI18n();
 const { getStatusBadgeVariant } = useTicketHelpers();
 const { formatSimpleDate } = useFormatting();
 
-const props = defineProps<{
+defineProps<{
     stats: {
         total_users: number;
         total_mechanics: number;
