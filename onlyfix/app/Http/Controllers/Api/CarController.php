@@ -4,53 +4,26 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Models\Car;
-use App\Models\User;
+use App\Services\CarService;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Gate;
 
 class CarController extends Controller
 {
+    public function __construct(
+        private readonly CarService $carService
+    ) {}
+
     /**
      * Display a listing of cars.
      */
     public function index(Request $request)
     {
-        $user = $request->user();
+        $filters = $request->only(['search', 'user_id']);
 
-        // Admin and mechanics can view all cars
-        if ($user->hasAnyRole(['admin', 'mechanic'])) {
-            $cars = Car::with(['user', 'tickets'])
-                ->when($request->user_id, function ($query, $userId) {
-                    $query->where('user_id', $userId);
-                })
-                ->when($request->search, function ($query, $search) {
-                    $query->where(function ($q) use ($search) {
-                        $q->where('make', 'like', "%{$search}%")
-                          ->orWhere('model', 'like', "%{$search}%")
-                          ->orWhere('license_plate', 'like', "%{$search}%")
-                          ->orWhere('vin', 'like', "%{$search}%");
-                    });
-                })
-                ->paginate(15);
-        } else {
-            // Regular users can only view their own cars
-            $cars = Car::with(['user', 'tickets'])
-                ->where('user_id', $user->id)
-                ->when($request->search, function ($query, $search) {
-                    $query->where(function ($q) use ($search) {
-                        $q->where('make', 'like', "%{$search}%")
-                          ->orWhere('model', 'like', "%{$search}%")
-                          ->orWhere('license_plate', 'like', "%{$search}%")
-                          ->orWhere('vin', 'like', "%{$search}%");
-                    });
-                })
-                ->paginate(15);
-        }
-
-        return response()->json($cars);
+        return response()->json(
+            $this->carService->getCars($request->user(), $filters)
+        );
     }
-
-    // Removed create() - not needed for API
 
     /**
      * Store a newly created car.
@@ -67,24 +40,12 @@ class CarController extends Controller
             'user_id' => 'sometimes|exists:users,id',
         ]);
 
-        // Regular users can only create cars for themselves
-        if (!$request->user()->hasRole('admin') && isset($validated['user_id'])) {
-            if ($validated['user_id'] != $request->user()->id) {
-                return response()->json([
-                    'message' => 'You can only create cars for yourself'
-                ], 403);
-            }
-        }
-
-        // If user_id not provided, use authenticated user's id
-        $validated['user_id'] = $validated['user_id'] ?? $request->user()->id;
-
-        $car = Car::create($validated);
+        $car = $this->carService->createCar($request->user(), $validated);
         $car->load('user');
 
         return response()->json([
             'message' => 'Car created successfully',
-            'data' => $car
+            'data' => $car,
         ], 201);
     }
 
@@ -93,32 +54,16 @@ class CarController extends Controller
      */
     public function show(Request $request, Car $car)
     {
-        $user = $request->user();
-
-        // Users can only view their own cars unless they're admin/mechanic
-        if (!$user->hasAnyRole(['admin', 'mechanic']) && $car->user_id !== $user->id) {
-            return response()->json(['message' => 'Unauthorized'], 403);
-        }
-
-        $car->load(['user', 'tickets.problems']);
+        $car = $this->carService->showCar($car, $request->user());
 
         return response()->json($car);
     }
-
-    // Removed edit() - not needed for API
 
     /**
      * Update the specified car.
      */
     public function update(Request $request, Car $car)
     {
-        $user = $request->user();
-
-        // Users can only update their own cars unless they're admin
-        if (!$user->hasRole('admin') && $car->user_id !== $user->id) {
-            return response()->json(['message' => 'Unauthorized'], 403);
-        }
-
         $validated = $request->validate([
             'make' => 'sometimes|string|max:255',
             'model' => 'sometimes|string|max:255',
@@ -128,12 +73,12 @@ class CarController extends Controller
             'color' => 'nullable|string|max:255',
         ]);
 
-        $car->update($validated);
+        $car = $this->carService->updateCar($car, $request->user(), $validated);
         $car->load('user');
 
         return response()->json([
             'message' => 'Car updated successfully',
-            'data' => $car
+            'data' => $car,
         ]);
     }
 
@@ -142,17 +87,10 @@ class CarController extends Controller
      */
     public function destroy(Request $request, Car $car)
     {
-        $user = $request->user();
-
-        // Users can only delete their own cars unless they're admin
-        if (!$user->hasRole('admin') && $car->user_id !== $user->id) {
-            return response()->json(['message' => 'Unauthorized'], 403);
-        }
-
-        $car->delete();
+        $this->carService->deleteCar($car, $request->user());
 
         return response()->json([
-            'message' => 'Car deleted successfully'
+            'message' => 'Car deleted successfully',
         ]);
     }
 
@@ -161,16 +99,7 @@ class CarController extends Controller
      */
     public function tickets(Request $request, Car $car)
     {
-        $user = $request->user();
-
-        // Users can only view tickets for their own cars unless they're admin/mechanic
-        if (!$user->hasAnyRole(['admin', 'mechanic']) && $car->user_id !== $user->id) {
-            return response()->json(['message' => 'Unauthorized'], 403);
-        }
-
-        $tickets = $car->tickets()
-            ->with(['user', 'mechanic', 'problems'])
-            ->paginate(15);
+        $tickets = $this->carService->getCarTickets($car, $request->user());
 
         return response()->json($tickets);
     }

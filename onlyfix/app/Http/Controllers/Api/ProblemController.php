@@ -4,42 +4,26 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Models\Problem;
+use App\Services\ProblemService;
 use Illuminate\Http\Request;
 
 class ProblemController extends Controller
 {
+    public function __construct(
+        private readonly ProblemService $problemService
+    ) {}
+
     /**
      * Display a listing of problems.
      */
     public function index(Request $request)
     {
-        $query = Problem::query();
+        $filters = $request->only(['category', 'is_active', 'search']);
 
-        // Filter by category
-        if ($request->has('category')) {
-            $query->where('category', $request->category);
-        }
-
-        // Filter active/inactive
-        if ($request->has('is_active')) {
-            $query->where('is_active', $request->boolean('is_active'));
-        }
-
-        // Search by name or description
-        if ($request->has('search')) {
-            $search = $request->search;
-            $query->where(function ($q) use ($search) {
-                $q->where('name', 'like', "%{$search}%")
-                    ->orWhere('description', 'like', "%{$search}%");
-            });
-        }
-
-        $problems = $query->paginate(15);
-
-        return response()->json($problems);
+        return response()->json(
+            $this->problemService->getProblems($filters)
+        );
     }
-
-    // Removed create() - not needed for API
 
     /**
      * Store a newly created problem.
@@ -47,10 +31,6 @@ class ProblemController extends Controller
      */
     public function store(Request $request)
     {
-        if (!$request->user()->hasAnyRole(['admin', 'mechanic'])) {
-            return response()->json(['message' => 'Unauthorized'], 403);
-        }
-
         $validated = $request->validate([
             'name' => 'required|string|max:255|unique:problems',
             'category' => 'required|in:engine,transmission,electrical,brakes,suspension,steering,body,other',
@@ -58,13 +38,11 @@ class ProblemController extends Controller
             'is_active' => 'boolean',
         ]);
 
-        $validated['is_active'] = $validated['is_active'] ?? true;
-
-        $problem = Problem::create($validated);
+        $problem = $this->problemService->createProblem($request->user(), $validated);
 
         return response()->json([
             'message' => 'Problem created successfully',
-            'data' => $problem
+            'data' => $problem,
         ], 201);
     }
 
@@ -73,12 +51,10 @@ class ProblemController extends Controller
      */
     public function show(Problem $problem)
     {
-        $problem->load('tickets');
+        $problem = $this->problemService->showProblem($problem);
 
         return response()->json($problem);
     }
-
-    // Removed edit() - not needed for API
 
     /**
      * Update the specified problem.
@@ -86,10 +62,6 @@ class ProblemController extends Controller
      */
     public function update(Request $request, Problem $problem)
     {
-        if (!$request->user()->hasAnyRole(['admin', 'mechanic'])) {
-            return response()->json(['message' => 'Unauthorized'], 403);
-        }
-
         $validated = $request->validate([
             'name' => 'sometimes|string|max:255|unique:problems,name,' . $problem->id,
             'category' => 'sometimes|string|max:255',
@@ -97,11 +69,11 @@ class ProblemController extends Controller
             'is_active' => 'boolean',
         ]);
 
-        $problem->update($validated);
+        $problem = $this->problemService->updateProblem($problem, $request->user(), $validated);
 
         return response()->json([
             'message' => 'Problem updated successfully',
-            'data' => $problem
+            'data' => $problem,
         ]);
     }
 
@@ -111,14 +83,10 @@ class ProblemController extends Controller
      */
     public function destroy(Request $request, Problem $problem)
     {
-        if (!$request->user()->hasRole('admin')) {
-            return response()->json(['message' => 'Unauthorized'], 403);
-        }
-
-        $problem->delete();
+        $this->problemService->deleteProblem($problem, $request->user());
 
         return response()->json([
-            'message' => 'Problem deleted successfully'
+            'message' => 'Problem deleted successfully',
         ]);
     }
 
@@ -127,18 +95,8 @@ class ProblemController extends Controller
      */
     public function statistics(Request $request)
     {
-        if (!$request->user()->hasAnyRole(['admin', 'mechanic'])) {
-            return response()->json(['message' => 'Unauthorized'], 403);
-        }
-
-        $problems = Problem::withCount('tickets')
-            ->orderBy('tickets_count', 'desc')
-            ->get();
-
-        return response()->json([
-            'total_problems' => Problem::count(),
-            'active_problems' => Problem::where('is_active', true)->count(),
-            'problems_by_frequency' => $problems,
-        ]);
+        return response()->json(
+            $this->problemService->getStatistics($request->user())
+        );
     }
 }

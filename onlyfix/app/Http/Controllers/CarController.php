@@ -4,51 +4,26 @@ namespace App\Http\Controllers;
 
 use App\Models\Car;
 use App\Models\User;
+use App\Services\CarService;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
 class CarController extends Controller
 {
+    public function __construct(
+        private readonly CarService $carService
+    ) {}
+
     /**
      * Display a listing of cars.
      */
     public function index(Request $request)
     {
-        $user = $request->user();
-
-        // Admin and mechanics can view all cars
-        if ($user->hasAnyRole(['admin', 'mechanic'])) {
-            $cars = Car::with(['user', 'tickets'])
-                ->when($request->user_id, function ($query, $userId) {
-                    $query->where('user_id', $userId);
-                })
-                ->when($request->search, function ($query, $search) {
-                    $query->where(function ($q) use ($search) {
-                        $q->where('make', 'like', "%{$search}%")
-                          ->orWhere('model', 'like', "%{$search}%")
-                          ->orWhere('license_plate', 'like', "%{$search}%")
-                          ->orWhere('vin', 'like', "%{$search}%");
-                    });
-                })
-                ->paginate(15);
-        } else {
-            // Regular users can only view their own cars
-            $cars = Car::with(['user', 'tickets'])
-                ->where('user_id', $user->id)
-                ->when($request->search, function ($query, $search) {
-                    $query->where(function ($q) use ($search) {
-                        $q->where('make', 'like', "%{$search}%")
-                          ->orWhere('model', 'like', "%{$search}%")
-                          ->orWhere('license_plate', 'like', "%{$search}%")
-                          ->orWhere('vin', 'like', "%{$search}%");
-                    });
-                })
-                ->paginate(15);
-        }
+        $filters = $request->only(['search', 'user_id']);
 
         return Inertia::render('Cars/Index', [
-            'cars' => $cars,
-            'filters' => $request->only(['search', 'user_id']),
+            'cars' => $this->carService->getCars($request->user(), $filters),
+            'filters' => $filters,
         ]);
     }
 
@@ -57,20 +32,16 @@ class CarController extends Controller
      */
     public function create(Request $request)
     {
-        $user = $request->user();
-        
-        // Mechanics can view but not create cars
-        if ($user->hasRole('mechanic') && !$user->hasRole('admin')) {
-            abort(403, 'Mechanics cannot create cars');
-        }
-
         /** @var \App\Models\User $user */
+        $user = $request->user();
+        $this->carService->authorizeCreate($user);
+
         $users = $user->hasRole('admin')
             ? User::select('id', 'name', 'email')->get()
             : null;
 
         return Inertia::render('Cars/Create', [
-            'users' => $users
+            'users' => $users,
         ]);
     }
 
@@ -79,13 +50,6 @@ class CarController extends Controller
      */
     public function store(Request $request)
     {
-        $user = $request->user();
-        
-        // Mechanics can view but not create cars
-        if ($user->hasRole('mechanic') && !$user->hasRole('admin')) {
-            abort(403, 'Mechanics cannot create cars');
-        }
-
         $validated = $request->validate([
             'make' => 'required|string|max:255',
             'model' => 'required|string|max:255',
@@ -96,19 +60,7 @@ class CarController extends Controller
             'user_id' => 'sometimes|exists:users,id',
         ]);
 
-        // Regular users can only create cars for themselves
-        if (!$request->user()->hasRole('admin') && isset($validated['user_id'])) {
-            if ($validated['user_id'] != $request->user()->id) {
-                return back()->withErrors([
-                    'user_id' => 'You can only create cars for yourself'
-                ])->withInput();
-            }
-        }
-
-        // If user_id not provided, use authenticated user's id
-        $validated['user_id'] = $validated['user_id'] ?? $request->user()->id;
-
-        $car = Car::create($validated);
+        $car = $this->carService->createCar($request->user(), $validated);
 
         return redirect()->route('cars.show', $car)
             ->with('success', 'Car created successfully');
@@ -120,23 +72,13 @@ class CarController extends Controller
     public function show(Request $request, Car $car)
     {
         $user = $request->user();
+        $car = $this->carService->showCar($car, $user);
+        $permissions = $this->carService->getCarPermissions($car, $user);
 
-        // Users can only view their own cars unless they're admin/mechanic
-        if (!$user->hasAnyRole(['admin', 'mechanic']) && $car->user_id !== $user->id) {
-            abort(403, 'Unauthorized');
-        }
-
-        $car->load(['user', 'tickets.problems']);
-
-        // Determine permissions
-        $isOwner = $car->user_id === $user->id;
-        $isAdmin = $user->hasRole('admin');
-
-        return Inertia::render('Cars/Show', [
-            'car' => $car,
-            'canEdit' => $isOwner || $isAdmin,
-            'canDelete' => $isOwner || $isAdmin,
-        ]);
+        return Inertia::render('Cars/Show', array_merge(
+            ['car' => $car],
+            $permissions
+        ));
     }
 
     /**
@@ -144,15 +86,10 @@ class CarController extends Controller
      */
     public function edit(Request $request, Car $car)
     {
-        $user = $request->user();
-        /** @var \App\Models\User $user */
-        // Authorization check
-        if (!$user->hasRole('admin') && $car->user_id !== $user->id) {
-            abort(403, 'Unauthorized');
-        }
+        $this->carService->authorizeModify($request->user(), $car);
 
         return Inertia::render('Cars/Edit', [
-            'car' => $car->load('user')
+            'car' => $car->load('user'),
         ]);
     }
 
@@ -161,13 +98,6 @@ class CarController extends Controller
      */
     public function update(Request $request, Car $car)
     {
-        $user = $request->user();
-
-        // Users can only update their own cars unless they're admin
-        if (!$user->hasRole('admin') && $car->user_id !== $user->id) {
-            abort(403, 'Unauthorized');
-        }
-
         $validated = $request->validate([
             'make' => 'sometimes|string|max:255',
             'model' => 'sometimes|string|max:255',
@@ -177,7 +107,7 @@ class CarController extends Controller
             'color' => 'nullable|string|max:255',
         ]);
 
-        $car->update($validated);
+        $this->carService->updateCar($car, $request->user(), $validated);
 
         return redirect()->route('cars.show', $car)
             ->with('success', 'Car updated successfully');
@@ -188,17 +118,9 @@ class CarController extends Controller
      */
     public function destroy(Request $request, Car $car)
     {
-        $user = $request->user();
-
-        // Users can only delete their own cars unless they're admin
-        if (!$user->hasRole('admin') && $car->user_id !== $user->id) {
-            abort(403, 'Unauthorized');
-        }
-
-        $car->delete();
+        $this->carService->deleteCar($car, $request->user());
 
         return redirect()->route('cars.index')
             ->with('success', 'Car deleted successfully');
     }
-
 }
