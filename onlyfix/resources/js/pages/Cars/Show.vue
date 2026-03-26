@@ -20,7 +20,7 @@ import { useTicketHelpers } from '@/composables/useTicketHelpers';
 import { useFormatting } from '@/composables/useFormatting';
 
 const { t } = useI18n();
-const { getStatusBadgeVariant, getStatusIcon } = useTicketHelpers();
+const { getStatusBadgeVariant, getStatusIcon, getStatusBgColorClass, getStatusIconColorClass } = useTicketHelpers();
 const { formatDate } = useFormatting();
 
 const props = defineProps<{
@@ -171,19 +171,11 @@ const deleteCar = () => {
                                 class="flex items-center justify-between p-4 rounded-lg border bg-card hover:bg-muted/50 transition-colors"
                             >
                                 <div class="flex items-start gap-3 min-w-0">
-                                    <div class="p-2 rounded-lg" :class="{
-                                        'bg-orange-100 dark:bg-orange-900/30': ticket.status === 'open',
-                                        'bg-blue-100 dark:bg-blue-900/30': ticket.status === 'assigned' || ticket.status === 'in_progress',
-                                        'bg-green-100 dark:bg-green-900/30': ticket.status === 'completed' || ticket.status === 'closed',
-                                    }">
+                                    <div class="p-2 rounded-lg" :class="getStatusBgColorClass(ticket.status)">
                                         <component
                                             :is="getStatusIcon(ticket.status)"
                                             class="h-5 w-5"
-                                            :class="{
-                                                'text-orange-600 dark:text-orange-400': ticket.status === 'open',
-                                                'text-blue-600 dark:text-blue-400': ticket.status === 'assigned' || ticket.status === 'in_progress',
-                                                'text-green-600 dark:text-green-400': ticket.status === 'completed' || ticket.status === 'closed',
-                                            }"
+                                            :class="getStatusIconColorClass(ticket.status)"
                                         />
                                     </div>
                                     <div class="min-w-0">

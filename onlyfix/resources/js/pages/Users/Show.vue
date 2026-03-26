@@ -3,7 +3,8 @@ import AppLayout from '@/layouts/AppLayout.vue';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { type BreadcrumbItem, type User } from '@/types';
+import { type BreadcrumbItem } from '@/types';
+import type { Car, Ticket, User } from '@/types/models';
 import { Head, Link, router } from '@inertiajs/vue3';
 import { useI18n } from 'vue-i18n';
 import { Mail, Calendar, Shield, Edit, Trash2, Car, ClipboardList } from 'lucide-vue-next';
@@ -19,10 +20,10 @@ const { getRoleBadgeVariant } = useTicketHelpers();
 const { formatSimpleDate } = useFormatting();
 
 const props = defineProps<{
-    user: User & { 
-        roles: string[], 
-        cars?: any[], 
-        tickets?: any[] 
+    user: User & {
+        roles: string[],
+        cars?: Car[],
+        tickets?: Ticket[]
     };
 }>();
 

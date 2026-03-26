@@ -8,7 +8,7 @@ import { Badge } from '@/components/ui/badge';
 import { dashboard } from '@/routes';
 import * as ticketsRoutes from '@/routes/tickets';
 import { type BreadcrumbItem } from '@/types';
-import type { Car, Problem, Ticket, User } from '@/types/models';
+import type { Car, Problem, Ticket, TicketPriority, User } from '@/types/models';
 import { Head, useForm, Link } from '@inertiajs/vue3';
 import { useI18n } from 'vue-i18n';
 import { 
@@ -90,7 +90,7 @@ const statusOptions = [
     { value: 'closed', label: t('tickets.status.closed') },
 ];
 
-const priorities = [
+const priorities: { value: TicketPriority; label: string; class: string }[] = [
     { value: 'low', label: t('tickets.priority.low'), class: 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400' },
     { value: 'medium', label: t('tickets.priority.medium'), class: 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-400' },
     { value: 'high', label: t('tickets.priority.high'), class: 'bg-orange-100 text-orange-800 dark:bg-orange-900/30 dark:text-orange-400' },
@@ -362,7 +362,7 @@ const submit = () => {
                                     :class="form.priority === priority.value 
                                         ? 'border-primary bg-primary/5' 
                                         : 'border-border hover:border-primary/50'"
-                                    @click="form.priority = priority.value as any"
+                                    @click="form.priority = priority.value"
                                 >
                                     <input
                                         type="radio"
