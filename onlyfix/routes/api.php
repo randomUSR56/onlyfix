@@ -5,18 +5,12 @@ use App\Http\Controllers\Api\CarController;
 use App\Http\Controllers\Api\ProblemController;
 use App\Http\Controllers\Api\TicketController;
 use App\Http\Controllers\Api\UserController;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 /*
 |--------------------------------------------------------------------------
 | API Routes
 |--------------------------------------------------------------------------
-|
-| Here is where you can register API routes for your application. These
-| routes are loaded by the RouteServiceProvider and all of them will
-| be assigned to the "api" middleware group. Make something great!
-|
 */
 
 // Public routes
@@ -24,17 +18,11 @@ Route::get('/health', function () {
     return response()->json(['status' => 'ok']);
 });
 
-// Serve OpenAPI spec
-Route::get('/openapi.yaml', function () {
-    return response()->file(base_path('openapi.yaml'), [
-        'Content-Type' => 'application/yaml',
-        'Content-Disposition' => 'inline; filename="openapi.yaml"',
-    ]);
+// Authentication routes (with rate limiting)
+Route::middleware('throttle:10,1')->group(function () {
+    Route::post('/register', [AuthController::class, 'register']);
+    Route::post('/login', [AuthController::class, 'login']);
 });
-
-// Authentication routes
-Route::post('/register', [AuthController::class, 'register']);
-Route::post('/login', [AuthController::class, 'login']);
 
 // Protected routes
 Route::middleware(['auth:sanctum'])->group(function () {
@@ -47,12 +35,17 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::prefix('users')->group(function () {
         Route::get('/me', [UserController::class, 'me']);
         Route::get('/mechanics', [UserController::class, 'mechanics']);
-        Route::get('/', [UserController::class, 'index']);
-        Route::post('/', [UserController::class, 'store']);
+
+        // Admin-only user management
+        Route::middleware(['role:admin'])->group(function () {
+            Route::get('/', [UserController::class, 'index']);
+            Route::post('/', [UserController::class, 'store']);
+            Route::delete('/{user}', [UserController::class, 'destroy']);
+        });
+
         Route::get('/{user}', [UserController::class, 'show']);
         Route::put('/{user}', [UserController::class, 'update']);
         Route::patch('/{user}', [UserController::class, 'update']);
-        Route::delete('/{user}', [UserController::class, 'destroy']);
         Route::get('/{user}/tickets', [UserController::class, 'tickets']);
         Route::get('/{user}/cars', [UserController::class, 'cars']);
     });
@@ -71,28 +64,36 @@ Route::middleware(['auth:sanctum'])->group(function () {
     // Problem routes
     Route::prefix('problems')->group(function () {
         Route::get('/', [ProblemController::class, 'index']);
-        Route::post('/', [ProblemController::class, 'store']);
-        Route::get('/statistics', [ProblemController::class, 'statistics']);
         Route::get('/{problem}', [ProblemController::class, 'show']);
-        Route::put('/{problem}', [ProblemController::class, 'update']);
-        Route::patch('/{problem}', [ProblemController::class, 'update']);
-        Route::delete('/{problem}', [ProblemController::class, 'destroy']);
+        Route::get('/statistics', [ProblemController::class, 'statistics'])->middleware('role:mechanic|admin');
+
+        // Admin/mechanic only
+        Route::middleware(['role:mechanic|admin'])->group(function () {
+            Route::post('/', [ProblemController::class, 'store']);
+            Route::put('/{problem}', [ProblemController::class, 'update']);
+            Route::patch('/{problem}', [ProblemController::class, 'update']);
+        });
+
+        Route::delete('/{problem}', [ProblemController::class, 'destroy'])->middleware('role:admin');
     });
 
     // Ticket routes
     Route::prefix('tickets')->group(function () {
         Route::get('/', [TicketController::class, 'index']);
         Route::post('/', [TicketController::class, 'store']);
-        Route::get('/statistics', [TicketController::class, 'statistics']);
+        Route::get('/statistics', [TicketController::class, 'statistics'])->middleware('role:mechanic|admin');
         Route::get('/{ticket}', [TicketController::class, 'show']);
         Route::put('/{ticket}', [TicketController::class, 'update']);
         Route::patch('/{ticket}', [TicketController::class, 'update']);
         Route::delete('/{ticket}', [TicketController::class, 'destroy']);
 
-        // Ticket actions
-        Route::post('/{ticket}/accept', [TicketController::class, 'accept']);
-        Route::post('/{ticket}/start', [TicketController::class, 'startWork']);
-        Route::post('/{ticket}/complete', [TicketController::class, 'complete']);
+        // Ticket workflow actions (mechanics & admins)
+        Route::middleware(['role:mechanic|admin'])->group(function () {
+            Route::post('/{ticket}/accept', [TicketController::class, 'accept']);
+            Route::post('/{ticket}/start', [TicketController::class, 'startWork']);
+            Route::post('/{ticket}/complete', [TicketController::class, 'complete']);
+        });
+
         Route::post('/{ticket}/close', [TicketController::class, 'close']);
     });
 });

@@ -43,19 +43,6 @@ class Car extends Model
     }
 
     /**
-     * Get all unique problems this car has had across all tickets.
-     * Access path: Car → Tickets → Ticket_Problems → Problems
-     */
-    public function problems()
-    {
-        return Problem::query()
-            ->whereHas('tickets', fn($q) =>
-                $q->where('car_id', $this->id)
-            )
-            ->distinct();
-    }
-
-    /**
      * Get unresolved (open) tickets for this car.
      */
     public function openTickets(): HasMany
