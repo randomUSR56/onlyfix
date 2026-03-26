@@ -636,6 +636,7 @@
     "empty": "No users found matching your criteria.",
     "ticketsCount": "{count} ticket | {count} tickets",
     "carsCount": "{count} car | {count} cars",
+    "ticketsAndCarsHeader": "Tickets / Cars",
     "show": {
       "info": "Information",
       "registeredAt": "Registered at:",
@@ -737,6 +738,11 @@
         "viewRecoveryCodes": "View Recovery Codes",
         "regenerateCodes": "Regenerate Codes",
         "usageNote": "Each recovery code can be used once to access your account and will be removed after use. If you need more, click {regenerate} above."
+      },
+      "errors": {
+        "fetchQrCode": "Failed to load QR code. Please try again.",
+        "fetchSetupKey": "Failed to load setup key. Please try again.",
+        "fetchRecoveryCodes": "Failed to load recovery codes. Please try again."
       }
     },
     "deleteAccount": {

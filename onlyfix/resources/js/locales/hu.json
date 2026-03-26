@@ -635,8 +635,9 @@
       "description": "Biztosan törölni szeretné {name} felhasználót? Ez a művelet nem vonható vissza."
     },
     "empty": "Nem találhatók felhasználók a megadott feltételekkel.",
-    "ticketsCount": "{count} jegy",
-    "carsCount": "{count} autó",
+    "ticketsCount": "{count} jegy | {count} jegy",
+    "carsCount": "{count} autó | {count} autó",
+    "ticketsAndCarsHeader": "Jegyek / Autók",
     "show": {
       "info": "Információk",
       "registeredAt": "Regisztrálva:",
@@ -738,6 +739,11 @@
         "viewRecoveryCodes": "Helyreállítási kódok megtekintése",
         "regenerateCodes": "Kódok újragenerálása",
         "usageNote": "Minden helyreállítási kód egyszer használható a fiókjához való hozzáféréshez, és használat után törlődik. Ha többre van szüksége, kattintson a fenti {regenerate} gombra."
+      },
+      "errors": {
+        "fetchQrCode": "Nem sikerült betölteni a QR-kódot. Kérjük, próbálja újra.",
+        "fetchSetupKey": "Nem sikerült betölteni a beállítási kulcsot. Kérjük, próbálja újra.",
+        "fetchRecoveryCodes": "Nem sikerült betölteni a visszaállítási kódokat. Kérjük, próbálja újra."
       }
     },
     "deleteAccount": {
