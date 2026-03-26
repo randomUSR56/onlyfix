@@ -16,7 +16,7 @@ import {
     Ticket as TicketIcon, ArrowLeft, LoaderCircle, Car as CarIcon, 
     AlertTriangle, Wrench, Plus, Info
 } from 'lucide-vue-next';
-import { computed, onMounted, watch } from 'vue';
+import { computed, watch } from 'vue';
 import { useAuth } from '@/composables/useAuth';
 import { useTicketHelpers } from '@/composables/useTicketHelpers';
 
@@ -118,15 +118,6 @@ const submit = () => {
         problem_notes: notesArray,
     })).post(ticketsRoutes.store().url);
 };
-
-// Check for preselected car from URL
-onMounted(() => {
-    const urlParams = new URLSearchParams(window.location.search);
-    const carId = urlParams.get('car_id');
-    if (carId) {
-        form.car_id = parseInt(carId);
-    }
-});
 </script>
 
 <template>

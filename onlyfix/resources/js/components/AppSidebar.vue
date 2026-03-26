@@ -14,6 +14,7 @@ import {
 import { dashboard } from '@/routes';
 import * as carsRoutes from '@/routes/cars';
 import * as helpRoutes from '@/routes/help';
+import * as profileRoutes from '@/routes/profile';
 import * as ticketsRoutes from '@/routes/tickets';
 import * as usersRoutes from '@/routes/users';
 import { type NavItem } from '@/types';
@@ -94,7 +95,7 @@ const footerNavItems = computed<NavItem[]>(() => [
     },
     {
         title: t('nav.settings'),
-        href: '/settings/profile',
+        href: profileRoutes.edit().url,
         icon: Settings,
     },
 ]);

@@ -122,9 +122,9 @@ import { LoaderCircle, User, Mail, Lock, ShieldCheck, ArrowRight } from 'lucide-
             <!-- Terms Notice -->
             <p class="text-xs text-muted-foreground text-center">
                 {{ $t('auth.register.termsNotice') }}
-                <a href="#" class="text-primary hover:underline">{{ $t('auth.register.termsOfService') }}</a>
+                <a href="#" class="text-primary hover:underline" @click.prevent>{{ $t('auth.register.termsOfService') }}</a>
                 {{ $t('common.and') }}
-                <a href="#" class="text-primary hover:underline">{{ $t('auth.register.privacyPolicy') }}</a>
+                <a href="#" class="text-primary hover:underline" @click.prevent>{{ $t('auth.register.privacyPolicy') }}</a>
             </p>
 
             <!-- Submit Button -->
