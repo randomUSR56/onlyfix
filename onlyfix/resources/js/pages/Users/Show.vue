@@ -7,7 +7,7 @@ import { type BreadcrumbItem } from '@/types';
 import type { Car, Ticket, User } from '@/types/models';
 import { Head, Link, router } from '@inertiajs/vue3';
 import { useI18n } from 'vue-i18n';
-import { Mail, Calendar, Shield, Edit, Trash2, Car, ClipboardList } from 'lucide-vue-next';
+import { Mail, Calendar, Shield, Edit, Trash2, Car as CarIcon, ClipboardList } from 'lucide-vue-next';
 import { useTicketHelpers } from '@/composables/useTicketHelpers';
 import { useFormatting } from '@/composables/useFormatting';
 import { getRoleName } from '@/composables/useAuth';
@@ -134,7 +134,7 @@ const deleteUser = () => {
                             <div v-if="user.cars?.length" class="space-y-3">
                                 <div v-for="car in user.cars" :key="car.id" class="flex items-center justify-between p-3 border rounded-lg">
                                     <div class="flex items-center gap-3">
-                                        <Car class="h-5 w-5 text-muted-foreground" />
+                                        <CarIcon class="h-5 w-5 text-muted-foreground" />
                                         <div>
                                             <p class="font-medium text-sm">{{ car.make }} {{ car.model }}</p>
                                             <p class="text-xs text-muted-foreground">{{ car.license_plate }}</p>

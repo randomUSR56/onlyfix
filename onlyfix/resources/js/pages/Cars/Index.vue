@@ -186,7 +186,7 @@ const deleteCar = () => {
                             </div>
                             <div class="pt-2 border-t">
                                 <Link
-                                    :href="carsRoutes.tickets({ car: car.id }).url"
+                                    :href="carsRoutes.show({ car: car.id }).url"
                                     class="inline-flex items-center gap-1 text-sm text-primary hover:underline"
                                 >
                                     <Ticket class="h-3 w-3" />
