@@ -2,7 +2,6 @@
 
 use App\Http\Controllers\CarController;
 use App\Http\Controllers\HelpController;
-use App\Http\Controllers\ProblemController;
 use App\Http\Controllers\TicketController;
 use App\Http\Controllers\UserController;
 use App\Models\Car;
@@ -133,8 +132,6 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::patch('/{car}', [CarController::class, 'update'])->name('update');
         Route::delete('/{car}', [CarController::class, 'destroy'])->name('destroy');
 
-        // Car tickets
-        Route::get('/{car}/tickets', [CarController::class, 'tickets'])->name('tickets');
     });
 
     // Tickets Management
@@ -158,25 +155,6 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::post('/{ticket}/close', [TicketController::class, 'close'])->name('close');
     });
 
-    // Problems Management (mechanics & admins only for create/update/delete)
-    Route::prefix('problems')->name('problems.')->group(function () {
-        Route::get('/', [ProblemController::class, 'index'])->name('index');
-
-        Route::middleware(['role:mechanic|admin'])->group(function () {
-            Route::get('/create', [ProblemController::class, 'create'])->name('create');
-            Route::post('/', [ProblemController::class, 'store'])->name('store');
-            Route::get('/{problem}/edit', [ProblemController::class, 'edit'])->name('edit');
-            Route::patch('/{problem}', [ProblemController::class, 'update'])->name('update');
-        });
-
-        Route::get('/{problem}', [ProblemController::class, 'show'])->name('show');
-
-        // Delete (admins only)
-        Route::middleware(['role:admin'])->group(function () {
-            Route::delete('/{problem}', [ProblemController::class, 'destroy'])->name('destroy');
-        });
-    });
-
     // Users Management
     Route::prefix('users')->name('users.')->group(function () {
         // Admin-only routes
@@ -191,17 +169,6 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::get('/{user}', [UserController::class, 'show'])->name('show');
         Route::get('/{user}/edit', [UserController::class, 'edit'])->name('edit');
         Route::patch('/{user}', [UserController::class, 'update'])->name('update');
-    });
-
-    // Statistics & Reports (mechanics & admins only)
-    Route::middleware(['role:mechanic|admin'])->prefix('statistics')->name('statistics.')->group(function () {
-        Route::get('/tickets', [TicketController::class, 'statistics'])->name('tickets');
-        Route::get('/problems', [ProblemController::class, 'statistics'])->name('problems');
-    });
-
-    // Mechanics List (mechanics & admins can view)
-    Route::middleware(['role:mechanic|admin'])->group(function () {
-        Route::get('/mechanics', [UserController::class, 'mechanics'])->name('mechanics.index');
     });
 
     // Help

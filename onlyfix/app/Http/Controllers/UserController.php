@@ -193,24 +193,4 @@ class UserController extends Controller
             ->with('success', 'User deleted successfully');
     }
 
-    /**
-     * Get mechanics list.
-     */
-    public function mechanics(Request $request)
-    {
-        if (!$request->user()->hasAnyRole(['mechanic', 'admin'])) {
-            abort(403, 'Unauthorized');
-        }
-
-        $mechanics = User::role('mechanic')
-            ->with('roles')
-            ->withCount(['assignedTickets' => function ($query) {
-                $query->whereIn('status', ['assigned', 'in_progress']);
-            }])
-            ->get();
-
-        return Inertia::render('Mechanics/Index', [
-            'mechanics' => $mechanics
-        ]);
-    }
 }

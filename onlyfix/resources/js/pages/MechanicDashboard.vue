@@ -14,7 +14,7 @@ import { useFormatting } from '@/composables/useFormatting';
 import { Wrench, ArrowRight, AlertCircle, Clock, CheckCircle2, Users, Inbox } from 'lucide-vue-next';
 
 const { t } = useI18n();
-const { getStatusBadgeVariant, getPriorityBadgeClass, getStatusIcon } = useTicketHelpers();
+const { getStatusBadgeVariant, getPriorityBadgeClass, getStatusIcon, getStatusBgColorClass, getStatusIconColorClass } = useTicketHelpers();
 const { formatDate } = useFormatting();
 
 interface MechanicStats {
@@ -212,20 +212,14 @@ const acceptTicket = (ticketId: number) => {
                             class="flex items-center gap-4 p-3 rounded-lg border bg-card hover:bg-muted/50 transition-colors group"
                         >
                             <!-- Status Icon -->
-                            <div 
+                            <div
                                 class="p-2 rounded-lg shrink-0"
-                                :class="{
-                                    'bg-blue-100 dark:bg-blue-900/30': ticket.status === 'assigned',
-                                    'bg-yellow-100 dark:bg-yellow-900/30': ticket.status === 'in_progress',
-                                }"
+                                :class="getStatusBgColorClass(ticket.status)"
                             >
                                 <component
                                     :is="getStatusIcon(ticket.status)"
                                     class="h-4 w-4"
-                                    :class="{
-                                        'text-blue-600 dark:text-blue-400': ticket.status === 'assigned',
-                                        'text-yellow-600 dark:text-yellow-400': ticket.status === 'in_progress',
-                                    }"
+                                    :class="getStatusIconColorClass(ticket.status)"
                                 />
                             </div>
                             

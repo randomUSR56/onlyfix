@@ -28,6 +28,7 @@ import {
     DialogHeader,
     DialogTitle,
 } from '@/components/ui/dialog';
+import ConfirmDeleteDialog from '@/components/ConfirmDeleteDialog.vue';
 
 const { t } = useI18n();
 const { isMechanic, user } = useAuth();
@@ -444,24 +445,12 @@ const canCloseTicket = computed(() =>
         </div>
 
         <!-- Delete Confirmation Dialog -->
-        <Dialog v-model:open="deleteDialogOpen">
-            <DialogContent>
-                <DialogHeader>
-                    <DialogTitle>{{ $t('tickets.delete.title') }}</DialogTitle>
-                    <DialogDescription>
-                        {{ $t('tickets.delete.description') }}
-                    </DialogDescription>
-                </DialogHeader>
-                <DialogFooter>
-                    <Button variant="outline" @click="deleteDialogOpen = false">
-                        {{ $t('common.cancel') }}
-                    </Button>
-                    <Button variant="destructive" @click="deleteTicket">
-                        {{ $t('common.delete') }}
-                    </Button>
-                </DialogFooter>
-            </DialogContent>
-        </Dialog>
+        <ConfirmDeleteDialog
+            v-model:open="deleteDialogOpen"
+            :title="$t('tickets.delete.title')"
+            :description="$t('tickets.delete.description')"
+            @confirm="deleteTicket"
+        />
 
         <!-- Close Ticket Confirmation Dialog -->
         <Dialog v-model:open="closeDialogOpen">

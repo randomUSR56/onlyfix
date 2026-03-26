@@ -15,14 +15,7 @@ import {
     FileText, Plus, Wrench
 } from 'lucide-vue-next';
 import { ref } from 'vue';
-import {
-    Dialog,
-    DialogContent,
-    DialogDescription,
-    DialogFooter,
-    DialogHeader,
-    DialogTitle,
-} from '@/components/ui/dialog';
+import ConfirmDeleteDialog from '@/components/ConfirmDeleteDialog.vue';
 import { useTicketHelpers } from '@/composables/useTicketHelpers';
 import { useFormatting } from '@/composables/useFormatting';
 
@@ -225,23 +218,11 @@ const deleteCar = () => {
         </div>
 
         <!-- Delete Confirmation Dialog -->
-        <Dialog v-model:open="deleteDialogOpen">
-            <DialogContent>
-                <DialogHeader>
-                    <DialogTitle>{{ $t('cars.delete.title') }}</DialogTitle>
-                    <DialogDescription>
-                        {{ $t('cars.delete.description', { car: `${car.make} ${car.model}` }) }}
-                    </DialogDescription>
-                </DialogHeader>
-                <DialogFooter>
-                    <Button variant="outline" @click="deleteDialogOpen = false">
-                        {{ $t('common.cancel') }}
-                    </Button>
-                    <Button variant="destructive" @click="deleteCar">
-                        {{ $t('common.delete') }}
-                    </Button>
-                </DialogFooter>
-            </DialogContent>
-        </Dialog>
+        <ConfirmDeleteDialog
+            v-model:open="deleteDialogOpen"
+            :title="$t('cars.delete.title')"
+            :description="$t('cars.delete.description', { car: `${car.make} ${car.model}` })"
+            @confirm="deleteCar"
+        />
     </AppLayout>
 </template>

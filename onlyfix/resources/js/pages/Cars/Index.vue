@@ -19,14 +19,7 @@ import {
     DropdownMenuItem,
     DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import {
-    Dialog,
-    DialogContent,
-    DialogDescription,
-    DialogFooter,
-    DialogHeader,
-    DialogTitle,
-} from '@/components/ui/dialog';
+import ConfirmDeleteDialog from '@/components/ConfirmDeleteDialog.vue';
 
 const { t } = useI18n();
 const { isMechanic, isAdmin } = useAuth();
@@ -235,23 +228,11 @@ const deleteCar = () => {
         </div>
 
         <!-- Delete Confirmation Dialog -->
-        <Dialog v-model:open="deleteDialogOpen">
-            <DialogContent>
-                <DialogHeader>
-                    <DialogTitle>{{ $t('cars.delete.title') }}</DialogTitle>
-                    <DialogDescription>
-                        {{ $t('cars.delete.description', { car: `${carToDelete?.make} ${carToDelete?.model}` }) }}
-                    </DialogDescription>
-                </DialogHeader>
-                <DialogFooter>
-                    <Button variant="outline" @click="deleteDialogOpen = false">
-                        {{ $t('common.cancel') }}
-                    </Button>
-                    <Button variant="destructive" @click="deleteCar">
-                        {{ $t('common.delete') }}
-                    </Button>
-                </DialogFooter>
-            </DialogContent>
-        </Dialog>
+        <ConfirmDeleteDialog
+            v-model:open="deleteDialogOpen"
+            :title="$t('cars.delete.title')"
+            :description="$t('cars.delete.description', { make: carToDelete?.make, model: carToDelete?.model })"
+            @confirm="deleteCar"
+        />
     </AppLayout>
 </template>

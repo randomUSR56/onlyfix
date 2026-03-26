@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Models\Car;
 use App\Models\User;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Gate;
 use Inertia\Inertia;
 
 class CarController extends Controller
@@ -202,25 +201,4 @@ class CarController extends Controller
             ->with('success', 'Car deleted successfully');
     }
 
-    /**
-     * Get tickets for a specific car.
-     */
-    public function tickets(Request $request, Car $car)
-    {
-        $user = $request->user();
-
-        // Users can only view tickets for their own cars unless they're admin/mechanic
-        if (!$user->hasAnyRole(['admin', 'mechanic']) && $car->user_id !== $user->id) {
-            abort(403, 'Unauthorized');
-        }
-
-        $tickets = $car->tickets()
-            ->with(['user', 'mechanic', 'problems'])
-            ->paginate(15);
-
-        return Inertia::render('Cars/Tickets', [
-            'car' => $car,
-            'tickets' => $tickets
-        ]);
-    }
 }

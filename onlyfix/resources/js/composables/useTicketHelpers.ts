@@ -63,11 +63,27 @@ export function useTicketHelpers() {
         return variants[role] || 'outline';
     };
 
+    const getStatusBgColorClass = (status: string): string => {
+        if (status === 'open') return 'bg-orange-100 dark:bg-orange-900/30';
+        if (status === 'assigned' || status === 'in_progress') return 'bg-blue-100 dark:bg-blue-900/30';
+        if (status === 'completed' || status === 'closed') return 'bg-green-100 dark:bg-green-900/30';
+        return 'bg-muted';
+    };
+
+    const getStatusIconColorClass = (status: string): string => {
+        if (status === 'open') return 'text-orange-600 dark:text-orange-400';
+        if (status === 'assigned' || status === 'in_progress') return 'text-blue-600 dark:text-blue-400';
+        if (status === 'completed' || status === 'closed') return 'text-green-600 dark:text-green-400';
+        return 'text-muted-foreground';
+    };
+
     return {
         getStatusBadgeVariant,
         getPriorityBadgeClass,
         getStatusIcon,
         translateProblem,
         getRoleBadgeVariant,
+        getStatusBgColorClass,
+        getStatusIconColorClass,
     };
 }

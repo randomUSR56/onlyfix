@@ -5,8 +5,8 @@ namespace App\Http\Controllers;
 use App\Models\Car;
 use App\Models\Problem;
 use App\Models\Ticket;
+use App\Models\User;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 use Inertia\Inertia;
 
 class TicketController extends Controller
@@ -95,30 +95,7 @@ class TicketController extends Controller
             abort(403, 'Mechanics cannot create tickets');
         }
 
-        // Get user's cars or all cars if admin
-        $cars = $user->hasRole('admin')
-            ? Car::with('user')->get()
-            : $user->cars;
-
-        // Get active problems
-        $problems = Problem::where('is_active', true)->get();
-
-        // Get all mechanics for admin
-        $mechanics = $user->hasRole('admin')
-            ? \App\Models\User::role('mechanic')->get()
-            : [];
-
-        // Get all users for admin
-        $users = $user->hasRole('admin')
-            ? \App\Models\User::role('user')->get()
-            : [];
-
-        return Inertia::render('Tickets/Create', [
-            'cars' => $cars,
-            'problems' => $problems,
-            'mechanics' => $mechanics,
-            'users' => $users,
-        ]);
+        return Inertia::render('Tickets/Create', $this->getTicketFormData($user));
     }
 
     /**
@@ -232,30 +209,10 @@ class TicketController extends Controller
         }
 
         // Get user's cars or all cars if admin
-        $cars = $user->hasRole('admin')
-            ? Car::with('user')->get()
-            : $user->cars;
-
-        // Get active problems
-        $problems = Problem::where('is_active', true)->get();
-
-        // Get all mechanics for admin
-        $mechanics = $user->hasRole('admin')
-            ? \App\Models\User::role('mechanic')->get()
-            : [];
-
-        // Get all users for admin
-        $users = $user->hasRole('admin')
-            ? \App\Models\User::role('user')->get()
-            : [];
-
-        return Inertia::render('Tickets/Edit', [
-            'ticket' => $ticket->load(['user', 'mechanic', 'car', 'problems']),
-            'cars' => $cars,
-            'problems' => $problems,
-            'mechanics' => $mechanics,
-            'users' => $users,
-        ]);
+        return Inertia::render('Tickets/Edit', array_merge(
+            ['ticket' => $ticket->load(['user', 'mechanic', 'car', 'problems'])],
+            $this->getTicketFormData($user)
+        ));
     }
 
     /**
@@ -496,41 +453,21 @@ class TicketController extends Controller
     }
 
     /**
-     * Get ticket statistics.
+     * Get the common form data needed for both create and edit ticket pages.
      */
-    public function statistics(Request $request)
+    private function getTicketFormData(User $user): array
     {
-        $user = $request->user();
-
-        if (! $user->hasAnyRole(['mechanic', 'admin'])) {
-            abort(403, 'Unauthorized');
-        }
-
-        $stats = [
-            'total_tickets' => Ticket::count(),
-            'by_status' => Ticket::select('status', DB::raw('count(*) as count'))
-                ->groupBy('status')
-                ->pluck('count', 'status'),
-            'by_priority' => Ticket::select('priority', DB::raw('count(*) as count'))
-                ->groupBy('priority')
-                ->pluck('count', 'priority'),
-            'open_tickets' => Ticket::where('status', 'open')->count(),
-            'assigned_tickets' => Ticket::where('status', 'assigned')->count(),
-            'in_progress_tickets' => Ticket::where('status', 'in_progress')->count(),
-            'completed_today' => Ticket::whereDate('completed_at', today())->count(),
+        return [
+            'cars' => $user->hasRole('admin')
+                ? Car::with('user')->get()
+                : $user->cars,
+            'problems' => Problem::where('is_active', true)->get(),
+            'mechanics' => $user->hasRole('admin')
+                ? User::role('mechanic')->get()
+                : [],
+            'users' => $user->hasRole('admin')
+                ? User::role('user')->get()
+                : [],
         ];
-
-        if ($user->hasRole('mechanic') && ! $user->hasRole('admin')) {
-            $stats['my_assigned_tickets'] = Ticket::where('mechanic_id', $user->id)
-                ->whereIn('status', ['assigned', 'in_progress'])
-                ->count();
-            $stats['my_completed_tickets'] = Ticket::where('mechanic_id', $user->id)
-                ->where('status', 'completed')
-                ->count();
-        }
-
-        return Inertia::render('Statistics/Tickets', [
-            'statistics' => $stats,
-        ]);
     }
 }

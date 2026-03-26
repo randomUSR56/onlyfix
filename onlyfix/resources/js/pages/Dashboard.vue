@@ -15,7 +15,7 @@ import { useFormatting } from '@/composables/useFormatting';
 import { Car as CarIcon, Plus, ArrowRight, Wrench, Clock, CheckCircle2 } from 'lucide-vue-next';
 
 const { t } = useI18n();
-const { getStatusBadgeVariant, getPriorityBadgeClass, getStatusIcon } = useTicketHelpers();
+const { getStatusBadgeVariant, getPriorityBadgeClass, getStatusIcon, getStatusBgColorClass, getStatusIconColorClass } = useTicketHelpers();
 const { formatDate } = useFormatting();
 
 defineProps<{
@@ -89,22 +89,14 @@ const breadcrumbs: BreadcrumbItem[] = [
                             class="flex items-center gap-4 p-3 rounded-lg border bg-card hover:bg-muted/50 transition-colors group"
                         >
                             <!-- Status Icon -->
-                            <div 
+                            <div
                                 class="p-2 rounded-lg shrink-0"
-                                :class="{
-                                    'bg-orange-100 dark:bg-orange-900/30': ticket.status === 'open',
-                                    'bg-blue-100 dark:bg-blue-900/30': ticket.status === 'assigned' || ticket.status === 'in_progress',
-                                    'bg-green-100 dark:bg-green-900/30': ticket.status === 'completed' || ticket.status === 'closed',
-                                }"
+                                :class="getStatusBgColorClass(ticket.status)"
                             >
                                 <component
                                     :is="getStatusIcon(ticket.status)"
                                     class="h-4 w-4"
-                                    :class="{
-                                        'text-orange-600 dark:text-orange-400': ticket.status === 'open',
-                                        'text-blue-600 dark:text-blue-400': ticket.status === 'assigned' || ticket.status === 'in_progress',
-                                        'text-green-600 dark:text-green-400': ticket.status === 'completed' || ticket.status === 'closed',
-                                    }"
+                                    :class="getStatusIconColorClass(ticket.status)"
                                 />
                             </div>
                             
