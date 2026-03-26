@@ -100,13 +100,3 @@ export interface PaginationLink {
     label: string;
     active: boolean;
 }
-
-// Dashboard stats
-export interface DashboardStats {
-    total_cars: number;
-    total_tickets: number;
-    open_tickets: number;
-    completed_tickets: number;
-    recent_tickets: Ticket[];
-    cars: Car[];
-}
