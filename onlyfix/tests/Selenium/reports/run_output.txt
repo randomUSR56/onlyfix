@@ -1,0 +1,48 @@
+OnlyFix Selenium Test Run Report
+Date: 2026-03-30
+Platform: macOS Darwin 24.6.0 arm64
+Python: 3.8.0 at /usr/local/bin/python3
+
+=== KÖRNYEZETI KORLÁTOK ===
+A tesztek futtatása a fejlesztői környezet sandbox korlátozásai miatt
+nem volt lehetséges az automatizált session során.
+
+Blokkoló problémák:
+  1. pip3 install: sandbox korlátozás nem engedélyezte a csomag telepítést
+  2. chromedriver: nem elérhető a PATH-ban
+  3. Google Chrome: /Applications hozzáférés korlátozott
+
+=== TESZTFÁJLOK ===
+A következő tesztfájlok készültek el és készen állnak futtatásra:
+
+  tests/Selenium/__init__.py
+  tests/Selenium/conftest.py              - Konfiguráció, driver fixture-ök
+  tests/Selenium/helpers/__init__.py
+  tests/Selenium/helpers/auth.py          - Login/logout, wait segédfüggvények
+  tests/Selenium/helpers/factories.py     - Tesztadat generátorok
+  tests/Selenium/tests/__init__.py
+  tests/Selenium/tests/test_auth.py       - 8 teszteset (autentikáció, navigáció)
+  tests/Selenium/tests/test_tickets.py    - 13 teszteset (jegy CRUD, workflow)
+  tests/Selenium/tests/test_cars.py       - 7 teszteset (autó CRUD, validáció)
+  tests/Selenium/tests/test_admin.py      - 8 teszteset (admin funkciók)
+  tests/Selenium/tests/test_help.py       - 3 teszteset (súgó tartalom)
+
+  Összesen: 39 teszteset, 5 funkcionális terület
+
+=== MANUÁLIS FUTTATÁSI UTASÍTÁSOK ===
+1. pip3 install selenium pytest pytest-html
+2. brew install --cask google-chrome  (ha nincs Chrome)
+3. php artisan migrate:fresh --seed   (adatbázis reset)
+4. Indítsd el az alkalmazást (php artisan serve / Docker)
+5. cd onlyfix && python3 -m pytest tests/Selenium/ -v --html=tests/Selenium/reports/report.html
+
+Opcionális: ONLYFIX_BASE_URL=http://localhost:8000 python3 -m pytest tests/Selenium/ -v
+
+=== VÁRT EREDMÉNY ===
+A teljes tesztkészlet futásához szükséges:
+  - Működő Laravel alkalmazás (http://localhost)
+  - Seeded adatbázis (php artisan migrate:fresh --seed)
+  - Google Chrome + chromedriver telepítve
+  - selenium, pytest, pytest-html Python csomagok
+
+=== END OF REPORT ===
