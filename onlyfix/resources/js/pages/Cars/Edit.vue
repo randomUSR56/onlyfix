@@ -71,7 +71,7 @@ const yearOptions = Array.from({ length: 50 }, (_, i) => currentYear - i);
             <!-- Header -->
             <div class="flex items-center gap-4">
                 <Link :href="carsRoutes.show({ car: car.id }).url">
-                    <Button variant="ghost" size="icon">
+                    <Button variant="ghost" size="icon" :aria-label="$t('common.goBack')">
                         <ArrowLeft class="h-5 w-5" />
                     </Button>
                 </Link>

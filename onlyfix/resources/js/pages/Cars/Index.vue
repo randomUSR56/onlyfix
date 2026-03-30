@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import AppLayout from '@/layouts/AppLayout.vue';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { dashboard } from '@/routes';
@@ -11,28 +10,23 @@ import type { Car, PaginatedData } from '@/types/models';
 import { Head, Link, router } from '@inertiajs/vue3';
 import { useI18n } from 'vue-i18n';
 import { useAuth } from '@/composables/useAuth';
+import { useFormatting } from '@/composables/useFormatting';
 import { Car as CarIcon, Plus, Search, Edit, Trash2, Eye, MoreHorizontal, Ticket } from 'lucide-vue-next';
-import { ref, watch, computed } from 'vue';
+import { ref, watch, computed, onUnmounted } from 'vue';
 import {
     DropdownMenu,
     DropdownMenuContent,
     DropdownMenuItem,
     DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import {
-    Dialog,
-    DialogContent,
-    DialogDescription,
-    DialogFooter,
-    DialogHeader,
-    DialogTitle,
-} from '@/components/ui/dialog';
+import ConfirmDeleteDialog from '@/components/ConfirmDeleteDialog.vue';
 
 const { t } = useI18n();
 const { isMechanic, isAdmin } = useAuth();
+const { formatDate, decodePaginationLabel } = useFormatting();
 
-// Mechanics can view but not create cars
-const canCreateCar = computed(() => !isMechanic.value || isAdmin.value);
+// Only regular users can create cars (admin manages but doesn't own cars, mechanics can't create)
+const canCreateCar = computed(() => !isMechanic.value && !isAdmin.value);
 
 const props = defineProps<{
     cars: PaginatedData<Car>;
@@ -57,9 +51,9 @@ const deleteDialogOpen = ref(false);
 const carToDelete = ref<Car | null>(null);
 
 // Debounced search
-let searchTimeout: ReturnType<typeof setTimeout>;
+let searchTimeout: ReturnType<typeof setTimeout> | null = null;
 watch(searchQuery, (value) => {
-    clearTimeout(searchTimeout);
+    if (searchTimeout) clearTimeout(searchTimeout);
     searchTimeout = setTimeout(() => {
         router.get(carsRoutes.index().url, { search: value || undefined }, {
             preserveState: true,
@@ -67,6 +61,10 @@ watch(searchQuery, (value) => {
             replace: true,
         });
     }, 300);
+});
+
+onUnmounted(() => {
+    if (searchTimeout) clearTimeout(searchTimeout);
 });
 
 const confirmDelete = (car: Car) => {
@@ -84,14 +82,6 @@ const deleteCar = () => {
         });
     }
 };
-
-const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString(undefined, {
-        year: 'numeric',
-        month: 'short',
-        day: 'numeric',
-    });
-};
 </script>
 
 <template>
@@ -102,7 +92,9 @@ const formatDate = (dateString: string) => {
             <!-- Header -->
             <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
                 <div>
-                    <h1 class="text-2xl font-bold tracking-tight">{{ $t('cars.title') }}</h1>
+                    <h1 class="text-2xl font-bold tracking-tight">
+                        {{ isAdmin || isMechanic ? $t('cars.allVehicles') : $t('cars.title') }}
+                    </h1>
                     <p class="text-muted-foreground">{{ $t('cars.subtitle') }}</p>
                 </div>
                 <Link v-if="canCreateCar" :href="carsRoutes.create().url">
@@ -146,7 +138,7 @@ const formatDate = (dateString: string) => {
                             </div>
                             <DropdownMenu>
                                 <DropdownMenuTrigger as-child>
-                                    <Button variant="ghost" size="icon" class="h-8 w-8">
+                                    <Button variant="ghost" size="icon" class="h-8 w-8" :aria-label="$t('common.actions')">
                                         <MoreHorizontal class="h-4 w-4" />
                                     </Button>
                                 </DropdownMenuTrigger>
@@ -194,7 +186,7 @@ const formatDate = (dateString: string) => {
                             </div>
                             <div class="pt-2 border-t">
                                 <Link
-                                    :href="carsRoutes.tickets({ car: car.id }).url"
+                                    :href="carsRoutes.show({ car: car.id }).url"
                                     class="inline-flex items-center gap-1 text-sm text-primary hover:underline"
                                 >
                                     <Ticket class="h-3 w-3" />
@@ -229,29 +221,18 @@ const formatDate = (dateString: string) => {
                     :disabled="!link.url || link.active"
                     :class="{ 'bg-primary text-primary-foreground': link.active }"
                     @click="link.url && router.get(link.url)"
-                    v-html="link.label"
-                />
+                >
+                    {{ decodePaginationLabel(link.label) }}
+                </Button>
             </div>
         </div>
 
         <!-- Delete Confirmation Dialog -->
-        <Dialog v-model:open="deleteDialogOpen">
-            <DialogContent>
-                <DialogHeader>
-                    <DialogTitle>{{ $t('cars.delete.title') }}</DialogTitle>
-                    <DialogDescription>
-                        {{ $t('cars.delete.description', { car: `${carToDelete?.make} ${carToDelete?.model}` }) }}
-                    </DialogDescription>
-                </DialogHeader>
-                <DialogFooter>
-                    <Button variant="outline" @click="deleteDialogOpen = false">
-                        {{ $t('common.cancel') }}
-                    </Button>
-                    <Button variant="destructive" @click="deleteCar">
-                        {{ $t('common.delete') }}
-                    </Button>
-                </DialogFooter>
-            </DialogContent>
-        </Dialog>
+        <ConfirmDeleteDialog
+            v-model:open="deleteDialogOpen"
+            :title="$t('cars.delete.title')"
+            :description="$t('cars.delete.description', { make: carToDelete?.make, model: carToDelete?.model })"
+            @confirm="deleteCar"
+        />
     </AppLayout>
 </template>

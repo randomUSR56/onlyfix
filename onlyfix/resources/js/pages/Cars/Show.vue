@@ -10,21 +10,18 @@ import { type BreadcrumbItem } from '@/types';
 import type { Car, Ticket } from '@/types/models';
 import { Head, Link, router } from '@inertiajs/vue3';
 import { useI18n } from 'vue-i18n';
-import { 
-    Car as CarIcon, ArrowLeft, Edit, Trash2, Calendar, Hash, Palette, 
-    FileText, Plus, Wrench, Clock, CheckCircle2, AlertCircle 
+import {
+    Car as CarIcon, ArrowLeft, Edit, Trash2, Calendar, Hash, Palette,
+    FileText, Plus, Wrench
 } from 'lucide-vue-next';
 import { ref } from 'vue';
-import {
-    Dialog,
-    DialogContent,
-    DialogDescription,
-    DialogFooter,
-    DialogHeader,
-    DialogTitle,
-} from '@/components/ui/dialog';
+import ConfirmDeleteDialog from '@/components/ConfirmDeleteDialog.vue';
+import { useTicketHelpers } from '@/composables/useTicketHelpers';
+import { useFormatting } from '@/composables/useFormatting';
 
 const { t } = useI18n();
+const { getStatusBadgeVariant, getStatusIcon, getStatusBgColorClass, getStatusIconColorClass } = useTicketHelpers();
+const { formatDate } = useFormatting();
 
 const props = defineProps<{
     car: Car & { tickets?: Ticket[] };
@@ -56,36 +53,6 @@ const deleteCar = () => {
         },
     });
 };
-
-const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString(undefined, {
-        year: 'numeric',
-        month: 'long',
-        day: 'numeric',
-    });
-};
-
-const getStatusBadgeVariant = (status: string) => {
-    const variants: Record<string, 'default' | 'secondary' | 'destructive' | 'outline'> = {
-        open: 'destructive',
-        assigned: 'secondary',
-        in_progress: 'default',
-        completed: 'outline',
-        closed: 'outline',
-    };
-    return variants[status] || 'secondary';
-};
-
-const getStatusIcon = (status: string) => {
-    const icons: Record<string, any> = {
-        open: AlertCircle,
-        assigned: Clock,
-        in_progress: Wrench,
-        completed: CheckCircle2,
-        closed: CheckCircle2,
-    };
-    return icons[status] || Clock;
-};
 </script>
 
 <template>
@@ -97,7 +64,7 @@ const getStatusIcon = (status: string) => {
             <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
                 <div class="flex items-center gap-4">
                     <Link :href="carsRoutes.index().url">
-                        <Button variant="ghost" size="icon">
+                        <Button variant="ghost" size="icon" :aria-label="$t('common.goBack')">
                             <ArrowLeft class="h-5 w-5" />
                         </Button>
                     </Link>
@@ -204,19 +171,11 @@ const getStatusIcon = (status: string) => {
                                 class="flex items-center justify-between p-4 rounded-lg border bg-card hover:bg-muted/50 transition-colors"
                             >
                                 <div class="flex items-start gap-3 min-w-0">
-                                    <div class="p-2 rounded-lg" :class="{
-                                        'bg-orange-100 dark:bg-orange-900/30': ticket.status === 'open',
-                                        'bg-blue-100 dark:bg-blue-900/30': ticket.status === 'assigned' || ticket.status === 'in_progress',
-                                        'bg-green-100 dark:bg-green-900/30': ticket.status === 'completed' || ticket.status === 'closed',
-                                    }">
+                                    <div class="p-2 rounded-lg" :class="getStatusBgColorClass(ticket.status)">
                                         <component
                                             :is="getStatusIcon(ticket.status)"
                                             class="h-5 w-5"
-                                            :class="{
-                                                'text-orange-600 dark:text-orange-400': ticket.status === 'open',
-                                                'text-blue-600 dark:text-blue-400': ticket.status === 'assigned' || ticket.status === 'in_progress',
-                                                'text-green-600 dark:text-green-400': ticket.status === 'completed' || ticket.status === 'closed',
-                                            }"
+                                            :class="getStatusIconColorClass(ticket.status)"
                                         />
                                     </div>
                                     <div class="min-w-0">
@@ -251,23 +210,11 @@ const getStatusIcon = (status: string) => {
         </div>
 
         <!-- Delete Confirmation Dialog -->
-        <Dialog v-model:open="deleteDialogOpen">
-            <DialogContent>
-                <DialogHeader>
-                    <DialogTitle>{{ $t('cars.delete.title') }}</DialogTitle>
-                    <DialogDescription>
-                        {{ $t('cars.delete.description', { car: `${car.make} ${car.model}` }) }}
-                    </DialogDescription>
-                </DialogHeader>
-                <DialogFooter>
-                    <Button variant="outline" @click="deleteDialogOpen = false">
-                        {{ $t('common.cancel') }}
-                    </Button>
-                    <Button variant="destructive" @click="deleteCar">
-                        {{ $t('common.delete') }}
-                    </Button>
-                </DialogFooter>
-            </DialogContent>
-        </Dialog>
+        <ConfirmDeleteDialog
+            v-model:open="deleteDialogOpen"
+            :title="$t('cars.delete.title')"
+            :description="$t('cars.delete.description', { car: `${car.make} ${car.model}` })"
+            @confirm="deleteCar"
+        />
     </AppLayout>
 </template>

@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import AppLayout from '@/layouts/AppLayout.vue';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { dashboard } from '@/routes';
@@ -10,11 +10,15 @@ import { type BreadcrumbItem } from '@/types';
 import type { DashboardStats, Ticket, Car } from '@/types/models';
 import { Head, Link } from '@inertiajs/vue3';
 import { useI18n } from 'vue-i18n';
-import { Car as CarIcon, Plus, ArrowRight, AlertCircle, Wrench, Clock, CheckCircle2 } from 'lucide-vue-next';
+import { useTicketHelpers } from '@/composables/useTicketHelpers';
+import { useFormatting } from '@/composables/useFormatting';
+import { Car as CarIcon, Plus, ArrowRight, Wrench, Clock, CheckCircle2 } from 'lucide-vue-next';
 
 const { t } = useI18n();
+const { getStatusBadgeVariant, getPriorityBadgeClass, getStatusIcon, getStatusBgColorClass, getStatusIconColorClass } = useTicketHelpers();
+const { formatDate } = useFormatting();
 
-const props = defineProps<{
+defineProps<{
     stats: DashboardStats;
     recentTickets: Ticket[];
     cars: (Car & { tickets_count?: number })[];
@@ -27,39 +31,7 @@ const breadcrumbs: BreadcrumbItem[] = [
     },
 ];
 
-const getStatusBadgeVariant = (status: string) => {
-    const variants: Record<string, 'default' | 'secondary' | 'destructive' | 'outline'> = {
-        open: 'destructive',
-        assigned: 'secondary',
-        in_progress: 'default',
-        completed: 'outline',
-        closed: 'outline',
-    };
-    return variants[status] || 'secondary';
-};
 
-const getPriorityBadgeClass = (priority: string) => {
-    const classes: Record<string, string> = {
-        urgent: 'bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-400',
-        high: 'bg-orange-100 text-orange-800 dark:bg-orange-900/30 dark:text-orange-400',
-        medium: 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-400',
-        low: 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400',
-    };
-    return classes[priority] || 'bg-gray-100 text-gray-800';
-};
-
-const getStatusIcon = (status: string) => {
-    if (status === 'open') return AlertCircle;
-    if (status === 'assigned' || status === 'in_progress') return Wrench;
-    return CheckCircle2;
-};
-
-const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString(undefined, {
-        month: 'short',
-        day: 'numeric',
-    });
-};
 </script>
 
 <template>
@@ -117,22 +89,14 @@ const formatDate = (dateString: string) => {
                             class="flex items-center gap-4 p-3 rounded-lg border bg-card hover:bg-muted/50 transition-colors group"
                         >
                             <!-- Status Icon -->
-                            <div 
+                            <div
                                 class="p-2 rounded-lg shrink-0"
-                                :class="{
-                                    'bg-orange-100 dark:bg-orange-900/30': ticket.status === 'open',
-                                    'bg-blue-100 dark:bg-blue-900/30': ticket.status === 'assigned' || ticket.status === 'in_progress',
-                                    'bg-green-100 dark:bg-green-900/30': ticket.status === 'completed' || ticket.status === 'closed',
-                                }"
+                                :class="getStatusBgColorClass(ticket.status)"
                             >
                                 <component
                                     :is="getStatusIcon(ticket.status)"
                                     class="h-4 w-4"
-                                    :class="{
-                                        'text-orange-600 dark:text-orange-400': ticket.status === 'open',
-                                        'text-blue-600 dark:text-blue-400': ticket.status === 'assigned' || ticket.status === 'in_progress',
-                                        'text-green-600 dark:text-green-400': ticket.status === 'completed' || ticket.status === 'closed',
-                                    }"
+                                    :class="getStatusIconColorClass(ticket.status)"
                                 />
                             </div>
                             

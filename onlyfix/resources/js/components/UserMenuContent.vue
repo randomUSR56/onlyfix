@@ -14,14 +14,20 @@ import { edit } from '@/routes/profile';
 import type { User } from '@/types';
 import { Link, router } from '@inertiajs/vue3';
 import { LogOut, Settings, Globe, Check } from 'lucide-vue-next';
-import { ref } from 'vue';
-import { availableLocales, setLocale, getCurrentLocale, type SupportedLocale } from '@/i18n';
+import { computed } from 'vue';
+import { availableLocales, setLocale, type SupportedLocale } from '@/i18n';
+import { i18n } from '@/i18n';
 
 interface Props {
     user: User;
 }
 
-const currentLocale = ref<SupportedLocale>(getCurrentLocale());
+const currentLocale = computed<SupportedLocale>(() => (i18n.global.locale as any).value);
+
+const localeFlags: Record<string, string> = {
+    en: '\u{1F1EC}\u{1F1E7}',
+    hu: '\u{1F1ED}\u{1F1FA}',
+};
 
 const handleLogout = () => {
     router.flushAll();
@@ -29,7 +35,6 @@ const handleLogout = () => {
 
 function changeLocale(locale: SupportedLocale) {
     setLocale(locale);
-    currentLocale.value = locale;
 }
 
 defineProps<Props>();
@@ -61,7 +66,7 @@ defineProps<Props>();
                     @click="changeLocale(locale.code)"
                 >
                     <span class="flex items-center gap-2 w-full">
-                        <span class="text-base">{{ locale.code === 'en' ? '🇬🇧' : '🇭🇺' }}</span>
+                        <span class="text-base">{{ localeFlags[locale.code] || locale.code }}</span>
                         <span>{{ locale.nativeName }}</span>
                         <Check v-if="currentLocale === locale.code" class="ml-auto h-4 w-4" />
                     </span>

@@ -45,19 +45,6 @@ class Problem extends Model
     }
 
     /**
-     * Get all cars that have experienced this problem.
-     * Access path: Problem → Tickets → Cars
-     */
-    public function cars()
-    {
-        return Car::query()
-            ->whereHas('tickets.problems', fn($q) =>
-                $q->where('problems.id', $this->id)
-            )
-            ->distinct();
-    }
-
-    /**
      * Scope a query to only include active problems.
      */
     public function scopeActive($query)

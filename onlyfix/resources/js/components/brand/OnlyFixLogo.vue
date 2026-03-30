@@ -33,7 +33,7 @@ const textSizeClasses = {
         <!-- OnlyFix Icon -->
         <img 
             src="/images/brand/onlyfix-icon.svg" 
-            alt="OnlyFix Logo"
+            alt="OnlyFix"
             :class="cn(sizeClasses[size], 'aspect-square')"
         />
         

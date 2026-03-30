@@ -4,26 +4,31 @@ import InputError from '@/components/InputError.vue';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Checkbox } from '@/components/ui/checkbox';
 import { Badge } from '@/components/ui/badge';
 import { dashboard } from '@/routes';
 import * as ticketsRoutes from '@/routes/tickets';
 import { type BreadcrumbItem } from '@/types';
-import type { Car, Problem, Ticket } from '@/types/models';
+import type { Car, Problem, Ticket, TicketPriority, User } from '@/types/models';
 import { Head, useForm, Link } from '@inertiajs/vue3';
 import { useI18n } from 'vue-i18n';
 import { 
     Ticket as TicketIcon, ArrowLeft, LoaderCircle, Car as CarIcon, 
     Wrench, Info
 } from 'lucide-vue-next';
-import { computed } from 'vue';
+import { computed, watch } from 'vue';
+import { useAuth } from '@/composables/useAuth';
+import { useTicketHelpers } from '@/composables/useTicketHelpers';
 
 const { t } = useI18n();
+const { isAdmin, isMechanic } = useAuth();
+const { translateProblem } = useTicketHelpers();
 
 const props = defineProps<{
     ticket: Ticket;
     cars: Car[];
     problems: Problem[];
+    users?: User[];
+    mechanics?: User[];
 }>();
 
 const breadcrumbs: BreadcrumbItem[] = [
@@ -55,6 +60,9 @@ props.ticket.problems?.forEach((p: Problem) => {
 });
 
 const form = useForm({
+    user_id: props.ticket.user_id,
+    mechanic_id: props.ticket.mechanic_id,
+    status: props.ticket.status,
     car_id: props.ticket.car_id,
     description: props.ticket.description,
     priority: props.ticket.priority as 'low' | 'medium' | 'high' | 'urgent',
@@ -62,7 +70,27 @@ const form = useForm({
     problem_notes: initialProblemNotes,
 });
 
-const priorities = [
+// Filter cars based on selected user if admin
+const filteredCars = computed(() => {
+    if (!isAdmin.value || !form.user_id) return props.cars;
+    return props.cars.filter(car => car.user_id === form.user_id);
+});
+
+// Auto-select first available car when admin changes user
+watch(() => form.user_id, () => {
+    const cars = filteredCars.value;
+    form.car_id = cars.length ? cars[0].id : null;
+});
+
+const statusOptions = [
+    { value: 'open', label: t('tickets.status.open') },
+    { value: 'assigned', label: t('tickets.status.assigned') },
+    { value: 'in_progress', label: t('tickets.status.in_progress') },
+    { value: 'completed', label: t('tickets.status.completed') },
+    { value: 'closed', label: t('tickets.status.closed') },
+];
+
+const priorities: { value: TicketPriority; label: string; class: string }[] = [
     { value: 'low', label: t('tickets.priority.low'), class: 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400' },
     { value: 'medium', label: t('tickets.priority.medium'), class: 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-400' },
     { value: 'high', label: t('tickets.priority.high'), class: 'bg-orange-100 text-orange-800 dark:bg-orange-900/30 dark:text-orange-400' },
@@ -83,24 +111,15 @@ const problemsByCategory = computed(() => {
     return grouped;
 });
 
-// Translate problem name and description
-const translateProblem = (problem: Problem) => {
-    const translationKey = `problems.items.${problem.name}`;
-    const translatedName = t(`${translationKey}.name`, problem.name);
-    const translatedDescription = t(`${translationKey}.description`, problem.description || '');
-    return {
-        name: translatedName === `${translationKey}.name` ? problem.name : translatedName,
-        description: translatedDescription === `${translationKey}.description` ? problem.description : translatedDescription,
-    };
-};
-
 const toggleProblem = (problemId: number): void => {
     const index = form.problem_ids.indexOf(problemId);
     if (index === -1) {
-        form.problem_ids.push(problemId);
+        form.problem_ids = [...form.problem_ids, problemId];
     } else {
-        form.problem_ids.splice(index, 1);
-        delete form.problem_notes[problemId];
+        form.problem_ids = form.problem_ids.filter((id: number) => id !== problemId);
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        const { [problemId]: _ignored, ...rest } = form.problem_notes;
+        form.problem_notes = rest;
     }
 };
 
@@ -129,7 +148,7 @@ const submit = () => {
             <!-- Header -->
             <div class="flex items-center gap-4">
                 <Link :href="ticketsRoutes.show({ ticket: ticket.id }).url">
-                    <Button variant="ghost" size="icon">
+                    <Button variant="ghost" size="icon" :aria-label="$t('common.goBack')">
                         <ArrowLeft class="h-5 w-5" />
                     </Button>
                 </Link>
@@ -144,6 +163,64 @@ const submit = () => {
                 <div class="grid gap-6 lg:grid-cols-3">
                     <!-- Left Column - Main Form -->
                     <div class="lg:col-span-2 space-y-6">
+                        <!-- Admin Only: User Selection -->
+                        <Card v-if="isAdmin && users?.length">
+                            <CardHeader>
+                                <CardTitle>{{ $t('admin.ticket.selectUser') }}</CardTitle>
+                                <CardDescription>{{ $t('admin.ticket.selectUserDescription') }}</CardDescription>
+                            </CardHeader>
+                            <CardContent>
+                                <select
+                                    v-model="form.user_id"
+                                    class="flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-sm transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
+                                >
+                                    <option v-for="user in users" :key="user.id" :value="user.id">
+                                        {{ user.name }} ({{ user.email }})
+                                    </option>
+                                </select>
+                                <InputError :message="form.errors.user_id" class="mt-2" />
+                            </CardContent>
+                        </Card>
+
+                        <!-- Admin & Mechanic: Status Update -->
+                        <Card v-if="isAdmin || isMechanic">
+                            <CardHeader>
+                                <CardTitle>{{ $t('tickets.status.label') }}</CardTitle>
+                                <CardDescription>{{ $t('admin.ticket.statusDescription') }}</CardDescription>
+                            </CardHeader>
+                            <CardContent>
+                                <select
+                                    v-model="form.status"
+                                    class="flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-sm transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
+                                >
+                                    <option v-for="option in statusOptions" :key="option.value" :value="option.value">
+                                        {{ option.label }}
+                                    </option>
+                                </select>
+                                <InputError :message="form.errors.status" class="mt-2" />
+                            </CardContent>
+                        </Card>
+
+                        <!-- Admin Only: Mechanic Assignment -->
+                        <Card v-if="isAdmin && mechanics?.length">
+                            <CardHeader>
+                                <CardTitle>{{ $t('admin.ticket.assignMechanic') }}</CardTitle>
+                                <CardDescription>{{ $t('admin.ticket.assignMechanicDescription') }}</CardDescription>
+                            </CardHeader>
+                            <CardContent>
+                                <select
+                                    v-model="form.mechanic_id"
+                                    class="flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-sm transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
+                                >
+                                    <option :value="null">{{ $t('admin.ticket.assignMechanicPlaceholder') }}</option>
+                                    <option v-for="mech in mechanics" :key="mech.id" :value="mech.id">
+                                        {{ mech.name }}
+                                    </option>
+                                </select>
+                                <InputError :message="form.errors.mechanic_id" class="mt-2" />
+                            </CardContent>
+                        </Card>
+
                         <!-- Select Car -->
                         <Card>
                             <CardHeader>
@@ -160,7 +237,7 @@ const submit = () => {
                             <CardContent>
                                 <div class="grid gap-3 sm:grid-cols-2">
                                     <div
-                                        v-for="car in cars"
+                                        v-for="car in filteredCars"
                                         :key="car.id"
                                         class="relative flex items-center gap-3 p-4 rounded-lg border-2 cursor-pointer transition-all"
                                         :class="form.car_id === car.id 
@@ -217,16 +294,11 @@ const submit = () => {
                                         >
                                             <div
                                                 class="flex items-start gap-3 p-3 rounded-lg border cursor-pointer transition-all"
-                                                :class="isProblemSelected(problem.id) 
-                                                    ? 'border-primary bg-primary/5' 
+                                                :class="isProblemSelected(problem.id)
+                                                    ? 'border-primary bg-primary/5'
                                                     : 'border-border hover:border-primary/50'"
                                                 @click="toggleProblem(problem.id)"
                                             >
-                                                <Checkbox
-                                                    :checked="isProblemSelected(problem.id)"
-                                                    @click.stop
-                                                    @update:checked="toggleProblem(problem.id)"
-                                                />
                                                 <div class="flex-1 min-w-0">
                                                     <p class="font-medium text-sm">{{ translateProblem(problem).name }}</p>
                                                     <p v-if="problem.description" class="text-xs text-muted-foreground line-clamp-2">
@@ -290,7 +362,7 @@ const submit = () => {
                                     :class="form.priority === priority.value 
                                         ? 'border-primary bg-primary/5' 
                                         : 'border-border hover:border-primary/50'"
-                                    @click="form.priority = priority.value as any"
+                                    @click="form.priority = priority.value"
                                 >
                                     <input
                                         type="radio"

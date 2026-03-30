@@ -33,3 +33,4 @@ yarn-error.log
 
 # Ignore Swagger UI build artifacts
 /public/swagger-ui/
+coverage/

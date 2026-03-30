@@ -28,7 +28,7 @@ export interface CarInput {
 export interface Problem {
     id: number;
     name: string;
-    category: string;
+    category: 'engine' | 'transmission' | 'electrical' | 'brakes' | 'suspension' | 'steering' | 'body' | 'other';
     description?: string | null;
     is_active: boolean;
     created_at: string;
@@ -73,7 +73,6 @@ export interface User {
     id: number;
     name: string;
     email: string;
-    avatar?: string;
     email_verified_at: string | null;
     created_at: string;
     updated_at: string;
@@ -99,14 +98,4 @@ export interface PaginationLink {
     url: string | null;
     label: string;
     active: boolean;
-}
-
-// Dashboard stats
-export interface DashboardStats {
-    total_cars: number;
-    total_tickets: number;
-    open_tickets: number;
-    completed_tickets: number;
-    recent_tickets: Ticket[];
-    cars: Car[];
 }

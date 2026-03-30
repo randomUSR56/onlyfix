@@ -25,7 +25,7 @@ const props = defineProps<Props>();
                 <div class="p-4 rounded-2xl bg-white/10 backdrop-blur-sm border border-white/20">
                     <img 
                         src="/images/brand/checkmark-circle.svg" 
-                        alt="Success"
+                        :alt="$t('common.success')"
                         class="w-12 h-12 text-accent"
                     />
                 </div>

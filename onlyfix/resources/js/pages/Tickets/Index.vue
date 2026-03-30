@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import AppLayout from '@/layouts/AppLayout.vue';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -11,11 +11,13 @@ import type { Ticket, PaginatedData } from '@/types/models';
 import { Head, Link, router } from '@inertiajs/vue3';
 import { useI18n } from 'vue-i18n';
 import { useAuth } from '@/composables/useAuth';
-import { 
-    Ticket as TicketIcon, Plus, Search, Eye, MoreHorizontal, Filter,
-    Clock, CheckCircle2, AlertCircle, Wrench, Car as CarIcon, X, UserPlus
+import { useTicketHelpers } from '@/composables/useTicketHelpers';
+import { useFormatting } from '@/composables/useFormatting';
+import {
+    Ticket as TicketIcon, Plus, Search, Eye, Filter,
+    Clock, Wrench, Car as CarIcon, X, UserPlus
 } from 'lucide-vue-next';
-import { ref, watch, computed } from 'vue';
+import { ref, watch, computed, onUnmounted } from 'vue';
 import {
     DropdownMenu,
     DropdownMenuContent,
@@ -26,7 +28,9 @@ import {
 } from '@/components/ui/dropdown-menu';
 
 const { t } = useI18n();
-const { isMechanic, isAdmin, user } = useAuth();
+const { isMechanic, isAdmin } = useAuth();
+const { getStatusBadgeVariant, getPriorityBadgeClass, getStatusIcon } = useTicketHelpers();
+const { formatDate, decodePaginationLabel } = useFormatting();
 
 // Mechanics can't create tickets, only users (and admins)
 const canCreateTicket = computed(() => !isMechanic.value || isAdmin.value);
@@ -59,12 +63,16 @@ const statuses = ['open', 'assigned', 'in_progress', 'completed', 'closed'];
 const priorities = ['low', 'medium', 'high', 'urgent'];
 
 // Debounced search
-let searchTimeout: ReturnType<typeof setTimeout>;
-watch(searchQuery, (value) => {
-    clearTimeout(searchTimeout);
+let searchTimeout: ReturnType<typeof setTimeout> | null = null;
+watch(searchQuery, () => {
+    if (searchTimeout) clearTimeout(searchTimeout);
     searchTimeout = setTimeout(() => {
         applyFilters();
     }, 300);
+});
+
+onUnmounted(() => {
+    if (searchTimeout) clearTimeout(searchTimeout);
 });
 
 const applyFilters = () => {
@@ -100,49 +108,9 @@ const hasActiveFilters = computed(() =>
     searchQuery.value || statusFilter.value || priorityFilter.value
 );
 
-const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString(undefined, {
-        year: 'numeric',
-        month: 'short',
-        day: 'numeric',
-    });
-};
-
-const getStatusBadgeVariant = (status: string) => {
-    const variants: Record<string, 'default' | 'secondary' | 'destructive' | 'outline'> = {
-        open: 'destructive',
-        assigned: 'secondary',
-        in_progress: 'default',
-        completed: 'outline',
-        closed: 'outline',
-    };
-    return variants[status] || 'secondary';
-};
-
-const getPriorityBadgeClass = (priority: string) => {
-    const classes: Record<string, string> = {
-        urgent: 'bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-400',
-        high: 'bg-orange-100 text-orange-800 dark:bg-orange-900/30 dark:text-orange-400',
-        medium: 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-400',
-        low: 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400',
-    };
-    return classes[priority] || 'bg-gray-100 text-gray-800';
-};
-
-const getStatusIcon = (status: string) => {
-    const icons: Record<string, any> = {
-        open: AlertCircle,
-        assigned: Clock,
-        in_progress: Wrench,
-        completed: CheckCircle2,
-        closed: CheckCircle2,
-    };
-    return icons[status] || Clock;
-};
-
-// Mechanic can accept open tickets
+// Only mechanics can accept open tickets (admin manages but doesn't do mechanic work)
 const canAcceptTicket = (ticket: Ticket) => {
-    return (isMechanic.value || isAdmin.value) && ticket.status === 'open' && !ticket.mechanic_id;
+    return isMechanic.value && ticket.status === 'open' && !ticket.mechanic_id;
 };
 
 const acceptTicket = (ticketId: number) => {
@@ -352,8 +320,9 @@ const acceptTicket = (ticketId: number) => {
                     :disabled="!link.url || link.active"
                     :class="{ 'bg-primary text-primary-foreground': link.active }"
                     @click="link.url && router.get(link.url)"
-                    v-html="link.label"
-                />
+                >
+                    {{ decodePaginationLabel(link.label) }}
+                </Button>
             </div>
         </div>
     </AppLayout>

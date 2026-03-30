@@ -1,6 +1,22 @@
 import { usePage } from '@inertiajs/vue3';
 import { computed } from 'vue';
 
+/**
+ * Normalize a role value to its string name.
+ * Handles both string roles ('admin') and object roles ({ id: 1, name: 'admin' }).
+ */
+export function getRoleName(role: string | { name: string }): string {
+    return typeof role === 'string' ? role : role.name;
+}
+
+/**
+ * Check if a roles array contains a specific role name.
+ * Works with both string[] and { name: string }[] arrays.
+ */
+function rolesInclude(roles: (string | { name: string })[] | undefined, roleName: string): boolean {
+    return roles?.some(r => getRoleName(r) === roleName) ?? false;
+}
+
 export function useAuth() {
     const page = usePage();
 
@@ -9,14 +25,14 @@ export function useAuth() {
 
     // Role checks
     const isAdmin = computed(
-        () => user.value?.roles?.includes('admin') ?? false,
+        () => rolesInclude(user.value?.roles, 'admin'),
     );
 
     const isMechanic = computed(
-        () => user.value?.roles?.includes('mechanic') ?? false,
+        () => rolesInclude(user.value?.roles, 'mechanic'),
     );
 
-    const isUser = computed(() => user.value?.roles?.includes('user') ?? false);
+    const isUser = computed(() => rolesInclude(user.value?.roles, 'user'));
 
     // Permission checks
     const hasPermission = (permission: string) => {
@@ -33,7 +49,7 @@ export function useAuth() {
 
     // Role checks with multiple roles
     const hasRole = (role: string) => {
-        return user.value?.roles?.includes(role) ?? false;
+        return rolesInclude(user.value?.roles, role);
     };
 
     const hasAnyRole = (roles: string[]) => {
@@ -50,8 +66,8 @@ export function useAuth() {
     // Check if user can manage users (admin only)
     const canManageUsers = computed(() => hasRole('admin'));
 
-    // Check if user can accept tickets (mechanic or admin)
-    const canAcceptTickets = computed(() => hasAnyRole(['mechanic', 'admin']));
+    // Check if user can accept tickets (mechanic only — admin manages, doesn't do mechanic work)
+    const canAcceptTickets = computed(() => hasRole('mechanic'));
 
     return {
         user,

@@ -6,7 +6,6 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 
 class Car extends Model
 {
@@ -41,19 +40,6 @@ class Car extends Model
     public function tickets(): HasMany
     {
         return $this->hasMany(Ticket::class);
-    }
-
-    /**
-     * Get all unique problems this car has had across all tickets.
-     * Access path: Car → Tickets → Ticket_Problems → Problems
-     */
-    public function problems()
-    {
-        return Problem::query()
-            ->whereHas('tickets', fn($q) =>
-                $q->where('car_id', $this->id)
-            )
-            ->distinct();
     }
 
     /**

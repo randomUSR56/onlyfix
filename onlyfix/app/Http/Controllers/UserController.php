@@ -3,44 +3,28 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use App\Services\UserService;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rule;
 use Inertia\Inertia;
 
 class UserController extends Controller
 {
+    public function __construct(
+        private readonly UserService $userService
+    ) {}
+
     /**
      * Display a listing of users.
      * Only admins can view all users.
      */
     public function index(Request $request)
     {
-        if (!$request->user()->hasRole('admin')) {
-            abort(403, 'Unauthorized');
-        }
-
-        $query = User::with('roles');
-
-        // Filter by role
-        if ($request->has('role')) {
-            $query->role($request->role);
-        }
-
-        // Search by name or email
-        if ($request->has('search')) {
-            $search = $request->search;
-            $query->where(function ($q) use ($search) {
-                $q->where('name', 'like', "%{$search}%")
-                    ->orWhere('email', 'like', "%{$search}%");
-            });
-        }
-
-        $users = $query->paginate(15);
+        $filters = $request->only(['role', 'search']);
 
         return Inertia::render('Users/Index', [
-            'users' => $users,
-            'filters' => $request->only(['role', 'search'])
+            'users' => $this->userService->getUsers($request->user(), $filters),
+            'filters' => $filters,
         ]);
     }
 
@@ -49,9 +33,7 @@ class UserController extends Controller
      */
     public function create(Request $request)
     {
-        if (!$request->user()->hasRole('admin')) {
-            abort(403, 'Unauthorized');
-        }
+        $this->userService->authorizeAdmin($request->user());
 
         return Inertia::render('Users/Create');
     }
@@ -62,10 +44,6 @@ class UserController extends Controller
      */
     public function store(Request $request)
     {
-        if (!$request->user()->hasRole('admin')) {
-            abort(403, 'Unauthorized');
-        }
-
         $validated = $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users',
@@ -73,13 +51,7 @@ class UserController extends Controller
             'role' => 'required|in:user,mechanic,admin',
         ]);
 
-        $user = User::create([
-            'name' => $validated['name'],
-            'email' => $validated['email'],
-            'password' => Hash::make($validated['password']),
-        ]);
-
-        $user->assignRole($validated['role']);
+        $user = $this->userService->createUser($request->user(), $validated);
 
         return redirect()->route('users.show', $user)
             ->with('success', 'User created successfully');
@@ -90,17 +62,10 @@ class UserController extends Controller
      */
     public function show(Request $request, User $user)
     {
-        $authUser = $request->user();
-
-        // Users can view their own profile, admins can view anyone
-        if ($authUser->id !== $user->id && !$authUser->hasRole('admin')) {
-            abort(403, 'Unauthorized');
-        }
-
-        $user->load(['roles', 'cars', 'tickets']);
+        $user = $this->userService->showUser($user, $request->user());
 
         return Inertia::render('Users/Show', [
-            'user' => $user
+            'user' => $user,
         ]);
     }
 
@@ -109,15 +74,10 @@ class UserController extends Controller
      */
     public function edit(Request $request, User $user)
     {
-        $authUser = $request->user();
-
-        // Users can edit their own profile, admins can edit anyone
-        if ($authUser->id !== $user->id && !$authUser->hasRole('admin')) {
-            abort(403, 'Unauthorized');
-        }
+        $this->userService->authorizeView($request->user(), $user);
 
         return Inertia::render('Users/Edit', [
-            'user' => $user->load('roles')
+            'user' => $user->load('roles'),
         ]);
     }
 
@@ -126,13 +86,6 @@ class UserController extends Controller
      */
     public function update(Request $request, User $user)
     {
-        $authUser = $request->user();
-
-        // Users can update their own profile, admins can update anyone
-        if ($authUser->id !== $user->id && !$authUser->hasRole('admin')) {
-            abort(403, 'Unauthorized');
-        }
-
         $validated = $request->validate([
             'name' => 'sometimes|string|max:255',
             'email' => [
@@ -146,23 +99,7 @@ class UserController extends Controller
             'role' => 'sometimes|in:user,mechanic,admin',
         ]);
 
-        // Only admins can change roles
-        if (isset($validated['role'])) {
-            if (!$authUser->hasRole('admin')) {
-                return back()->withErrors([
-                    'role' => 'Only admins can change user roles'
-                ]);
-            }
-            $user->syncRoles([$validated['role']]);
-            unset($validated['role']);
-        }
-
-        // Hash password if provided
-        if (isset($validated['password'])) {
-            $validated['password'] = Hash::make($validated['password']);
-        }
-
-        $user->update($validated);
+        $this->userService->updateUser($user, $request->user(), $validated);
 
         return redirect()->route('users.show', $user)
             ->with('success', 'User updated successfully');
@@ -174,42 +111,9 @@ class UserController extends Controller
      */
     public function destroy(Request $request, User $user)
     {
-        $authUser = $request->user();
-
-        if (!$authUser->hasRole('admin')) {
-            abort(403, 'Unauthorized');
-        }
-
-        if ($authUser->id === $user->id) {
-            return back()->withErrors([
-                'user' => 'You cannot delete your own account'
-            ]);
-        }
-
-        $user->delete();
+        $this->userService->deleteUser($user, $request->user());
 
         return redirect()->route('users.index')
             ->with('success', 'User deleted successfully');
-    }
-
-    /**
-     * Get mechanics list.
-     */
-    public function mechanics(Request $request)
-    {
-        if (!$request->user()->hasAnyRole(['mechanic', 'admin'])) {
-            abort(403, 'Unauthorized');
-        }
-
-        $mechanics = User::role('mechanic')
-            ->with('roles')
-            ->withCount(['assignedTickets' => function ($query) {
-                $query->whereIn('status', ['assigned', 'in_progress']);
-            }])
-            ->get();
-
-        return Inertia::render('Mechanics/Index', [
-            'mechanics' => $mechanics
-        ]);
     }
 }

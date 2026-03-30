@@ -8,14 +8,16 @@ import { dashboard } from '@/routes';
 import * as ticketsRoutes from '@/routes/tickets';
 import * as carsRoutes from '@/routes/cars';
 import { type BreadcrumbItem } from '@/types';
-import type { Ticket, Problem } from '@/types/models';
+import type { Ticket } from '@/types/models';
 import { Head, Link, router } from '@inertiajs/vue3';
 import { useI18n } from 'vue-i18n';
 import { useAuth } from '@/composables/useAuth';
-import { 
+import { useTicketHelpers } from '@/composables/useTicketHelpers';
+import { useFormatting } from '@/composables/useFormatting';
+import {
     Ticket as TicketIcon, ArrowLeft, Edit, Trash2, Car as CarIcon,
-    Clock, CheckCircle2, AlertCircle, Wrench, User, Calendar,
-    MessageSquare, XCircle, Play, UserPlus
+    Clock, CheckCircle2, Wrench, User,
+    MessageSquare, Play, UserPlus
 } from 'lucide-vue-next';
 import { ref, computed } from 'vue';
 import {
@@ -26,9 +28,12 @@ import {
     DialogHeader,
     DialogTitle,
 } from '@/components/ui/dialog';
+import ConfirmDeleteDialog from '@/components/ConfirmDeleteDialog.vue';
 
 const { t } = useI18n();
-const { isMechanic, isAdmin, user } = useAuth();
+const { isMechanic, user } = useAuth();
+const { getStatusBadgeVariant, getPriorityBadgeClass, getStatusIcon, translateProblem } = useTicketHelpers();
+const { formatLongDate, formatDate } = useFormatting();
 
 const props = defineProps<{
     ticket: Ticket;
@@ -86,81 +91,20 @@ const completeTicket = () => {
 
 // Mechanic action permissions
 const canAcceptTicket = computed(() => 
-    (isMechanic.value || isAdmin.value) && props.ticket.status === 'open'
+    isMechanic.value && props.ticket.status === 'open'
 );
 
-const canStartWork = computed(() => 
-    (isMechanic.value || isAdmin.value) && 
-    props.ticket.status === 'assigned' && 
-    (props.ticket.mechanic_id === user.value?.id || isAdmin.value)
+const canStartWork = computed(() =>
+    isMechanic.value &&
+    props.ticket.status === 'assigned' &&
+    props.ticket.mechanic_id === user.value?.id
 );
 
-const canCompleteTicket = computed(() => 
-    (isMechanic.value || isAdmin.value) && 
-    props.ticket.status === 'in_progress' && 
-    (props.ticket.mechanic_id === user.value?.id || isAdmin.value)
+const canCompleteTicket = computed(() =>
+    isMechanic.value &&
+    props.ticket.status === 'in_progress' &&
+    props.ticket.mechanic_id === user.value?.id
 );
-
-const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString(undefined, {
-        year: 'numeric',
-        month: 'long',
-        day: 'numeric',
-        hour: '2-digit',
-        minute: '2-digit',
-    });
-};
-
-const formatShortDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString(undefined, {
-        year: 'numeric',
-        month: 'short',
-        day: 'numeric',
-    });
-};
-
-const getStatusBadgeVariant = (status: string) => {
-    const variants: Record<string, 'default' | 'secondary' | 'destructive' | 'outline'> = {
-        open: 'destructive',
-        assigned: 'secondary',
-        in_progress: 'default',
-        completed: 'outline',
-        closed: 'outline',
-    };
-    return variants[status] || 'secondary';
-};
-
-const getPriorityBadgeClass = (priority: string) => {
-    const classes: Record<string, string> = {
-        urgent: 'bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-400',
-        high: 'bg-orange-100 text-orange-800 dark:bg-orange-900/30 dark:text-orange-400',
-        medium: 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-400',
-        low: 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400',
-    };
-    return classes[priority] || 'bg-gray-100 text-gray-800';
-};
-
-// Translate problem name and description
-const translateProblem = (problem: Problem) => {
-    const translationKey = `problems.items.${problem.name}`;
-    const translatedName = t(`${translationKey}.name`, problem.name);
-    const translatedDescription = t(`${translationKey}.description`, problem.description || '');
-    return {
-        name: translatedName === `${translationKey}.name` ? problem.name : translatedName,
-        description: translatedDescription === `${translationKey}.description` ? problem.description : translatedDescription,
-    };
-};
-
-const getStatusIcon = (status: string) => {
-    const icons: Record<string, any> = {
-        open: AlertCircle,
-        assigned: Clock,
-        in_progress: Wrench,
-        completed: CheckCircle2,
-        closed: CheckCircle2,
-    };
-    return icons[status] || Clock;
-};
 
 const statusTimeline = computed(() => {
     const timeline = [];
@@ -187,7 +131,7 @@ const statusTimeline = computed(() => {
         timeline.push({
             status: 'in_progress',
             label: t('tickets.timeline.inProgress'),
-            date: props.ticket.accepted_at,
+            date: props.ticket.updated_at,
             icon: Wrench,
             completed: true,
         });
@@ -230,7 +174,7 @@ const canCloseTicket = computed(() =>
             <div class="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
                 <div class="flex items-start gap-4">
                     <Link :href="ticketsRoutes.index().url">
-                        <Button variant="ghost" size="icon">
+                        <Button variant="ghost" size="icon" :aria-label="$t('common.goBack')">
                             <ArrowLeft class="h-5 w-5" />
                         </Button>
                     </Link>
@@ -261,7 +205,7 @@ const canCloseTicket = computed(() =>
                                 </span>
                             </div>
                             <p class="text-muted-foreground">
-                                {{ $t('tickets.show.createdOn') }} {{ formatShortDate(ticket.created_at) }}
+                                {{ $t('tickets.show.createdOn') }} {{ formatDate(ticket.created_at) }}
                             </p>
                         </div>
                     </div>
@@ -357,7 +301,7 @@ const canCloseTicket = computed(() =>
                                     </p>
                                     <div v-if="problem.pivot?.notes" class="p-2 rounded bg-background border-l-2 border-primary">
                                         <p class="text-sm">
-                                            <span class="font-medium">{{ $t('tickets.show.customerNote') }}:</span>
+                                            <span class="font-medium">{{ $t('tickets.show.customerNote') }}</span>
                                             {{ problem.pivot.notes }}
                                         </p>
                                     </div>
@@ -392,7 +336,7 @@ const canCloseTicket = computed(() =>
                                         </div>
                                         <div>
                                             <p class="font-medium">{{ item.label }}</p>
-                                            <p v-if="item.date" class="text-sm text-muted-foreground">{{ formatDate(item.date) }}</p>
+                                            <p v-if="item.date" class="text-sm text-muted-foreground">{{ formatLongDate(item.date) }}</p>
                                         </div>
                                     </div>
                                 </div>
@@ -483,15 +427,15 @@ const canCloseTicket = computed(() =>
                                 <Separator />
                                 <div class="flex justify-between">
                                     <span class="text-muted-foreground">{{ $t('tickets.show.created') }}</span>
-                                    <span>{{ formatShortDate(ticket.created_at) }}</span>
+                                    <span>{{ formatDate(ticket.created_at) }}</span>
                                 </div>
                                 <div v-if="ticket.accepted_at" class="flex justify-between">
                                     <span class="text-muted-foreground">{{ $t('tickets.show.accepted') }}</span>
-                                    <span>{{ formatShortDate(ticket.accepted_at) }}</span>
+                                    <span>{{ formatDate(ticket.accepted_at) }}</span>
                                 </div>
                                 <div v-if="ticket.completed_at" class="flex justify-between">
                                     <span class="text-muted-foreground">{{ $t('tickets.show.completed') }}</span>
-                                    <span>{{ formatShortDate(ticket.completed_at) }}</span>
+                                    <span>{{ formatDate(ticket.completed_at) }}</span>
                                 </div>
                             </div>
                         </CardContent>
@@ -501,24 +445,12 @@ const canCloseTicket = computed(() =>
         </div>
 
         <!-- Delete Confirmation Dialog -->
-        <Dialog v-model:open="deleteDialogOpen">
-            <DialogContent>
-                <DialogHeader>
-                    <DialogTitle>{{ $t('tickets.delete.title') }}</DialogTitle>
-                    <DialogDescription>
-                        {{ $t('tickets.delete.description') }}
-                    </DialogDescription>
-                </DialogHeader>
-                <DialogFooter>
-                    <Button variant="outline" @click="deleteDialogOpen = false">
-                        {{ $t('common.cancel') }}
-                    </Button>
-                    <Button variant="destructive" @click="deleteTicket">
-                        {{ $t('common.delete') }}
-                    </Button>
-                </DialogFooter>
-            </DialogContent>
-        </Dialog>
+        <ConfirmDeleteDialog
+            v-model:open="deleteDialogOpen"
+            :title="$t('tickets.delete.title')"
+            :description="$t('tickets.delete.description')"
+            @confirm="deleteTicket"
+        />
 
         <!-- Close Ticket Confirmation Dialog -->
         <Dialog v-model:open="closeDialogOpen">

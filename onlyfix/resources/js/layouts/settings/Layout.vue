@@ -8,35 +8,39 @@ import { edit as editPassword } from '@/routes/password';
 import { edit as editProfile } from '@/routes/profile';
 import { show } from '@/routes/two-factor';
 import { type NavItem } from '@/types';
-import { Link } from '@inertiajs/vue3';
+import { Link, usePage } from '@inertiajs/vue3';
+import { computed } from 'vue';
+import { useI18n } from 'vue-i18n';
+
+const { t } = useI18n();
+const page = usePage();
+const currentPath = computed(() => page.url);
 
 const sidebarNavItems: NavItem[] = [
     {
-        title: 'Profile',
+        title: t('settings.profile.label'),
         href: editProfile(),
     },
     {
-        title: 'Password',
+        title: t('settings.password.label'),
         href: editPassword(),
     },
     {
-        title: 'Two-Factor Auth',
+        title: t('settings.twoFactor.label'),
         href: show(),
     },
     {
-        title: 'Appearance',
+        title: t('settings.appearance.label'),
         href: editAppearance(),
     },
 ];
-
-const currentPath = typeof window !== undefined ? window.location.pathname : '';
 </script>
 
 <template>
     <div class="px-4 py-6">
         <Heading
-            title="Settings"
-            description="Manage your profile and account settings"
+            :title="$t('settings.title')"
+            :description="$t('settings.description')"
         />
 
         <div class="flex flex-col lg:flex-row lg:space-x-12">
@@ -48,7 +52,7 @@ const currentPath = typeof window !== undefined ? window.location.pathname : '';
                         variant="ghost"
                         :class="[
                             'w-full justify-start',
-                            { 'bg-muted': urlIsActive(item.href, currentPath) },
+                            { 'bg-muted': urlIsActive(item.href, currentPath.value) },
                         ]"
                         as-child
                     >

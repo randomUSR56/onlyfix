@@ -9,9 +9,13 @@ import { type BreadcrumbItem } from '@/types';
 import type { Ticket } from '@/types/models';
 import { Head, Link, router } from '@inertiajs/vue3';
 import { useI18n } from 'vue-i18n';
+import { useTicketHelpers } from '@/composables/useTicketHelpers';
+import { useFormatting } from '@/composables/useFormatting';
 import { Wrench, ArrowRight, AlertCircle, Clock, CheckCircle2, Users, Inbox } from 'lucide-vue-next';
 
 const { t } = useI18n();
+const { getStatusBadgeVariant, getPriorityBadgeClass, getStatusIcon, getStatusBgColorClass, getStatusIconColorClass } = useTicketHelpers();
+const { formatDate } = useFormatting();
 
 interface MechanicStats {
     available_tickets: number;
@@ -20,7 +24,7 @@ interface MechanicStats {
     completed_tickets: number;
 }
 
-const props = defineProps<{
+defineProps<{
     stats: MechanicStats;
     availableTickets: Ticket[];
     myTickets: Ticket[];
@@ -33,40 +37,7 @@ const breadcrumbs: BreadcrumbItem[] = [
     },
 ];
 
-const getStatusBadgeVariant = (status: string) => {
-    const variants: Record<string, 'default' | 'secondary' | 'destructive' | 'outline'> = {
-        open: 'destructive',
-        assigned: 'secondary',
-        in_progress: 'default',
-        completed: 'outline',
-        closed: 'outline',
-    };
-    return variants[status] || 'secondary';
-};
 
-const getPriorityBadgeClass = (priority: string) => {
-    const classes: Record<string, string> = {
-        urgent: 'bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-400',
-        high: 'bg-orange-100 text-orange-800 dark:bg-orange-900/30 dark:text-orange-400',
-        medium: 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-400',
-        low: 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400',
-    };
-    return classes[priority] || 'bg-gray-100 text-gray-800';
-};
-
-const getStatusIcon = (status: string) => {
-    if (status === 'open') return AlertCircle;
-    if (status === 'assigned') return Clock;
-    if (status === 'in_progress') return Wrench;
-    return CheckCircle2;
-};
-
-const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString(undefined, {
-        month: 'short',
-        day: 'numeric',
-    });
-};
 
 const acceptTicket = (ticketId: number) => {
     router.post(ticketsRoutes.accept({ ticket: ticketId }).url);
@@ -241,20 +212,14 @@ const acceptTicket = (ticketId: number) => {
                             class="flex items-center gap-4 p-3 rounded-lg border bg-card hover:bg-muted/50 transition-colors group"
                         >
                             <!-- Status Icon -->
-                            <div 
+                            <div
                                 class="p-2 rounded-lg shrink-0"
-                                :class="{
-                                    'bg-blue-100 dark:bg-blue-900/30': ticket.status === 'assigned',
-                                    'bg-yellow-100 dark:bg-yellow-900/30': ticket.status === 'in_progress',
-                                }"
+                                :class="getStatusBgColorClass(ticket.status)"
                             >
                                 <component
                                     :is="getStatusIcon(ticket.status)"
                                     class="h-4 w-4"
-                                    :class="{
-                                        'text-blue-600 dark:text-blue-400': ticket.status === 'assigned',
-                                        'text-yellow-600 dark:text-yellow-400': ticket.status === 'in_progress',
-                                    }"
+                                    :class="getStatusIconColorClass(ticket.status)"
                                 />
                             </div>
                             

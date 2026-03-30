@@ -1,7 +1,7 @@
 <?php
 
 use App\Http\Controllers\CarController;
-use App\Http\Controllers\ProblemController;
+use App\Http\Controllers\HelpController;
 use App\Http\Controllers\TicketController;
 use App\Http\Controllers\UserController;
 use App\Models\Car;
@@ -19,8 +19,36 @@ Route::middleware(['auth', 'verified'])->group(function () {
         /** @var \App\Models\User $user */
         $user = $request->user();
         
+        // Admin Dashboard
+        if ($user->hasRole('admin')) {
+            $stats = [
+                'total_users' => \App\Models\User::count(),
+                'total_mechanics' => \App\Models\User::role('mechanic')->count(),
+                'total_tickets' => Ticket::count(),
+                'open_tickets' => Ticket::where('status', 'open')->count(),
+                'in_progress_tickets' => Ticket::where('status', 'in_progress')->count(),
+                'completed_tickets' => Ticket::where('status', 'completed')->count(),
+            ];
+
+            $recentTickets = Ticket::with(['car', 'user'])
+                ->orderBy('created_at', 'desc')
+                ->take(5)
+                ->get();
+
+            $recentUsers = \App\Models\User::with('roles')
+                ->orderBy('created_at', 'desc')
+                ->take(6)
+                ->get();
+
+            return Inertia::render('AdminDashboard', [
+                'stats' => $stats,
+                'recentTickets' => $recentTickets,
+                'recentUsers' => $recentUsers,
+            ]);
+        }
+        
         // Mechanic Dashboard
-        if ($user->hasRole('mechanic') || $user->hasRole('admin')) {
+        if ($user->hasRole('mechanic')) {
             $stats = [
                 'available_tickets' => Ticket::where('status', 'open')
                     ->whereNull('mechanic_id')
@@ -104,8 +132,6 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::patch('/{car}', [CarController::class, 'update'])->name('update');
         Route::delete('/{car}', [CarController::class, 'destroy'])->name('destroy');
 
-        // Car tickets
-        Route::get('/{car}/tickets', [CarController::class, 'tickets'])->name('tickets');
     });
 
     // Tickets Management
@@ -129,25 +155,6 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::post('/{ticket}/close', [TicketController::class, 'close'])->name('close');
     });
 
-    // Problems Management (mechanics & admins only for create/update/delete)
-    Route::prefix('problems')->name('problems.')->group(function () {
-        Route::get('/', [ProblemController::class, 'index'])->name('index');
-
-        Route::middleware(['role:mechanic|admin'])->group(function () {
-            Route::get('/create', [ProblemController::class, 'create'])->name('create');
-            Route::post('/', [ProblemController::class, 'store'])->name('store');
-            Route::get('/{problem}/edit', [ProblemController::class, 'edit'])->name('edit');
-            Route::patch('/{problem}', [ProblemController::class, 'update'])->name('update');
-        });
-
-        Route::get('/{problem}', [ProblemController::class, 'show'])->name('show');
-
-        // Delete (admins only)
-        Route::middleware(['role:admin'])->group(function () {
-            Route::delete('/{problem}', [ProblemController::class, 'destroy'])->name('destroy');
-        });
-    });
-
     // Users Management
     Route::prefix('users')->name('users.')->group(function () {
         // Admin-only routes
@@ -164,16 +171,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::patch('/{user}', [UserController::class, 'update'])->name('update');
     });
 
-    // Statistics & Reports (mechanics & admins only)
-    Route::middleware(['role:mechanic|admin'])->prefix('statistics')->name('statistics.')->group(function () {
-        Route::get('/tickets', [TicketController::class, 'statistics'])->name('tickets');
-        Route::get('/problems', [ProblemController::class, 'statistics'])->name('problems');
-    });
-
-    // Mechanics List (mechanics & admins can view)
-    Route::middleware(['role:mechanic|admin'])->group(function () {
-        Route::get('/mechanics', [UserController::class, 'mechanics'])->name('mechanics.index');
-    });
+    // Help
+    Route::get('/help', [HelpController::class, 'index'])->name('help.index');
 });
 
 require __DIR__.'/settings.php';
