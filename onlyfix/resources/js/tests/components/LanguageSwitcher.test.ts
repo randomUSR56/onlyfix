@@ -1,9 +1,10 @@
 import { describe, it, expect, vi } from 'vitest';
 import { mount } from '@vue/test-utils';
-import { defineComponent, h, ref } from 'vue';
+import { defineComponent, h } from 'vue';
 
 // Use vi.hoisted to solve the hoisting problem
 const { mockLocale, mockSetLocale } = vi.hoisted(() => {
+    // eslint-disable-next-line @typescript-eslint/no-require-imports
     const { ref } = require('vue');
     const mockLocale = ref('hu');
     const mockSetLocale = vi.fn((locale: string) => {
