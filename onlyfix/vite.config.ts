@@ -29,11 +29,17 @@ export default defineConfig({
         host: '0.0.0.0',
         port: 5173,
         strictPort: true,
-        hmr: {
-            host: process.env.VITE_HMR_HOST || 'node.onlyfix.local',
-            protocol: 'ws',
-            port: 5173,
-        },
+        // Vite asset URLs route through nginx (same origin as the page).
+        // Nginx proxies /@vite/*, /resources/*, /node_modules/* to the
+        // node container internally, avoiding broken WebSocket
+        // port-forwarding in Docker Desktop for Windows.
+        origin: isDocker ? process.env.APP_URL || 'http://onlyfix.local' : undefined,
+        allowedHosts: isDocker ? true : undefined,
+        // Disable HMR in Docker — Docker Desktop for Windows cannot
+        // forward WebSocket connections, and Vite 7 blocks rendering
+        // when the HMR handshake fails.  Not needed for production-
+        // ready codebases; a full page reload after file changes is fine.
+        hmr: isDocker ? false : undefined,
         watch: {
             usePolling: true,
             interval: 1000,
