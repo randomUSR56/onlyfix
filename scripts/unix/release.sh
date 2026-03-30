@@ -99,7 +99,12 @@ else
     print_success ".env fájl már létezik"
 fi
 
-# ── 5. Docker images build (production) ──────────────────────────
+# ── 5. Régi konténerek és volume-ok eltávolítása ────────────────
+print_step "Régi konténerek és volume-ok eltávolítása..."
+$COMPOSE_CMD down -v 2>/dev/null || true
+print_success "Tiszta állapot előkészítve"
+
+# ── 6. Docker images build (production) ──────────────────────────
 print_step "Docker image-ek építése (production)..."
 $COMPOSE_CMD build --no-cache
 print_success "Docker image-ek elkészültek (production)"
@@ -116,8 +121,7 @@ print_success "Composer függőségek telepítve"
 
 # ── 8. NPM install + production build ───────────────────────────
 print_step "NPM függőségek telepítése és production build..."
-$COMPOSE_CMD exec -it app npm install
-$COMPOSE_CMD exec -it app npm run build
+(cd onlyfix && npm install && npm run build)
 print_success "NPM production build elkészült"
 
 # ── 9. Laravel app key generálás ─────────────────────────────────

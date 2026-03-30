@@ -64,7 +64,12 @@ if exist "docker-compose.local.yml" (
     echo ✅ Lokalis override fajl megtalalva ^(docker-compose.local.yml^)
 )
 
-REM ── 5. Docker images build (production) ────────────────────────
+REM ── 5. Regi kontenerek es volume-ok eltavolitasa ──────────────
+echo 🔧 Regi kontenerek es volume-ok eltavolitasa...
+%COMPOSE_CMD% %COMPOSE_FILES% down -v >nul 2>&1
+echo ✅ Tiszta allapot elokeszitve
+
+REM ── 6. Docker images build (production) ────────────────────────
 echo 🔧 Docker image-ek epitese ^(production^)...
 %COMPOSE_CMD% %COMPOSE_FILES% build --no-cache
 if %errorlevel% neq 0 (
@@ -91,8 +96,10 @@ echo ✅ Composer fuggosegek telepitve
 
 REM ── 8. NPM install + production build ─────────────────────────
 echo 🔧 NPM fuggosegek telepitese es production build...
-%COMPOSE_CMD% %COMPOSE_FILES% exec %EXEC_FLAGS% app npm install
-%COMPOSE_CMD% %COMPOSE_FILES% exec %EXEC_FLAGS% app npm run build
+pushd onlyfix
+npm install
+npm run build
+popd
 echo ✅ NPM production build elkeszult
 
 REM ── 9. Laravel app key generalas ──────────────────────────────

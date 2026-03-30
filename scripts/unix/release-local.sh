@@ -31,19 +31,24 @@ else
     print_success ".env fájl már létezik"
 fi
 
-# ── 3. Docker images build (production) ──────────────────────────
-print_step "Docker image-ek építése (production)..."
-
+# ── 3. Docker compose fájlok meghatározása ─────────────────────
 COMPOSE_FILES="-f docker-compose.yml"
 if [ -f "docker-compose.local.yml" ]; then
     COMPOSE_FILES="$COMPOSE_FILES -f docker-compose.local.yml"
     print_success "Lokális override fájl megtalálva (docker-compose.local.yml)"
 fi
 
+# ── 4. Régi konténerek és volume-ok eltávolítása ────────────────
+print_step "Régi konténerek és volume-ok eltávolítása..."
+$COMPOSE_CMD $COMPOSE_FILES down -v 2>/dev/null || true
+print_success "Tiszta állapot előkészítve"
+
+# ── 5. Docker images build (production) ──────────────────────────
+print_step "Docker image-ek építése (production)..."
 $COMPOSE_CMD $COMPOSE_FILES build --no-cache
 print_success "Docker image-ek elkészültek (production)"
 
-# ── 4. Konténerek indítása ───────────────────────────────────────
+# ── 5. Konténerek indítása ───────────────────────────────────────
 print_step "Konténerek indítása..."
 $COMPOSE_CMD $COMPOSE_FILES up -d
 print_success "Konténerek elindultak"
@@ -55,8 +60,7 @@ print_success "Composer függőségek telepítve"
 
 # ── 6. NPM install + production build ───────────────────────────
 print_step "NPM függőségek telepítése és production build..."
-$COMPOSE_CMD $COMPOSE_FILES exec -it app npm install
-$COMPOSE_CMD $COMPOSE_FILES exec -it app npm run build
+(cd onlyfix && npm install && npm run build)
 print_success "NPM production build elkészült"
 
 # ── 7. Laravel app key generálás ─────────────────────────────────

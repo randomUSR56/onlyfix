@@ -96,7 +96,12 @@ if not exist "onlyfix\.env" (
     echo ✅ .env fajl mar letezik
 )
 
-REM ── 7. Docker images build (production) ────────────────────────
+REM ── 7. Regi kontenerek es volume-ok eltavolitasa ──────────────
+echo 🔧 Regi kontenerek es volume-ok eltavolitasa...
+%COMPOSE_CMD% down -v >nul 2>&1
+echo ✅ Tiszta allapot elokeszitve
+
+REM ── 8. Docker images build (production) ────────────────────────
 echo 🔧 Docker image-ek epitese ^(production^)...
 %COMPOSE_CMD% build --no-cache
 if %errorlevel% neq 0 (
@@ -121,10 +126,12 @@ if not defined WT_SESSION (
 %COMPOSE_CMD% exec %EXEC_FLAGS% app composer install
 echo ✅ Composer fuggosegek telepitve
 
-REM ── 10. NPM install + production build ─────────────────────────
+REM ── 11. NPM install + production build ─────────────────────────
 echo 🔧 NPM fuggosegek telepitese es production build...
-%COMPOSE_CMD% exec %EXEC_FLAGS% app npm install
-%COMPOSE_CMD% exec %EXEC_FLAGS% app npm run build
+pushd onlyfix
+npm install
+npm run build
+popd
 echo ✅ NPM production build elkeszult
 
 REM ── 11. Laravel app key generalas ──────────────────────────────
