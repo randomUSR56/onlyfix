@@ -7,7 +7,7 @@ vi.mock('@/components/ui/dialog', () => ({
     Dialog: defineComponent({
         props: ['open'],
         emits: ['update:open'],
-        setup(props, { slots, emit }) {
+        setup(props, { slots }) {
             return () => props.open ? h('div', { class: 'dialog', 'data-testid': 'dialog' }, [
                 slots.default?.(),
             ]) : null;
