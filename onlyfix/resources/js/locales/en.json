@@ -1,0 +1,782 @@
+{
+  "common": {
+    "appName": "OnlyFix",
+    "loading": "Loading...",
+    "save": "Save",
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "edit": "Edit",
+    "create": "Create",
+    "submit": "Submit",
+    "back": "Back",
+    "next": "Next",
+    "close": "Close",
+    "or": "Or",
+    "and": "and",
+    "yes": "Yes",
+    "no": "No",
+    "all": "All",
+    "none": "None",
+    "search": "Search",
+    "filter": "Filter",
+    "reset": "Reset",
+    "view": "View",
+    "viewAll": "View all",
+    "clearFilters": "Clear filters",
+    "goBack": "Go back",
+    "actions": "Actions",
+    "copyright": "© {year} OnlyFix. All rights reserved.",
+    "somethingWentWrong": "Something went wrong.",
+    "success": "Success",
+    "passwordPlaceholder": "--------",
+    "quoteOpen": "\u201c",
+    "quoteClose": "\u201d"
+  },
+  "nav": {
+    "home": "Home",
+    "dashboard": "Dashboard",
+    "login": "Log in",
+    "register": "Register",
+    "logout": "Log out",
+    "settings": "Settings",
+    "profile": "Profile",
+    "myCars": "My Cars",
+    "myTickets": "My Tickets",
+    "allTickets": "All Tickets",
+    "help": "Help & Support",
+    "platform": "Platform",
+    "navigationMenu": "Navigation Menu"
+  },
+  "welcome": {
+    "pageTitle": "Welcome",
+    "getStarted": "Let's get started",
+    "ecosystemDescription": "Laravel has an incredibly rich ecosystem.",
+    "suggestion": "We suggest starting with the following.",
+    "readThe": "Read the",
+    "documentation": "Documentation",
+    "watchTutorials": "Watch video tutorials at",
+    "laracasts": "Laracasts",
+    "deployNow": "Deploy now"
+  },
+  "auth": {
+    "login": {
+      "pageTitle": "Log in",
+      "title": "Welcome back",
+      "description": "Sign in to your account to manage your repair tickets",
+      "heroTitle": "Your Trusted Auto Repair Partner",
+      "heroSubtitle": "Submit repair requests, track progress, and communicate with certified mechanics - all in one place.",
+      "emailLabel": "Email address",
+      "emailPlaceholder": "you{'@'}example.com",
+      "passwordLabel": "Password",
+      "passwordPlaceholder": "••••••••",
+      "forgotPassword": "Forgot password?",
+      "rememberMe": "Keep me signed in",
+      "submitButton": "Sign in",
+      "newToOnlyFix": "New to OnlyFix?",
+      "createAccount": "Create an account"
+    },
+    "register": {
+      "pageTitle": "Register",
+      "title": "Create your account",
+      "description": "Join OnlyFix and start managing your car repairs efficiently",
+      "heroTitle": "Get Started in Minutes",
+      "heroSubtitle": "Whether you're a car owner seeking repairs or a mechanic managing work orders, OnlyFix streamlines the entire process.",
+      "nameLabel": "Full name",
+      "namePlaceholder": "John Doe",
+      "emailLabel": "Email address",
+      "emailPlaceholder": "you{'@'}example.com",
+      "passwordLabel": "Password",
+      "passwordPlaceholder": "••••••••",
+      "confirmPasswordLabel": "Confirm password",
+      "termsNotice": "By creating an account, you agree to our",
+      "termsOfService": "Terms of Service",
+      "privacyPolicy": "Privacy Policy",
+      "submitButton": "Create account",
+      "alreadyHaveAccount": "Already have an account?",
+      "signInInstead": "Sign in instead"
+    },
+    "forgotPassword": {
+      "pageTitle": "Forgot password",
+      "title": "Forgot password",
+      "description": "Enter your email to receive a password reset link",
+      "emailLabel": "Email address",
+      "emailPlaceholder": "email{'@'}example.com",
+      "submitButton": "Email password reset link",
+      "returnTo": "Or, return to",
+      "login": "log in"
+    },
+    "resetPassword": {
+      "pageTitle": "Reset password",
+      "title": "Reset password",
+      "description": "Enter your new password",
+      "emailLabel": "Email",
+      "passwordLabel": "Password",
+      "confirmPasswordLabel": "Confirm password",
+      "submitButton": "Reset password"
+    },
+    "confirmPassword": {
+      "pageTitle": "Confirm password",
+      "title": "Confirm your password",
+      "description": "This is a secure area. Please confirm your password before continuing.",
+      "passwordLabel": "Password",
+      "submitButton": "Confirm"
+    },
+    "verifyEmail": {
+      "pageTitle": "Verify email",
+      "title": "Verify your email",
+      "description": "Thanks for signing up! Before getting started, could you verify your email address by clicking on the link we just emailed to you?",
+      "resendButton": "Resend verification email",
+      "resendSuccess": "A new verification link has been sent to your email address.",
+      "logout": "Log out"
+    },
+    "twoFactor": {
+      "pageTitle": "Two-factor authentication",
+      "title": "Two-factor authentication",
+      "description": "Please confirm access to your account by entering the authentication code provided by your authenticator application.",
+      "codeLabel": "Code",
+      "recoveryCodeLabel": "Recovery code",
+      "useRecoveryCode": "Use a recovery code",
+      "useAuthCode": "Use an authentication code",
+      "submitButton": "Log in"
+    }
+  },
+  "dashboard": {
+    "pageTitle": "Dashboard",
+    "title": "Dashboard",
+    "welcome": "Welcome back!",
+    "subtitle": "Here's an overview of your cars and service tickets.",
+    "stats": {
+      "totalCars": "Total Cars",
+      "registeredVehicles": "Registered vehicles",
+      "totalTickets": "Total Tickets",
+      "serviceRequests": "Service requests",
+      "openTickets": "Open Tickets",
+      "awaitingService": "Awaiting service",
+      "completedTickets": "Completed",
+      "successfulRepairs": "Successful repairs"
+    },
+    "quickActions": {
+      "newTicket": "New Service Ticket",
+      "newTicketDescription": "Report a problem with your car and request service",
+      "addCar": "Add a Car",
+      "addCarDescription": "Register a new vehicle to your account"
+    },
+    "recentTickets": {
+      "title": "Recent Tickets",
+      "description": "Your latest service requests",
+      "empty": "No service tickets yet"
+    },
+    "myCars": {
+      "title": "My Cars",
+      "description": "Your registered vehicles",
+      "empty": "No cars registered yet",
+      "tickets": "tickets"
+    }
+  },
+  "mechanicDashboard": {
+    "pageTitle": "Mechanic Dashboard",
+    "title": "Mechanic Dashboard",
+    "welcome": "Welcome, Mechanic!",
+    "subtitle": "Manage your service tickets and work orders.",
+    "stats": {
+      "availableTickets": "Available Tickets",
+      "myTickets": "My Tickets",
+      "inProgressTickets": "In Progress",
+      "completedTickets": "Completed"
+    },
+    "availableTickets": {
+      "title": "Available Tickets",
+      "description": "Unassigned tickets ready to be accepted",
+      "empty": "No available tickets",
+      "emptyDescription": "All tickets are currently assigned"
+    },
+    "myTickets": {
+      "title": "My Active Tickets",
+      "description": "Tickets assigned to you",
+      "empty": "No active tickets",
+      "emptyDescription": "Accept tickets from the available list"
+    },
+    "acceptTicket": "Accept"
+  },
+  "adminDashboard": {
+    "pageTitle": "Admin Dashboard",
+    "title": "Administrator Control Panel",
+    "welcome": "Welcome, Administrator!",
+    "subtitle": "System-wide overview and management.",
+    "stats": {
+      "totalUsers": "Total Users",
+      "activeMechanics": "Active Mechanics",
+      "pendingTickets": "Pending Tickets",
+      "monthlyRevenue": "Monthly Revenue"
+    },
+    "recentUsers": "Recent Users",
+    "recentUsersDescription": "Latest registered members",
+    "systemStatus": "System Status",
+    "activeWorkflows": "Active Workflows",
+    "completedRepairs": "Completed Repairs"
+  },
+  "cars": {
+    "pageTitle": "My Cars",
+    "title": "My Cars",
+    "subtitle": "Manage your registered vehicles",
+    "addCar": "Add Car",
+    "searchPlaceholder": "Search cars...",
+    "licensePlate": "License Plate",
+    "color": "Color",
+    "vin": "VIN",
+    "registered": "Registered",
+    "serviceHistory": "service tickets",
+    "allVehicles": "All Vehicles",
+    "empty": {
+      "title": "No cars registered",
+      "description": "Add your first car to start creating service tickets"
+    },
+    "create": {
+      "pageTitle": "Add Car",
+      "title": "Add a New Car",
+      "subtitle": "Register a vehicle to your account",
+      "formTitle": "Vehicle Information",
+      "formDescription": "Enter the details of your car",
+      "submitButton": "Add Car"
+    },
+    "edit": {
+      "pageTitle": "Edit Car",
+      "title": "Edit Car",
+      "formTitle": "Update Vehicle Information",
+      "formDescription": "Modify the details of your car",
+      "submitButton": "Save Changes"
+    },
+    "show": {
+      "details": "Vehicle Details",
+      "detailsDescription": "Information about your car",
+      "serviceHistory": "Service History",
+      "serviceHistoryDescription": "All service tickets for this vehicle",
+      "noServiceHistory": "No service history",
+      "noServiceHistoryDescription": "This car hasn't had any service tickets yet",
+      "registeredOn": "Registered on"
+    },
+    "delete": {
+      "title": "Delete Car",
+      "description": "Are you sure you want to delete {car}? This will also delete all associated service tickets. This action cannot be undone."
+    },
+    "form": {
+      "make": "Make",
+      "makePlaceholder": "e.g., Toyota",
+      "model": "Model",
+      "modelPlaceholder": "e.g., Camry",
+      "year": "Year",
+      "licensePlate": "License Plate",
+      "licensePlatePlaceholder": "e.g., ABC-123",
+      "vin": "VIN (optional)",
+      "vinPlaceholder": "17-character VIN",
+      "vinHint": "Vehicle Identification Number - found on your registration",
+      "color": "Color (optional)",
+      "colorPlaceholder": "e.g., Silver"
+    }
+  },
+  "problems": {
+    "categories": {
+      "engine": "Engine",
+      "transmission": "Transmission",
+      "electrical": "Electrical",
+      "brakes": "Brakes",
+      "suspension": "Suspension",
+      "steering": "Steering",
+      "body": "Body",
+      "other": "Other"
+    },
+    "items": {
+      "Engine oil leak": {
+        "name": "Engine oil leak",
+        "description": "Oil is leaking from engine components"
+      },
+      "Engine overheating": {
+        "name": "Engine overheating",
+        "description": "Engine temperature exceeds normal operating range"
+      },
+      "Check engine light on": {
+        "name": "Check engine light on",
+        "description": "Dashboard warning light is illuminated"
+      },
+      "Engine misfire": {
+        "name": "Engine misfire",
+        "description": "Engine runs rough or shows misfiring symptoms"
+      },
+      "Poor fuel economy": {
+        "name": "Poor fuel economy",
+        "description": "Vehicle is consuming excessive fuel"
+      },
+      "Engine making strange noise": {
+        "name": "Engine making strange noise",
+        "description": "Unusual sounds coming from the engine"
+      },
+      "Hard to start engine": {
+        "name": "Hard to start engine",
+        "description": "Engine requires multiple attempts to start"
+      },
+      "Transmission slipping": {
+        "name": "Transmission slipping",
+        "description": "Transmission fails to engage gears properly"
+      },
+      "Hard shifting": {
+        "name": "Hard shifting",
+        "description": "Difficulty when shifting between gears"
+      },
+      "Transmission fluid leak": {
+        "name": "Transmission fluid leak",
+        "description": "Red fluid leaking from the transmission"
+      },
+      "Grinding noise when shifting": {
+        "name": "Grinding noise when shifting",
+        "description": "Unusual grinding sound when changing gears"
+      },
+      "Delayed engagement": {
+        "name": "Delayed engagement",
+        "description": "Transmission hesitates before engaging"
+      },
+      "Battery dead": {
+        "name": "Battery dead",
+        "description": "Battery does not hold charge"
+      },
+      "Alternator failure": {
+        "name": "Alternator failure",
+        "description": "Alternator is not charging the battery properly"
+      },
+      "Starter motor issues": {
+        "name": "Starter motor issues",
+        "description": "Starter motor fails to engage or clicks"
+      },
+      "Headlights not working": {
+        "name": "Headlights not working",
+        "description": "One or both headlights are not functioning"
+      },
+      "Dashboard lights malfunction": {
+        "name": "Dashboard lights malfunction",
+        "description": "Warning lights are not functioning properly"
+      },
+      "Power windows not working": {
+        "name": "Power windows not working",
+        "description": "Electric windows are not operating"
+      },
+      "Central locking failure": {
+        "name": "Central locking failure",
+        "description": "Door locks do not respond to remote or switch"
+      },
+      "Squeaking brakes": {
+        "name": "Squeaking brakes",
+        "description": "High-pitched noise when braking"
+      },
+      "Grinding brakes": {
+        "name": "Grinding brakes",
+        "description": "Metal-on-metal grinding sound when braking"
+      },
+      "Soft brake pedal": {
+        "name": "Soft brake pedal",
+        "description": "Brake pedal feels spongy or goes to floor"
+      },
+      "Brake pulls to one side": {
+        "name": "Brake pulls to one side",
+        "description": "Vehicle pulls left or right when braking"
+      },
+      "ABS light on": {
+        "name": "ABS light on",
+        "description": "Anti-lock brake system warning light is on"
+      },
+      "Brake fluid leak": {
+        "name": "Brake fluid leak",
+        "description": "Brake fluid is leaking from the system"
+      },
+      "Parking brake stuck": {
+        "name": "Parking brake stuck",
+        "description": "Parking brake does not release properly"
+      },
+      "Rough ride": {
+        "name": "Rough ride",
+        "description": "Vehicle rides harshly over bumps"
+      },
+      "Uneven tire wear": {
+        "name": "Uneven tire wear",
+        "description": "Tires are wearing unevenly"
+      },
+      "Clunking noise over bumps": {
+        "name": "Clunking noise over bumps",
+        "description": "Loud clunking when driving over uneven surfaces"
+      },
+      "Vehicle sits lower on one side": {
+        "name": "Vehicle sits lower on one side",
+        "description": "Uneven vehicle height indicating suspension issue"
+      },
+      "Excessive bouncing": {
+        "name": "Excessive bouncing",
+        "description": "Vehicle continues bouncing after bumps"
+      },
+      "Nose dives when braking": {
+        "name": "Nose dives when braking",
+        "description": "Front end dips excessively when braking"
+      },
+      "Hard to turn steering wheel": {
+        "name": "Hard to turn steering wheel",
+        "description": "Excessive force needed to steer"
+      },
+      "Loose steering": {
+        "name": "Loose steering",
+        "description": "Steering wheel has too much play"
+      },
+      "Steering wheel vibration": {
+        "name": "Steering wheel vibration",
+        "description": "Steering shakes or vibrates while driving"
+      },
+      "Power steering fluid leak": {
+        "name": "Power steering fluid leak",
+        "description": "Power steering fluid is leaking from the system"
+      },
+      "Steering wheel off-center": {
+        "name": "Steering wheel off-center",
+        "description": "Steering wheel is not straight when driving straight"
+      },
+      "Whining noise when turning": {
+        "name": "Whining noise when turning",
+        "description": "High-pitched whining when steering"
+      },
+      "Rust damage": {
+        "name": "Rust damage",
+        "description": "Corrosion on body panels"
+      },
+      "Dent repair needed": {
+        "name": "Dent repair needed",
+        "description": "Body panel dented from impact"
+      },
+      "Paint scratches": {
+        "name": "Paint scratches",
+        "description": "Surface paint damage requiring repair"
+      },
+      "Door alignment issues": {
+        "name": "Door alignment issues",
+        "description": "Doors do not close or align properly"
+      },
+      "Windshield crack": {
+        "name": "Windshield crack",
+        "description": "Crack or chip in windshield glass"
+      },
+      "Hood latch broken": {
+        "name": "Hood latch broken",
+        "description": "Hood does not close properly"
+      },
+      "Air conditioning not cooling": {
+        "name": "Air conditioning not cooling",
+        "description": "AC blows warm air or does not work"
+      },
+      "Heater not working": {
+        "name": "Heater not working",
+        "description": "Heating system does not produce warm air"
+      },
+      "Window won't roll up/down": {
+        "name": "Window won't roll up/down",
+        "description": "Electric window is stuck or not operating"
+      },
+      "Exhaust leak": {
+        "name": "Exhaust leak",
+        "description": "Exhaust system is leaking gases"
+      },
+      "Unusual exhaust smoke": {
+        "name": "Unusual exhaust smoke",
+        "description": "Black, white, or blue smoke from exhaust"
+      },
+      "Fuel gauge not working": {
+        "name": "Fuel gauge not working",
+        "description": "Fuel level indicator not reading correctly"
+      },
+      "Wiper blades need replacement": {
+        "name": "Wiper blades need replacement",
+        "description": "Wipers are streaking or not cleaning properly"
+      },
+      "Oil change needed": {
+        "name": "Oil change needed",
+        "description": "Regular oil and filter change required"
+      },
+      "Tire rotation needed": {
+        "name": "Tire rotation needed",
+        "description": "Tires need to be rotated for even wear"
+      },
+      "General inspection": {
+        "name": "General inspection",
+        "description": "Comprehensive vehicle safety check"
+      }
+    }
+  },
+  "tickets": {
+    "pageTitle": "My Tickets",
+    "title": "My Tickets",
+    "subtitle": "Track and manage your service requests",
+    "ticket": "Ticket",
+    "createTicket": "New Ticket",
+    "searchPlaceholder": "Search tickets...",
+    "filterByStatus": "Filter by status",
+    "filterByPriority": "Filter by priority",
+    "problems": "problems",
+    "empty": {
+      "title": "No service tickets",
+      "description": "Create your first ticket to request car service"
+    },
+    "status": {
+      "label": "Status",
+      "open": "Open",
+      "assigned": "Assigned",
+      "in_progress": "In Progress",
+      "completed": "Completed",
+      "closed": "Closed"
+    },
+    "priority": {
+      "label": "Priority",
+      "low": "Low",
+      "medium": "Medium",
+      "high": "High",
+      "urgent": "Urgent"
+    },
+    "actions": {
+      "accept": "Accept Ticket",
+      "startWork": "Start Work",
+      "complete": "Mark Complete"
+    },
+    "edit": {
+      "pageTitle": "Edit Ticket",
+      "title": "Edit Ticket",
+      "subtitle": "Update the details of your service request",
+      "submitButton": "Save Changes"
+    },    "create": {
+      "pageTitle": "New Ticket",
+      "title": "Create Service Ticket",
+      "subtitle": "Describe the problems with your car",
+      "noCarsTitle": "No cars registered",
+      "noCarsDescription": "You need to add a car before creating a service ticket.",
+      "selectCar": "Select Car",
+      "selectCarDescription": "Choose which car needs service",
+      "selectProblems": "Select Problems",
+      "selectProblemsDescription": "What issues are you experiencing?",
+      "problemNotePlaceholder": "Add details about this issue...",
+      "descriptionTitle": "Additional Details",
+      "descriptionSubtitle": "Describe any other information that might help",
+      "descriptionPlaceholder": "Please describe the problems you're experiencing with your car. Include when the issue started, any unusual sounds, behaviors, or warning lights...",
+      "priorityTitle": "Priority Level",
+      "priorityDescription": "How urgent is this service request?",
+      "summaryTitle": "Summary",
+      "selectedCar": "Selected car",
+      "noCarSelected": "No car selected",
+      "selectedProblems": "Selected problems",
+      "noProblemsSelected": "No problems selected",
+      "submitButton": "Create Ticket"
+    },
+    "show": {
+      "createdOn": "Created on",
+      "description": "Description",
+      "reportedProblems": "Reported Problems",
+      "reportedProblemsDescription": "Issues selected by the customer",
+      "customerNote": "Customer note:",
+      "noProblems": "No problems reported",
+      "timeline": "Timeline",
+      "vehicleInfo": "Vehicle Information",
+      "viewCarDetails": "View car details",
+      "assignedMechanic": "Assigned Mechanic",
+      "statusInfo": "Status Information",
+      "status": "Status",
+      "priority": "Priority",
+      "created": "Created",
+      "accepted": "Accepted",
+      "completed": "Completed",
+      "closeTicket": "Close Ticket"
+    },
+    "timeline": {
+      "created": "Ticket Created",
+      "assigned": "Assigned to Mechanic",
+      "inProgress": "Work Started",
+      "completed": "Work Completed",
+      "closed": "Ticket Closed"
+    },
+    "delete": {
+      "title": "Delete Ticket",
+      "description": "Are you sure you want to delete this ticket? This action cannot be undone."
+    },
+    "close": {
+      "title": "Close Ticket",
+      "description": "Once you close this ticket, it will be marked as resolved. Are you satisfied with the service?"
+    }
+  },
+  "users": {
+    "pageTitle": "Users",
+    "title": "User Management",
+    "subtitle": "Manage system users and their permissions",
+    "addUser": "Add User",
+    "searchPlaceholder": "Search by name or email...",
+    "role": "Role",
+    "roles": {
+      "admin": "Administrator",
+      "mechanic": "Mechanic",
+      "user": "Customer"
+    },
+    "form": {
+      "name": "Name",
+      "email": "Email Address",
+      "password": "Password",
+      "passwordConfirmation": "Confirm Password",
+      "role": "Select Role"
+    },
+    "create": {
+      "title": "Create New User",
+      "submitButton": "Create User"
+    },
+    "edit": {
+      "title": "Edit User",
+      "submitButton": "Save Changes",
+      "passwordOptionalHint": "(Only if you want to change it)"
+    },
+    "delete": {
+      "title": "Delete User",
+      "description": "Are you sure you want to delete user {name}? This action cannot be undone."
+    },
+    "empty": "No users found matching your criteria.",
+    "ticketsCount": "{count} ticket | {count} tickets",
+    "carsCount": "{count} car | {count} cars",
+    "ticketsAndCarsHeader": "Tickets / Cars",
+    "show": {
+      "info": "Information",
+      "registeredAt": "Registered at:",
+      "accountStatus": "Account Status:",
+      "verified": "Verified",
+      "unverified": "Unverified",
+      "professionalData": "Professional Data",
+      "totalRepairs": "Total Repairs:",
+      "registeredCars": "Registered Cars",
+      "registeredCarsDescription": "Vehicles assigned to this user",
+      "noCars": "No registered cars.",
+      "repairTickets": "Repair Tickets",
+      "assignedTasks": "Assigned Tasks",
+      "ownRequests": "Own Requests",
+      "noTickets": "No tickets found.",
+      "details": "Details"
+    }
+  },
+  "admin": {
+    "ticket": {
+      "selectUser": "Select Customer",
+      "selectUserDescription": "Who does this repair ticket belong to?",
+      "selectUserPlaceholder": "Choose a customer...",
+      "assignMechanic": "Assign Mechanic",
+      "assignMechanicDescription": "Who will perform the repair?",
+      "assignMechanicPlaceholder": "No mechanic assigned",
+      "statusDescription": "The status of the repair process"
+    }
+  },
+  "settings": {
+    "title": "Settings",
+    "description": "Manage your profile and account settings",
+    "profile": {
+      "label": "Profile",
+      "pageTitle": "Profile settings",
+      "breadcrumb": "Profile settings",
+      "title": "Profile information",
+      "description": "Update your name and email address",
+      "nameLabel": "Name",
+      "namePlaceholder": "Full name",
+      "emailLabel": "Email address",
+      "emailPlaceholder": "Email address",
+      "unverifiedEmail": "Your email address is unverified.",
+      "resendVerification": "Click here to resend the verification email.",
+      "verificationSent": "A new verification link has been sent to your email address.",
+      "saveButton": "Save",
+      "saved": "Saved."
+    },
+    "password": {
+      "label": "Password",
+      "pageTitle": "Password settings",
+      "breadcrumb": "Password settings",
+      "title": "Update password",
+      "description": "Ensure your account is using a long, random password to stay secure",
+      "currentPasswordLabel": "Current password",
+      "currentPasswordPlaceholder": "Current password",
+      "newPasswordLabel": "New password",
+      "newPasswordPlaceholder": "New password",
+      "confirmPasswordLabel": "Confirm password",
+      "confirmPasswordPlaceholder": "Confirm password",
+      "saveButton": "Save password",
+      "saved": "Saved."
+    },
+    "appearance": {
+      "label": "Appearance",
+      "pageTitle": "Appearance settings",
+      "breadcrumb": "Appearance settings",
+      "title": "Appearance settings",
+      "description": "Update your account's appearance settings"
+    },
+    "twoFactor": {
+      "label": "Two-Factor Auth",
+      "pageTitle": "Two-factor authentication",
+      "breadcrumb": "Two-factor authentication",
+      "title": "Two-factor authentication",
+      "description": "Add additional security to your account using two factor authentication",
+      "badgeEnabled": "Enabled",
+      "badgeDisabled": "Disabled",
+      "disabledDescription": "When you enable two-factor authentication, you will be prompted for a secure pin during login. This pin can be retrieved from a TOTP-supported application on your phone.",
+      "enabledDescription": "With two-factor authentication enabled, you will be prompted for a secure, random pin during login, which you can retrieve from the TOTP-supported application on your phone.",
+      "continueSetup": "Continue Setup",
+      "enable2FA": "Enable 2FA",
+      "disable2FA": "Disable 2FA",
+      "modal": {
+        "enabledTitle": "Two-Factor Authentication Enabled",
+        "enabledDescription": "Two-factor authentication is now enabled. Scan the QR code or enter the setup key in your authenticator app.",
+        "verifyTitle": "Verify Authentication Code",
+        "verifyDescription": "Enter the 6-digit code from your authenticator app",
+        "setupTitle": "Enable Two-Factor Authentication",
+        "setupDescription": "To finish enabling two-factor authentication, scan the QR code or enter the setup key in your authenticator app",
+        "continue": "Continue",
+        "orEnterManually": "or, enter the code manually",
+        "confirm": "Confirm"
+      },
+      "recoveryCodes": {
+        "title": "2FA Recovery Codes",
+        "description": "Recovery codes let you regain access if you lose your 2FA device. Store them in a secure password manager.",
+        "hideRecoveryCodes": "Hide Recovery Codes",
+        "viewRecoveryCodes": "View Recovery Codes",
+        "regenerateCodes": "Regenerate Codes",
+        "usageNote": "Each recovery code can be used once to access your account and will be removed after use. If you need more, click {regenerate} above."
+      },
+      "errors": {
+        "fetchQrCode": "Failed to load QR code. Please try again.",
+        "fetchSetupKey": "Failed to load setup key. Please try again.",
+        "fetchRecoveryCodes": "Failed to load recovery codes. Please try again."
+      }
+    },
+    "deleteAccount": {
+      "title": "Delete account",
+      "description": "Delete your account and all of its resources",
+      "warningTitle": "Warning",
+      "warningText": "Please proceed with caution, this cannot be undone.",
+      "deleteButton": "Delete account",
+      "confirmTitle": "Are you sure you want to delete your account?",
+      "confirmDescription": "Once your account is deleted, all of its resources and data will also be permanently deleted. Please enter your password to confirm you would like to permanently delete your account.",
+      "passwordLabel": "Password",
+      "passwordPlaceholder": "Password"
+    }
+  },
+  "language": {
+    "title": "Language",
+    "select": "Select language",
+    "en": "English",
+    "hu": "Magyar"
+  },
+  "layouts": {
+    "auth": {
+      "defaultHeroTitle": "Professional Car Repair Management",
+      "defaultHeroSubtitle": "Streamline your auto repair workflow with our comprehensive ticketing system. Connect customers with mechanics efficiently."
+    }
+  },
+  "features": {
+    "quickTicket": "Quick ticket creation for car issues",
+    "realTimeUpdates": "Real-time repair status updates",
+    "directCommunication": "Direct communication with mechanics"
+  },
+  "appearance": {
+    "light": "Light",
+    "dark": "Dark",
+    "system": "System"
+  }
+}

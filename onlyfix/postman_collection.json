@@ -1,0 +1,692 @@
+{
+    "info": {
+        "name": "OnlyFix API",
+        "description": "Complete API documentation for OnlyFix - Car Service Management System",
+        "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+    },
+    "auth": {
+        "type": "bearer",
+        "bearer": [
+            {
+                "key": "token",
+                "value": "{{access_token}}",
+                "type": "string"
+            }
+        ]
+    },
+    "item": [
+        {
+            "name": "Authentication",
+            "item": [
+                {
+                    "name": "Register",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"name\": \"John Doe\",\n  \"email\": \"john@example.com\",\n  \"password\": \"password123\",\n  \"password_confirmation\": \"password123\"\n}"
+                        },
+                        "url": {
+                            "raw": "{{base_url}}/register",
+                            "host": ["{{base_url}}"],
+                            "path": ["register"]
+                        },
+                        "description": "Register a new user account. Default role is 'user'."
+                    }
+                },
+                {
+                    "name": "Login",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"email\": \"john@example.com\",\n  \"password\": \"password123\"\n}"
+                        },
+                        "url": {
+                            "raw": "{{base_url}}/login",
+                            "host": ["{{base_url}}"],
+                            "path": ["login"]
+                        },
+                        "description": "Login to get authentication token"
+                    },
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "exec": [
+                                    "var jsonData = pm.response.json();",
+                                    "pm.environment.set(\"access_token\", jsonData.token);"
+                                ]
+                            }
+                        }
+                    ]
+                },
+                {
+                    "name": "Logout",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Accept",
+                                "value": "application/json"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{base_url}}/logout",
+                            "host": ["{{base_url}}"],
+                            "path": ["logout"]
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "name": "Users",
+            "item": [
+                {
+                    "name": "Get Current User",
+                    "request": {
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                            "raw": "{{base_url}}/api/users/me",
+                            "host": ["{{base_url}}"],
+                            "path": ["api", "users", "me"]
+                        },
+                        "description": "Get authenticated user's profile with roles, cars, and tickets"
+                    }
+                },
+                {
+                    "name": "List Users",
+                    "request": {
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                            "raw": "{{base_url}}/api/users?role=mechanic&search=john",
+                            "host": ["{{base_url}}"],
+                            "path": ["api", "users"],
+                            "query": [
+                                {
+                                    "key": "role",
+                                    "value": "mechanic",
+                                    "description": "Filter by role (user, mechanic, admin)"
+                                },
+                                {
+                                    "key": "search",
+                                    "value": "john",
+                                    "description": "Search by name or email"
+                                }
+                            ]
+                        },
+                        "description": "List all users (Admin only). Supports filtering by role and search."
+                    }
+                },
+                {
+                    "name": "Create User",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"name\": \"Jane Smith\",\n  \"email\": \"jane@example.com\",\n  \"password\": \"password123\",\n  \"role\": \"mechanic\"\n}"
+                        },
+                        "url": {
+                            "raw": "{{base_url}}/api/users",
+                            "host": ["{{base_url}}"],
+                            "path": ["api", "users"]
+                        },
+                        "description": "Create a new user (Admin only)"
+                    }
+                },
+                {
+                    "name": "Get User",
+                    "request": {
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                            "raw": "{{base_url}}/api/users/{{user_id}}",
+                            "host": ["{{base_url}}"],
+                            "path": ["api", "users", "{{user_id}}"]
+                        }
+                    }
+                },
+                {
+                    "name": "Update User",
+                    "request": {
+                        "method": "PUT",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"name\": \"Jane Doe\",\n  \"email\": \"jane.doe@example.com\",\n  \"role\": \"admin\"\n}"
+                        },
+                        "url": {
+                            "raw": "{{base_url}}/api/users/{{user_id}}",
+                            "host": ["{{base_url}}"],
+                            "path": ["api", "users", "{{user_id}}"]
+                        }
+                    }
+                },
+                {
+                    "name": "Delete User",
+                    "request": {
+                        "method": "DELETE",
+                        "header": [],
+                        "url": {
+                            "raw": "{{base_url}}/api/users/{{user_id}}",
+                            "host": ["{{base_url}}"],
+                            "path": ["api", "users", "{{user_id}}"]
+                        },
+                        "description": "Delete user (Admin only, cannot delete self)"
+                    }
+                },
+                {
+                    "name": "Get Mechanics",
+                    "request": {
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                            "raw": "{{base_url}}/api/users/mechanics",
+                            "host": ["{{base_url}}"],
+                            "path": ["api", "users", "mechanics"]
+                        },
+                        "description": "Get list of all mechanics with their workload"
+                    }
+                },
+                {
+                    "name": "Get User Tickets",
+                    "request": {
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                            "raw": "{{base_url}}/api/users/{{user_id}}/tickets",
+                            "host": ["{{base_url}}"],
+                            "path": ["api", "users", "{{user_id}}", "tickets"]
+                        }
+                    }
+                },
+                {
+                    "name": "Get User Cars",
+                    "request": {
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                            "raw": "{{base_url}}/api/users/{{user_id}}/cars",
+                            "host": ["{{base_url}}"],
+                            "path": ["api", "users", "{{user_id}}", "cars"]
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "name": "Cars",
+            "item": [
+                {
+                    "name": "List Cars",
+                    "request": {
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                            "raw": "{{base_url}}/api/cars?user_id=1",
+                            "host": ["{{base_url}}"],
+                            "path": ["api", "cars"],
+                            "query": [
+                                {
+                                    "key": "user_id",
+                                    "value": "1",
+                                    "description": "Filter by user (Admin/Mechanic only)"
+                                }
+                            ]
+                        },
+                        "description": "List cars. Users see their own, mechanics/admins see all."
+                    }
+                },
+                {
+                    "name": "Create Car",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"make\": \"Toyota\",\n  \"model\": \"Camry\",\n  \"year\": 2020,\n  \"license_plate\": \"ABC-1234\",\n  \"vin\": \"1HGBH41JXMN109186\",\n  \"color\": \"Blue\"\n}"
+                        },
+                        "url": {
+                            "raw": "{{base_url}}/api/cars",
+                            "host": ["{{base_url}}"],
+                            "path": ["api", "cars"]
+                        }
+                    }
+                },
+                {
+                    "name": "Get Car",
+                    "request": {
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                            "raw": "{{base_url}}/api/cars/{{car_id}}",
+                            "host": ["{{base_url}}"],
+                            "path": ["api", "cars", "{{car_id}}"]
+                        }
+                    }
+                },
+                {
+                    "name": "Update Car",
+                    "request": {
+                        "method": "PUT",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"color\": \"Red\",\n  \"year\": 2021\n}"
+                        },
+                        "url": {
+                            "raw": "{{base_url}}/api/cars/{{car_id}}",
+                            "host": ["{{base_url}}"],
+                            "path": ["api", "cars", "{{car_id}}"]
+                        }
+                    }
+                },
+                {
+                    "name": "Delete Car",
+                    "request": {
+                        "method": "DELETE",
+                        "header": [],
+                        "url": {
+                            "raw": "{{base_url}}/api/cars/{{car_id}}",
+                            "host": ["{{base_url}}"],
+                            "path": ["api", "cars", "{{car_id}}"]
+                        }
+                    }
+                },
+                {
+                    "name": "Get Car Tickets",
+                    "request": {
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                            "raw": "{{base_url}}/api/cars/{{car_id}}/tickets",
+                            "host": ["{{base_url}}"],
+                            "path": ["api", "cars", "{{car_id}}", "tickets"]
+                        },
+                        "description": "Get all tickets for a specific car"
+                    }
+                }
+            ]
+        },
+        {
+            "name": "Problems",
+            "item": [
+                {
+                    "name": "List Problems",
+                    "request": {
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                            "raw": "{{base_url}}/api/problems?category=Engine&is_active=1&search=oil",
+                            "host": ["{{base_url}}"],
+                            "path": ["api", "problems"],
+                            "query": [
+                                {
+                                    "key": "category",
+                                    "value": "Engine"
+                                },
+                                {
+                                    "key": "is_active",
+                                    "value": "1"
+                                },
+                                {
+                                    "key": "search",
+                                    "value": "oil"
+                                }
+                            ]
+                        }
+                    }
+                },
+                {
+                    "name": "Create Problem",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"name\": \"Oil leak\",\n  \"category\": \"Engine\",\n  \"description\": \"Engine oil leaking from gasket\",\n  \"is_active\": true\n}"
+                        },
+                        "url": {
+                            "raw": "{{base_url}}/api/problems",
+                            "host": ["{{base_url}}"],
+                            "path": ["api", "problems"]
+                        },
+                        "description": "Create problem (Mechanic/Admin only)"
+                    }
+                },
+                {
+                    "name": "Get Problem",
+                    "request": {
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                            "raw": "{{base_url}}/api/problems/{{problem_id}}",
+                            "host": ["{{base_url}}"],
+                            "path": ["api", "problems", "{{problem_id}}"]
+                        }
+                    }
+                },
+                {
+                    "name": "Update Problem",
+                    "request": {
+                        "method": "PUT",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"description\": \"Updated description\",\n  \"is_active\": false\n}"
+                        },
+                        "url": {
+                            "raw": "{{base_url}}/api/problems/{{problem_id}}",
+                            "host": ["{{base_url}}"],
+                            "path": ["api", "problems", "{{problem_id}}"]
+                        }
+                    }
+                },
+                {
+                    "name": "Delete Problem",
+                    "request": {
+                        "method": "DELETE",
+                        "header": [],
+                        "url": {
+                            "raw": "{{base_url}}/api/problems/{{problem_id}}",
+                            "host": ["{{base_url}}"],
+                            "path": ["api", "problems", "{{problem_id}}"]
+                        },
+                        "description": "Delete problem (Admin only)"
+                    }
+                },
+                {
+                    "name": "Problem Statistics",
+                    "request": {
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                            "raw": "{{base_url}}/api/problems/statistics",
+                            "host": ["{{base_url}}"],
+                            "path": ["api", "problems", "statistics"]
+                        },
+                        "description": "Get problem statistics (Mechanic/Admin only)"
+                    }
+                }
+            ]
+        },
+        {
+            "name": "Tickets",
+            "item": [
+                {
+                    "name": "List Tickets",
+                    "request": {
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                            "raw": "{{base_url}}/api/tickets?status=open&priority=high&mechanic_id=2",
+                            "host": ["{{base_url}}"],
+                            "path": ["api", "tickets"],
+                            "query": [
+                                {
+                                    "key": "status",
+                                    "value": "open",
+                                    "description": "open, assigned, in_progress, completed, closed"
+                                },
+                                {
+                                    "key": "priority",
+                                    "value": "high",
+                                    "description": "low, medium, high, urgent"
+                                },
+                                {
+                                    "key": "mechanic_id",
+                                    "value": "2"
+                                }
+                            ]
+                        }
+                    }
+                },
+                {
+                    "name": "Create Ticket",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"car_id\": 1,\n  \"description\": \"Car making strange noise when starting\",\n  \"priority\": \"high\",\n  \"problem_ids\": [1, 2],\n  \"problem_notes\": [\"Occurs in cold weather\", \"Getting worse\"]\n}"
+                        },
+                        "url": {
+                            "raw": "{{base_url}}/api/tickets",
+                            "host": ["{{base_url}}"],
+                            "path": ["api", "tickets"]
+                        }
+                    }
+                },
+                {
+                    "name": "Get Ticket",
+                    "request": {
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                            "raw": "{{base_url}}/api/tickets/{{ticket_id}}",
+                            "host": ["{{base_url}}"],
+                            "path": ["api", "tickets", "{{ticket_id}}"]
+                        }
+                    }
+                },
+                {
+                    "name": "Update Ticket",
+                    "request": {
+                        "method": "PUT",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"description\": \"Updated description\",\n  \"priority\": \"urgent\",\n  \"status\": \"in_progress\"\n}"
+                        },
+                        "url": {
+                            "raw": "{{base_url}}/api/tickets/{{ticket_id}}",
+                            "host": ["{{base_url}}"],
+                            "path": ["api", "tickets", "{{ticket_id}}"]
+                        }
+                    }
+                },
+                {
+                    "name": "Delete Ticket",
+                    "request": {
+                        "method": "DELETE",
+                        "header": [],
+                        "url": {
+                            "raw": "{{base_url}}/api/tickets/{{ticket_id}}",
+                            "host": ["{{base_url}}"],
+                            "path": ["api", "tickets", "{{ticket_id}}"]
+                        }
+                    }
+                },
+                {
+                    "name": "Accept Ticket",
+                    "request": {
+                        "method": "POST",
+                        "header": [],
+                        "url": {
+                            "raw": "{{base_url}}/api/tickets/{{ticket_id}}/accept",
+                            "host": ["{{base_url}}"],
+                            "path": [
+                                "api",
+                                "tickets",
+                                "{{ticket_id}}",
+                                "accept"
+                            ]
+                        },
+                        "description": "Mechanic accepts/assigns ticket to themselves"
+                    }
+                },
+                {
+                    "name": "Start Work",
+                    "request": {
+                        "method": "POST",
+                        "header": [],
+                        "url": {
+                            "raw": "{{base_url}}/api/tickets/{{ticket_id}}/start",
+                            "host": ["{{base_url}}"],
+                            "path": ["api", "tickets", "{{ticket_id}}", "start"]
+                        },
+                        "description": "Mechanic starts working on ticket"
+                    }
+                },
+                {
+                    "name": "Complete Ticket",
+                    "request": {
+                        "method": "POST",
+                        "header": [],
+                        "url": {
+                            "raw": "{{base_url}}/api/tickets/{{ticket_id}}/complete",
+                            "host": ["{{base_url}}"],
+                            "path": [
+                                "api",
+                                "tickets",
+                                "{{ticket_id}}",
+                                "complete"
+                            ]
+                        },
+                        "description": "Mechanic marks ticket as completed"
+                    }
+                },
+                {
+                    "name": "Close Ticket",
+                    "request": {
+                        "method": "POST",
+                        "header": [],
+                        "url": {
+                            "raw": "{{base_url}}/api/tickets/{{ticket_id}}/close",
+                            "host": ["{{base_url}}"],
+                            "path": ["api", "tickets", "{{ticket_id}}", "close"]
+                        },
+                        "description": "User or admin closes ticket"
+                    }
+                },
+                {
+                    "name": "Ticket Statistics",
+                    "request": {
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                            "raw": "{{base_url}}/api/tickets/statistics",
+                            "host": ["{{base_url}}"],
+                            "path": ["api", "tickets", "statistics"]
+                        },
+                        "description": "Get ticket statistics (Mechanic/Admin only)"
+                    }
+                }
+            ]
+        },
+        {
+            "name": "Health Check",
+            "item": [
+                {
+                    "name": "API Health",
+                    "request": {
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                            "raw": "{{base_url}}/api/health",
+                            "host": ["{{base_url}}"],
+                            "path": ["api", "health"]
+                        },
+                        "description": "Check if API is running"
+                    }
+                }
+            ]
+        }
+    ],
+    "variable": [
+        {
+            "key": "base_url",
+            "value": "http://localhost:8000",
+            "type": "string"
+        },
+        {
+            "key": "access_token",
+            "value": "",
+            "type": "string"
+        },
+        {
+            "key": "user_id",
+            "value": "1",
+            "type": "string"
+        },
+        {
+            "key": "car_id",
+            "value": "1",
+            "type": "string"
+        },
+        {
+            "key": "problem_id",
+            "value": "1",
+            "type": "string"
+        },
+        {
+            "key": "ticket_id",
+            "value": "1",
+            "type": "string"
+        }
+    ]
+}

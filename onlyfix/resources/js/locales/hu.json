@@ -1,0 +1,783 @@
+{
+  "common": {
+    "appName": "OnlyFix",
+    "loading": "Betöltés...",
+    "save": "Mentés",
+    "cancel": "Mégse",
+    "delete": "Törlés",
+    "edit": "Szerkesztés",
+    "create": "Létrehozás",
+    "submit": "Küldés",
+    "back": "Vissza",
+    "next": "Következő",
+    "close": "Bezárás",
+    "or": "Vagy",
+    "and": "és",
+    "yes": "Igen",
+    "no": "Nem",
+    "all": "Összes",
+    "none": "Egyik sem",
+    "search": "Keresés",
+    "filter": "Szűrés",
+    "reset": "Visszaállítás",
+    "view": "Megtekintés",
+    "viewAll": "Összes megtekintése",
+    "clearFilters": "Szűrők törlése",
+    "goBack": "Vissza",
+    "actions": "Műveletek",
+    "copyright": "© {year} OnlyFix. Minden jog fenntartva.",
+    "somethingWentWrong": "Hiba történt.",
+    "success": "Sikeres",
+    "passwordPlaceholder": "--------",
+    "quoteOpen": "\u201e",
+    "quoteClose": "\u201d"
+  },
+  "nav": {
+    "home": "Kezdőlap",
+    "dashboard": "Irányítópult",
+    "login": "Bejelentkezés",
+    "register": "Regisztráció",
+    "logout": "Kijelentkezés",
+    "settings": "Beállítások",
+    "profile": "Profil",
+    "myCars": "Autóim",
+    "myTickets": "Jegyeim",
+    "allTickets": "Összes jegy",
+    "help": "Súgó és támogatás",
+    "platform": "Platform",
+    "navigationMenu": "Navigációs menü"
+  },
+  "welcome": {
+    "pageTitle": "Üdvözöljük",
+    "getStarted": "Kezdjük el",
+    "ecosystemDescription": "A Laravel rendkívül gazdag ökoszisztémával rendelkezik.",
+    "suggestion": "Javasoljuk, hogy kezdje a következőkkel.",
+    "readThe": "Olvassa el a",
+    "documentation": "Dokumentációt",
+    "watchTutorials": "Nézzen oktatóvideókat itt:",
+    "laracasts": "Laracasts",
+    "deployNow": "Telepítés most"
+  },
+  "auth": {
+    "login": {
+      "pageTitle": "Bejelentkezés",
+      "title": "Üdvözöljük újra",
+      "description": "Jelentkezzen be fiókjába a javítási jegyek kezeléséhez",
+      "heroTitle": "Megbízható autójavító partnerünk",
+      "heroSubtitle": "Küldjön javítási kéréseket, kövesse nyomon a folyamatot, és kommunikáljon minősített szerelőkkel - mindezt egy helyen.",
+      "emailLabel": "E-mail cím",
+      "emailPlaceholder": "pelda{'@'}email.com",
+      "passwordLabel": "Jelszó",
+      "passwordPlaceholder": "••••••••",
+      "forgotPassword": "Elfelejtett jelszó?",
+      "rememberMe": "Emlékezz rám",
+      "submitButton": "Bejelentkezés",
+      "newToOnlyFix": "Még nincs fiókja?",
+      "createAccount": "Fiók létrehozása"
+    },
+    "register": {
+      "pageTitle": "Regisztráció",
+      "title": "Fiók létrehozása",
+      "description": "Csatlakozzon az OnlyFix-hez és kezdje el hatékonyan kezelni autójavításait",
+      "heroTitle": "Kezdjen percek alatt",
+      "heroSubtitle": "Legyen Ön autótulajdonos, aki javítást keres, vagy szerelő, aki munkamegrendeléseket kezel, az OnlyFix egyszerűsíti az egész folyamatot.",
+      "nameLabel": "Teljes név",
+      "namePlaceholder": "Kovács János",
+      "emailLabel": "E-mail cím",
+      "emailPlaceholder": "pelda{'@'}email.com",
+      "passwordLabel": "Jelszó",
+      "passwordPlaceholder": "••••••••",
+      "confirmPasswordLabel": "Jelszó megerősítése",
+      "termsNotice": "A fiók létrehozásával elfogadja a",
+      "termsOfService": "Felhasználási feltételeket",
+      "privacyPolicy": "Adatvédelmi szabályzatot",
+      "submitButton": "Fiók létrehozása",
+      "alreadyHaveAccount": "Már van fiókja?",
+      "signInInstead": "Jelentkezzen be"
+    },
+    "forgotPassword": {
+      "pageTitle": "Elfelejtett jelszó",
+      "title": "Elfelejtett jelszó",
+      "description": "Adja meg e-mail címét a jelszó-visszaállító link küldéséhez",
+      "emailLabel": "E-mail cím",
+      "emailPlaceholder": "pelda{'@'}email.com",
+      "submitButton": "Jelszó-visszaállító link küldése",
+      "returnTo": "Vagy térjen vissza a",
+      "login": "bejelentkezéshez"
+    },
+    "resetPassword": {
+      "pageTitle": "Jelszó visszaállítása",
+      "title": "Jelszó visszaállítása",
+      "description": "Adja meg az új jelszavát",
+      "emailLabel": "E-mail",
+      "passwordLabel": "Jelszó",
+      "confirmPasswordLabel": "Jelszó megerősítése",
+      "submitButton": "Jelszó visszaállítása"
+    },
+    "confirmPassword": {
+      "pageTitle": "Jelszó megerősítése",
+      "title": "Erősítse meg jelszavát",
+      "description": "Ez egy biztonságos terület. Kérjük, erősítse meg jelszavát a folytatás előtt.",
+      "passwordLabel": "Jelszó",
+      "submitButton": "Megerősítés"
+    },
+    "verifyEmail": {
+      "pageTitle": "E-mail megerősítése",
+      "title": "E-mail címének megerősítése",
+      "description": "Köszönjük a regisztrációt! Mielőtt elkezdené, kérjük, erősítse meg e-mail címét az elküldött linkre kattintva.",
+      "resendButton": "Megerősítő e-mail újraküldése",
+      "resendSuccess": "Új megerősítő link lett elküldve az e-mail címére.",
+      "logout": "Kijelentkezés"
+    },
+    "twoFactor": {
+      "pageTitle": "Kétfaktoros hitelesítés",
+      "title": "Kétfaktoros hitelesítés",
+      "description": "Kérjük, erősítse meg a hozzáférést a hitelesítő alkalmazás által megadott kód beírásával.",
+      "codeLabel": "Kód",
+      "recoveryCodeLabel": "Helyreállítási kód",
+      "useRecoveryCode": "Helyreállítási kód használata",
+      "useAuthCode": "Hitelesítési kód használata",
+      "submitButton": "Bejelentkezés"
+    }
+  },
+  "dashboard": {
+    "pageTitle": "Irányítópult",
+    "title": "Irányítópult",
+    "welcome": "Üdvözöljük újra!",
+    "subtitle": "Itt láthatja autói és szervizjegyei áttekintését.",
+    "stats": {
+      "totalCars": "Összes autó",
+      "registeredVehicles": "Regisztrált járművek",
+      "totalTickets": "Összes jegy",
+      "serviceRequests": "Szerviz kérések",
+      "openTickets": "Nyitott jegyek",
+      "awaitingService": "Szervizre vár",
+      "completedTickets": "Befejezett",
+      "successfulRepairs": "Sikeres javítások"
+    },
+    "quickActions": {
+      "newTicket": "Új szervizjegy",
+      "newTicketDescription": "Jelentsen problémát autójával és kérjen szervizt",
+      "addCar": "Autó hozzáadása",
+      "addCarDescription": "Regisztráljon új járművet fiókjához"
+    },
+    "recentTickets": {
+      "title": "Legutóbbi jegyek",
+      "description": "Legújabb szerviz kérései",
+      "empty": "Még nincsenek szervizjegyei"
+    },
+    "myCars": {
+      "title": "Autóim",
+      "description": "Regisztrált járművei",
+      "empty": "Még nincsenek regisztrált autói",
+      "tickets": "jegy"
+    }
+  },
+  "mechanicDashboard": {
+    "pageTitle": "Szerelő irányítópult",
+    "title": "Szerelő irányítópult",
+    "welcome": "Üdvözöljük, Szerelő!",
+    "subtitle": "Kezelje szervizjegyeit és munkamegrendeléseit.",
+    "stats": {
+      "availableTickets": "Elérhető jegyek",
+      "myTickets": "Saját jegyek",
+      "inProgressTickets": "Folyamatban",
+      "completedTickets": "Befejezett"
+    },
+    "availableTickets": {
+      "title": "Elérhető jegyek",
+      "description": "Nem kiosztott jegyek, amelyek elfogadásra várnak",
+      "empty": "Nincsenek elérhető jegyek",
+      "emptyDescription": "Minden jegy jelenleg ki van osztva"
+    },
+    "myTickets": {
+      "title": "Aktív jegyeim",
+      "description": "Önhöz rendelt jegyek",
+      "empty": "Nincsenek aktív jegyek",
+      "emptyDescription": "Fogadjon el jegyeket az elérhető listából"
+    },
+    "acceptTicket": "Elfogadás"
+  },
+  "adminDashboard": {
+    "pageTitle": "Admin irányítópult",
+    "title": "Adminisztrátori vezérlőpult",
+    "welcome": "Üdvözöljük, Adminisztrátor!",
+    "subtitle": "Rendszerszintű áttekintés és kezelés.",
+    "stats": {
+      "totalUsers": "Összes felhasználó",
+      "activeMechanics": "Aktív szerelők",
+      "pendingTickets": "Függőben lévő jegyek",
+      "monthlyRevenue": "Havi forgalom"
+    },
+    "recentUsers": "Legutóbbi felhasználók",
+    "recentUsersDescription": "Legutóbb regisztrált tagok",
+    "systemStatus": "Rendszerállapot",
+    "activeWorkflows": "Aktív munkafolyamat",
+    "completedRepairs": "Lezárt javítások"
+  },
+  "cars": {
+    "pageTitle": "Autóim",
+    "title": "Autóim",
+    "subtitle": "Regisztrált járműveinek kezelése",
+    "addCar": "Autó hozzáadása",
+    "searchPlaceholder": "Autók keresése...",
+    "licensePlate": "Rendszám",
+    "color": "Szín",
+    "vin": "Alvázszám",
+    "registered": "Regisztrálva",
+    "serviceHistory": "szervizjegy",
+    "allVehicles": "Összes jármű",
+    "empty": {
+      "title": "Nincsenek regisztrált autók",
+      "description": "Adja hozzá első autóját szervizjegyek létrehozásához"
+    },
+    "create": {
+      "pageTitle": "Autó hozzáadása",
+      "title": "Új autó hozzáadása",
+      "subtitle": "Regisztráljon járművet fiókjához",
+      "formTitle": "Jármű adatok",
+      "formDescription": "Adja meg autója adatait",
+      "submitButton": "Autó hozzáadása"
+    },
+    "edit": {
+      "pageTitle": "Autó szerkesztése",
+      "title": "Autó szerkesztése",
+      "formTitle": "Jármű adatok frissítése",
+      "formDescription": "Módosítsa autója adatait",
+      "submitButton": "Változások mentése"
+    },
+    "show": {
+      "details": "Jármű részletek",
+      "detailsDescription": "Autója adatai",
+      "serviceHistory": "Szerviz előzmények",
+      "serviceHistoryDescription": "A jármű összes szervizjegye",
+      "noServiceHistory": "Nincs szerviz előzmény",
+      "noServiceHistoryDescription": "Ez az autó még nem volt szervizben",
+      "registeredOn": "Regisztrálva"
+    },
+    "delete": {
+      "title": "Autó törlése",
+      "description": "Biztosan törölni szeretné a következő autót: {car}? Ez az összes kapcsolódó szervizjegyet is törli. Ez a művelet nem vonható vissza."
+    },
+    "form": {
+      "make": "Márka",
+      "makePlaceholder": "pl. Toyota",
+      "model": "Típus",
+      "modelPlaceholder": "pl. Camry",
+      "year": "Évjárat",
+      "licensePlate": "Rendszám",
+      "licensePlatePlaceholder": "pl. ABC-123",
+      "vin": "Alvázszám (opcionális)",
+      "vinPlaceholder": "17 karakteres alvázszám",
+      "vinHint": "Járműazonosító szám - a forgalmi engedélyen található",
+      "color": "Szín (opcionális)",
+      "colorPlaceholder": "pl. Ezüst"
+    }
+  },
+  "problems": {
+    "categories": {
+      "engine": "Motor",
+      "transmission": "Váltó",
+      "electrical": "Elektromos",
+      "brakes": "Fékek",
+      "suspension": "Futómű",
+      "steering": "Kormányzás",
+      "body": "Karosszéria",
+      "other": "Egyéb"
+    },
+    "items": {
+      "Engine oil leak": {
+        "name": "Motorolaj szivárgás",
+        "description": "Olaj szivárog a motor alkatrészeiből"
+      },
+      "Engine overheating": {
+        "name": "Motor túlmelegedés",
+        "description": "A motor hőmérséklete meghaladja a normál tartományt"
+      },
+      "Check engine light on": {
+        "name": "Motorfigyelmeztető lámpa világít",
+        "description": "A műszerfal figyelmeztető lámpája világít"
+      },
+      "Engine misfire": {
+        "name": "Motor begyújtási hiba",
+        "description": "A motor egyenetlenül jár vagy begyújtási hibát mutat"
+      },
+      "Poor fuel economy": {
+        "name": "Magas üzemanyag-fogyasztás",
+        "description": "A jármű túlzott üzemanyagot fogyaszt"
+      },
+      "Engine making strange noise": {
+        "name": "Furcsa motorhang",
+        "description": "Szokatlan hangok a motorból"
+      },
+      "Hard to start engine": {
+        "name": "Nehezen indul a motor",
+        "description": "A motor többszöri próbálkozásra indul csak be"
+      },
+      "Transmission slipping": {
+        "name": "Váltó csúszás",
+        "description": "A váltó nem kapcsol megfelelően a fokozatok között"
+      },
+      "Hard shifting": {
+        "name": "Nehéz váltás",
+        "description": "Nehézség a sebességek váltásakor"
+      },
+      "Transmission fluid leak": {
+        "name": "Váltóolaj szivárgás",
+        "description": "Piros folyadék szivárog a váltóból"
+      },
+      "Grinding noise when shifting": {
+        "name": "Csikorgó hang váltáskor",
+        "description": "Szokatlan csikorgó hang sebességváltáskor"
+      },
+      "Delayed engagement": {
+        "name": "Késleltetett kapcsolás",
+        "description": "A váltó késlekedik a kapcsolás előtt"
+      },
+      "Battery dead": {
+        "name": "Lemerült akkumulátor",
+        "description": "Az akkumulátor nem tartja a töltést"
+      },
+      "Alternator failure": {
+        "name": "Generátor hiba",
+        "description": "A generátor nem tölti megfelelően az akkumulátort"
+      },
+      "Starter motor issues": {
+        "name": "Önindító problémák",
+        "description": "Az önindító nem kapcsol be vagy kattog"
+      },
+      "Headlights not working": {
+        "name": "Fényszórók nem működnek",
+        "description": "Egyik vagy mindkét fényszóró nem működik"
+      },
+      "Dashboard lights malfunction": {
+        "name": "Műszerfal lámpák hibája",
+        "description": "A figyelmeztető lámpák nem működnek megfelelően"
+      },
+      "Power windows not working": {
+        "name": "Elektromos ablakok nem működnek",
+        "description": "Az elektromos ablakok nem működnek"
+      },
+      "Central locking failure": {
+        "name": "Központi zár hiba",
+        "description": "Az ajtózárak nem reagálnak a távirányítóra vagy kapcsolóra"
+      },
+      "Squeaking brakes": {
+        "name": "Csikorgó fékek",
+        "description": "Magas hangú zaj fékezéskor"
+      },
+      "Grinding brakes": {
+        "name": "Súrlódó fékek",
+        "description": "Fém-fém súrlódási hang fékezéskor"
+      },
+      "Soft brake pedal": {
+        "name": "Puha fékpedál",
+        "description": "A fékpedál szivacsos érzésű vagy a padlóig megy"
+      },
+      "Brake pulls to one side": {
+        "name": "Fék egyik oldalra húz",
+        "description": "A jármű fékezéskor balra vagy jobbra húz"
+      },
+      "ABS light on": {
+        "name": "ABS lámpa világít",
+        "description": "A blokkolásgátló rendszer figyelmeztető lámpája világít"
+      },
+      "Brake fluid leak": {
+        "name": "Fékfolyadék szivárgás",
+        "description": "Fékfolyadék szivárog a rendszerből"
+      },
+      "Parking brake stuck": {
+        "name": "Kézifék beragadt",
+        "description": "A rögzítőfék nem enged ki megfelelően"
+      },
+      "Rough ride": {
+        "name": "Kemény menetérzet",
+        "description": "A jármű keményen veszi az egyenetlenségeket"
+      },
+      "Uneven tire wear": {
+        "name": "Egyenetlen gumiabroncs kopás",
+        "description": "A gumiabroncsok egyenetlenül kopnak"
+      },
+      "Clunking noise over bumps": {
+        "name": "Koppanó zaj egyenetlenségeken",
+        "description": "Hangos koppanás egyenetlen felületen haladva"
+      },
+      "Vehicle sits lower on one side": {
+        "name": "Jármű egyik oldalon alacsonyabb",
+        "description": "Egyenetlen járműmagasság, ami futómű hibára utal"
+      },
+      "Excessive bouncing": {
+        "name": "Túlzott hintázás",
+        "description": "A jármű tovább hintázik az egyenetlenségek után"
+      },
+      "Nose dives when braking": {
+        "name": "Orr lemerül fékezéskor",
+        "description": "Az első rész túlzottan lesüllyed fékezéskor"
+      },
+      "Hard to turn steering wheel": {
+        "name": "Nehéz kormányozni",
+        "description": "Túlzott erő szükséges a kormányzáshoz"
+      },
+      "Loose steering": {
+        "name": "Laza kormányzás",
+        "description": "A kormánykeréknek túl nagy a játéka"
+      },
+      "Steering wheel vibration": {
+        "name": "Kormánykerék vibráció",
+        "description": "A kormány remeg vagy vibrál vezetés közben"
+      },
+      "Power steering fluid leak": {
+        "name": "Szervokormány folyadék szivárgás",
+        "description": "Szervokormány folyadék szivárog a rendszerből"
+      },
+      "Steering wheel off-center": {
+        "name": "Kormánykerék nem középen",
+        "description": "A kormány nem egyenes egyenes haladásnál"
+      },
+      "Whining noise when turning": {
+        "name": "Nyikorgó hang kanyarodáskor",
+        "description": "Magas hangú nyikorgás kormányzáskor"
+      },
+      "Rust damage": {
+        "name": "Rozsdakár",
+        "description": "Korrózió a karosszéria elemeken"
+      },
+      "Dent repair needed": {
+        "name": "Horpadás javítás szükséges",
+        "description": "Ütéstől behorpadt karosszéria elem"
+      },
+      "Paint scratches": {
+        "name": "Festék karcolások",
+        "description": "Felszíni festéksérülés, javítás szükséges"
+      },
+      "Door alignment issues": {
+        "name": "Ajtóbeállítási problémák",
+        "description": "Az ajtók nem záródnak vagy nem állnak megfelelően"
+      },
+      "Windshield crack": {
+        "name": "Szélvédő repedés",
+        "description": "Repedés vagy szilánk a szélvédő üvegen"
+      },
+      "Hood latch broken": {
+        "name": "Motorháztető zár elromlott",
+        "description": "A motorháztető nem záródik megfelelően"
+      },
+      "Air conditioning not cooling": {
+        "name": "Klíma nem hűt",
+        "description": "A légkondi meleg levegőt fúj vagy nem működik"
+      },
+      "Heater not working": {
+        "name": "Fűtés nem működik",
+        "description": "A fűtési rendszer nem termel meleg levegőt"
+      },
+      "Window won't roll up/down": {
+        "name": "Ablak nem megy le/fel",
+        "description": "Az elektromos ablak beragadt vagy nem működik"
+      },
+      "Exhaust leak": {
+        "name": "Kipufogó szivárgás",
+        "description": "A kipufogórendszer gázt ereszt"
+      },
+      "Unusual exhaust smoke": {
+        "name": "Szokatlan kipufogófüst",
+        "description": "Fekete, fehér vagy kék füst a kipufogóból"
+      },
+      "Fuel gauge not working": {
+        "name": "Üzemanyagmérő nem működik",
+        "description": "Az üzemanyagszint jelző nem mutat helyesen"
+      },
+      "Wiper blades need replacement": {
+        "name": "Ablaktörlő lapát csere szükséges",
+        "description": "Az ablaktörlők csíkoznak vagy nem tisztítanak megfelelően"
+      },
+      "Oil change needed": {
+        "name": "Olajcsere szükséges",
+        "description": "Rendszeres olaj- és szűrőcsere szükséges"
+      },
+      "Tire rotation needed": {
+        "name": "Kerékcsere szükséges",
+        "description": "A gumiabroncsokat forgatni kell az egyenletes kopás érdekében"
+      },
+      "General inspection": {
+        "name": "Általános átvizsgálás",
+        "description": "Átfogó járműbiztonsági ellenőrzés"
+      }
+    }
+  },
+  "tickets": {
+    "pageTitle": "Jegyeim",
+    "title": "Jegyeim",
+    "subtitle": "Szerviz kérések nyomon követése és kezelése",
+    "ticket": "Jegy",
+    "createTicket": "Új jegy",
+    "searchPlaceholder": "Jegyek keresése...",
+    "filterByStatus": "Szűrés állapot szerint",
+    "filterByPriority": "Szűrés prioritás szerint",
+    "problems": "probléma",
+    "empty": {
+      "title": "Nincsenek szervizjegyek",
+      "description": "Hozza létre első jegyét autószerviz igényléséhez"
+    },
+    "status": {
+      "label": "Állapot",
+      "open": "Nyitott",
+      "assigned": "Kiosztva",
+      "in_progress": "Folyamatban",
+      "completed": "Befejezve",
+      "closed": "Lezárva"
+    },
+    "priority": {
+      "label": "Prioritás",
+      "low": "Alacsony",
+      "medium": "Közepes",
+      "high": "Magas",
+      "urgent": "Sürgős"
+    },
+    "actions": {
+      "accept": "Jegy elfogadása",
+      "startWork": "Munka indítása",
+      "complete": "Befejezés"
+    },
+    "edit": {
+      "pageTitle": "Jegy szerkesztése",
+      "title": "Jegy szerkesztése",
+      "subtitle": "Frissítse a szerviz kérés részleteit",
+      "submitButton": "Változások mentése"
+    },
+    "create": {
+      "pageTitle": "Új jegy",
+      "title": "Szervizjegy létrehozása",
+      "subtitle": "Írja le autója problémáit",
+      "noCarsTitle": "Nincsenek regisztrált autók",
+      "noCarsDescription": "Szervizjegy létrehozásához először hozzá kell adnia egy autót.",
+      "selectCar": "Autó kiválasztása",
+      "selectCarDescription": "Válassza ki, melyik autónak van szervizre szüksége",
+      "selectProblems": "Problémák kiválasztása",
+      "selectProblemsDescription": "Milyen problémákat tapasztal?",
+      "problemNotePlaceholder": "Adjon hozzá részleteket erről a problémáról...",
+      "descriptionTitle": "További részletek",
+      "descriptionSubtitle": "Írjon le minden egyéb hasznos információt",
+      "descriptionPlaceholder": "Kérjük, írja le az autójával tapasztalt problémákat. Tartalmazza, mikor kezdődött a probléma, szokatlan hangokat, viselkedést vagy figyelmeztető lámpákat...",
+      "priorityTitle": "Prioritási szint",
+      "priorityDescription": "Mennyire sürgős ez a szerviz kérés?",
+      "summaryTitle": "Összegzés",
+      "selectedCar": "Kiválasztott autó",
+      "noCarSelected": "Nincs autó kiválasztva",
+      "selectedProblems": "Kiválasztott problémák",
+      "noProblemsSelected": "Nincs probléma kiválasztva",
+      "submitButton": "Jegy létrehozása"
+    },
+    "show": {
+      "createdOn": "Létrehozva",
+      "description": "Leírás",
+      "reportedProblems": "Bejelentett problémák",
+      "reportedProblemsDescription": "Az ügyfél által kiválasztott problémák",
+      "customerNote": "Ügyfél megjegyzése:",
+      "noProblems": "Nincsenek bejelentett problémák",
+      "timeline": "Idővonal",
+      "vehicleInfo": "Jármű információk",
+      "viewCarDetails": "Autó részletek megtekintése",
+      "assignedMechanic": "Kijelölt szerelő",
+      "statusInfo": "Állapot információk",
+      "status": "Állapot",
+      "priority": "Prioritás",
+      "created": "Létrehozva",
+      "accepted": "Elfogadva",
+      "completed": "Befejezve",
+      "closeTicket": "Jegy lezárása"
+    },
+    "timeline": {
+      "created": "Jegy létrehozva",
+      "assigned": "Szerelőhöz rendelve",
+      "inProgress": "Munka megkezdve",
+      "completed": "Munka befejezve",
+      "closed": "Jegy lezárva"
+    },
+    "delete": {
+      "title": "Jegy törlése",
+      "description": "Biztosan törölni szeretné ezt a jegyet? Ez a művelet nem vonható vissza."
+    },
+    "close": {
+      "title": "Jegy lezárása",
+      "description": "A jegy lezárásával azt megoldottnak jelöli. Elégedett a szolgáltatással?"
+    }
+  },
+  "users": {
+    "pageTitle": "Felhasználók",
+    "title": "Felhasználók kezelése",
+    "subtitle": "Rendszerfelhasználók és jogosultságok kezelése",
+    "addUser": "Új felhasználó",
+    "searchPlaceholder": "Keresés név vagy e-mail alapján...",
+    "role": "Szerepkör",
+    "roles": {
+      "admin": "Adminisztrátor",
+      "mechanic": "Szerelő",
+      "user": "Ügyfél"
+    },
+    "form": {
+      "name": "Név",
+      "email": "E-mail cím",
+      "password": "Jelszó",
+      "passwordConfirmation": "Jelszó megerősítése",
+      "role": "Szerepkör kiválasztása"
+    },
+    "create": {
+      "title": "Új felhasználó létrehozása",
+      "submitButton": "Felhasználó létrehozása"
+    },
+    "edit": {
+      "title": "Felhasználó szerkesztése",
+      "submitButton": "Változások mentése",
+      "passwordOptionalHint": "(Csak ha meg szeretné változtatni)"
+    },
+    "delete": {
+      "title": "Felhasználó törlése",
+      "description": "Biztosan törölni szeretné {name} felhasználót? Ez a művelet nem vonható vissza."
+    },
+    "empty": "Nem találhatók felhasználók a megadott feltételekkel.",
+    "ticketsCount": "{count} jegy | {count} jegy",
+    "carsCount": "{count} autó | {count} autó",
+    "ticketsAndCarsHeader": "Jegyek / Autók",
+    "show": {
+      "info": "Információk",
+      "registeredAt": "Regisztrálva:",
+      "accountStatus": "Fiók állapota:",
+      "verified": "Megerősítve",
+      "unverified": "Nincs megerősítve",
+      "professionalData": "Szakmai adatok",
+      "totalRepairs": "Összes javítás:",
+      "registeredCars": "Regisztrált autók",
+      "registeredCarsDescription": "A felhasználóhoz rendelt járművek",
+      "noCars": "Nincsenek regisztrált autók.",
+      "repairTickets": "Javítási jegyek",
+      "assignedTasks": "Hozzárendelt feladatok",
+      "ownRequests": "Saját kérések",
+      "noTickets": "Nincsenek jegyek.",
+      "details": "Részletek"
+    }
+  },
+  "admin": {
+    "ticket": {
+      "selectUser": "Ügyfél kiválasztása",
+      "selectUserDescription": "Kihez tartozik ez a javítási jegy?",
+      "selectUserPlaceholder": "Válasszon ügyfelet...",
+      "assignMechanic": "Szerelő kijelölése",
+      "assignMechanicDescription": "Ki fogja végezni a javítást?",
+      "assignMechanicPlaceholder": "Nincs kijelölt szerelő",
+      "statusDescription": "A javítási folyamat állapota"
+    }
+  },
+  "settings": {
+    "title": "Beállítások",
+    "description": "Profilod és fiókbeállításaid kezelése",
+    "profile": {
+      "label": "Profil",
+      "pageTitle": "Profil beállítások",
+      "breadcrumb": "Profil beállítások",
+      "title": "Profil információk",
+      "description": "Frissítse nevét és e-mail címét",
+      "nameLabel": "Név",
+      "namePlaceholder": "Teljes név",
+      "emailLabel": "E-mail cím",
+      "emailPlaceholder": "E-mail cím",
+      "unverifiedEmail": "Az e-mail címe nincs megerősítve.",
+      "resendVerification": "Kattintson ide a megerősítő e-mail újraküldéséhez.",
+      "verificationSent": "Új megerősítő link lett elküldve az e-mail címére.",
+      "saveButton": "Mentés",
+      "saved": "Mentve."
+    },
+    "password": {
+      "label": "Jelszó",
+      "pageTitle": "Jelszó beállítások",
+      "breadcrumb": "Jelszó beállítások",
+      "title": "Jelszó frissítése",
+      "description": "Győződjön meg róla, hogy fiókja hosszú, véletlenszerű jelszót használ a biztonság érdekében",
+      "currentPasswordLabel": "Jelenlegi jelszó",
+      "currentPasswordPlaceholder": "Jelenlegi jelszó",
+      "newPasswordLabel": "Új jelszó",
+      "newPasswordPlaceholder": "Új jelszó",
+      "confirmPasswordLabel": "Jelszó megerősítése",
+      "confirmPasswordPlaceholder": "Jelszó megerősítése",
+      "saveButton": "Jelszó mentése",
+      "saved": "Mentve."
+    },
+    "appearance": {
+      "label": "Megjelenés",
+      "pageTitle": "Megjelenés beállítások",
+      "breadcrumb": "Megjelenés beállítások",
+      "title": "Megjelenés beállítások",
+      "description": "Frissítse fiókja megjelenési beállításait"
+    },
+    "twoFactor": {
+      "label": "Kétlépcsős hitelesítés",
+      "pageTitle": "Kétfaktoros hitelesítés",
+      "breadcrumb": "Kétfaktoros hitelesítés",
+      "title": "Kétfaktoros hitelesítés",
+      "description": "További biztonság hozzáadása fiókjához kétfaktoros hitelesítéssel",
+      "badgeEnabled": "Engedélyezve",
+      "badgeDisabled": "Letiltva",
+      "disabledDescription": "A kétfaktoros hitelesítés engedélyezésekor a bejelentkezés során egy biztonságos PIN-kódot kell megadnia. Ezt a PIN-kódot egy TOTP-kompatibilis alkalmazásból kérheti le telefonján.",
+      "enabledDescription": "A kétfaktoros hitelesítés engedélyezésével a bejelentkezéskor egy biztonságos, véletlenszerű PIN-kódot kell megadnia, amelyet telefonja TOTP-kompatibilis alkalmazásából kérhet le.",
+      "continueSetup": "Beállítás folytatása",
+      "enable2FA": "2FA engedélyezése",
+      "disable2FA": "2FA letiltása",
+      "modal": {
+        "enabledTitle": "Kétfaktoros hitelesítés engedélyezve",
+        "enabledDescription": "A kétfaktoros hitelesítés most engedélyezve van. Olvassa be a QR-kódot, vagy adja meg a beállítási kulcsot a hitelesítő alkalmazásában.",
+        "verifyTitle": "Hitelesítési kód ellenőrzése",
+        "verifyDescription": "Adja meg a hitelesítő alkalmazás 6 jegyű kódját",
+        "setupTitle": "Kétfaktoros hitelesítés engedélyezése",
+        "setupDescription": "A kétfaktoros hitelesítés befejezéséhez olvassa be a QR-kódot, vagy adja meg a beállítási kulcsot a hitelesítő alkalmazásában",
+        "continue": "Tovább",
+        "orEnterManually": "vagy adja meg a kódot kézzel",
+        "confirm": "Megerősítés"
+      },
+      "recoveryCodes": {
+        "title": "2FA helyreállítási kódok",
+        "description": "A helyreállítási kódok lehetővé teszik a hozzáférés visszaszerzését, ha elveszíti 2FA eszközét. Tárolja őket biztonságos jelszókezelőben.",
+        "hideRecoveryCodes": "Helyreállítási kódok elrejtése",
+        "viewRecoveryCodes": "Helyreállítási kódok megtekintése",
+        "regenerateCodes": "Kódok újragenerálása",
+        "usageNote": "Minden helyreállítási kód egyszer használható a fiókjához való hozzáféréshez, és használat után törlődik. Ha többre van szüksége, kattintson a fenti {regenerate} gombra."
+      },
+      "errors": {
+        "fetchQrCode": "Nem sikerült betölteni a QR-kódot. Kérjük, próbálja újra.",
+        "fetchSetupKey": "Nem sikerült betölteni a beállítási kulcsot. Kérjük, próbálja újra.",
+        "fetchRecoveryCodes": "Nem sikerült betölteni a visszaállítási kódokat. Kérjük, próbálja újra."
+      }
+    },
+    "deleteAccount": {
+      "title": "Fiók törlése",
+      "description": "Fiókja és összes erőforrása törlése",
+      "warningTitle": "Figyelmeztetés",
+      "warningText": "Kérjük, óvatosan járjon el, ez nem visszavonható.",
+      "deleteButton": "Fiók törlése",
+      "confirmTitle": "Biztosan törölni szeretné a fiókját?",
+      "confirmDescription": "A fiók törlése után annak összes erőforrása és adata véglegesen törlődik. Kérjük, adja meg jelszavát a fiók végleges törlésének megerősítéséhez.",
+      "passwordLabel": "Jelszó",
+      "passwordPlaceholder": "Jelszó"
+    }
+  },
+  "language": {
+    "title": "Nyelv",
+    "select": "Nyelv kiválasztása",
+    "en": "English",
+    "hu": "Magyar"
+  },
+  "layouts": {
+    "auth": {
+      "defaultHeroTitle": "Professzionális autójavítás kezelés",
+      "defaultHeroSubtitle": "Egyszerűsítse autójavítási munkafolyamatait átfogó jegykezelő rendszerünkkel. Kapcsolja össze az ügyfeleket a szerelőkkel hatékonyan."
+    }
+  },
+  "features": {
+    "quickTicket": "Gyors jegylétrehozás autóproblémákhoz",
+    "realTimeUpdates": "Valós idejű javítási állapotfrissítések",
+    "directCommunication": "Közvetlen kommunikáció a szerelőkkel"
+  },
+  "appearance": {
+    "light": "Világos",
+    "dark": "Sötét",
+    "system": "Rendszer"
+  }
+}

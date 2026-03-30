@@ -1,0 +1,74 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600" fill="none" preserveAspectRatio="xMidYMid slice">
+    <defs>
+        <!-- Gradient Background - More Vibrant -->
+        <linearGradient id="bgGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stop-color="#1e40af"/>
+            <stop offset="40%" stop-color="#2563eb"/>
+            <stop offset="100%" stop-color="#1e3a8a"/>
+        </linearGradient>
+        
+        <!-- Grid Pattern -->
+        <pattern id="gridPattern" width="40" height="40" patternUnits="userSpaceOnUse">
+            <path d="M 40 0 L 0 0 0 40" fill="none" stroke="white" stroke-opacity="0.08" stroke-width="1"/>
+        </pattern>
+        
+        <!-- Glow Effect -->
+        <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
+            <feGaussianBlur stdDeviation="20" result="coloredBlur"/>
+            <feMerge>
+                <feMergeNode in="coloredBlur"/>
+                <feMergeNode in="SourceGraphic"/>
+            </feMerge>
+        </filter>
+    </defs>
+    
+    <!-- Background -->
+    <rect width="800" height="600" fill="url(#bgGradient)"/>
+    
+    <!-- Grid Overlay -->
+    <rect width="800" height="600" fill="url(#gridPattern)"/>
+    
+    <!-- Decorative Circles - Brighter -->
+    <circle cx="150" cy="100" r="180" fill="white" fill-opacity="0.06"/>
+    <circle cx="650" cy="500" r="250" fill="white" fill-opacity="0.05"/>
+    <circle cx="700" cy="100" r="120" fill="#60a5fa" fill-opacity="0.08"/>
+    
+    <!-- Accent Glow - More Vibrant -->
+    <circle cx="400" cy="300" r="120" fill="#60a5fa" fill-opacity="0.25" filter="url(#glow)"/>
+    <circle cx="200" cy="450" r="80" fill="#f97316" fill-opacity="0.15" filter="url(#glow)"/>
+    
+    <!-- Car Silhouette - More Visible -->
+    <g transform="translate(200, 180)" opacity="0.15">
+        <!-- Car Body -->
+        <path d="M50 120 L80 80 L150 70 L280 70 L350 80 L380 120 L400 120 L400 180 L0 180 L0 120 Z" fill="white"/>
+        <!-- Windows -->
+        <path d="M90 85 L120 75 L260 75 L290 85 L280 110 L100 110 Z" fill="#60a5fa"/>
+        <!-- Wheels -->
+        <circle cx="100" cy="180" r="35" fill="white"/>
+        <circle cx="100" cy="180" r="20" fill="#60a5fa"/>
+        <circle cx="300" cy="180" r="35" fill="white"/>
+        <circle cx="300" cy="180" r="20" fill="#60a5fa"/>
+    </g>
+    
+    <!-- Wrench Icon - Large - More Visible -->
+    <g transform="translate(550, 150) rotate(45)" opacity="0.2">
+        <path d="M0 40 L20 20 L60 20 L80 0 L100 0 L100 20 L80 40 L80 160 L60 180 L40 180 L20 160 L20 40 Z" fill="white"/>
+    </g>
+    
+    <!-- Gear Icon - More Visible -->
+    <g transform="translate(100, 350)" opacity="0.12">
+        <path d="M50 0 L60 0 L65 15 L80 20 L90 10 L100 20 L90 30 L95 45 L110 50 L110 60 L95 65 L90 80 L100 90 L90 100 L80 90 L65 95 L60 110 L50 110 L45 95 L30 90 L20 100 L10 90 L20 80 L15 65 L0 60 L0 50 L15 45 L20 30 L10 20 L20 10 L30 20 L45 15 Z" fill="white"/>
+        <circle cx="55" cy="55" r="25" fill="#1e3a8a"/>
+    </g>
+    
+    <!-- Speedometer - More Visible -->
+    <g transform="translate(620, 400)" opacity="0.15">
+        <circle cx="60" cy="60" r="60" fill="none" stroke="white" stroke-width="4"/>
+        <path d="M60 60 L60 20" stroke="#f97316" stroke-width="3" stroke-linecap="round"/>
+        <circle cx="60" cy="60" r="8" fill="#f97316"/>
+    </g>
+    
+    <!-- Accent Lines - Brighter Orange -->
+    <line x1="0" y1="580" x2="300" y2="580" stroke="#fb923c" stroke-width="5" stroke-opacity="0.8"/>
+    <line x1="500" y1="20" x2="800" y2="20" stroke="#fb923c" stroke-width="5" stroke-opacity="0.8"/>
+</svg>

@@ -20,6 +20,9 @@ import { Form } from '@inertiajs/vue3';
 import { useClipboard } from '@vueuse/core';
 import { Check, Copy, Loader2, ScanLine } from 'lucide-vue-next';
 import { computed, nextTick, ref, watch } from 'vue';
+import { useI18n } from 'vue-i18n';
+
+const { t } = useI18n();
 
 interface Props {
     requiresConfirmation: boolean;
@@ -46,26 +49,24 @@ const modalConfig = computed<{
 }>(() => {
     if (props.twoFactorEnabled) {
         return {
-            title: 'Two-Factor Authentication Enabled',
-            description:
-                'Two-factor authentication is now enabled. Scan the QR code or enter the setup key in your authenticator app.',
-            buttonText: 'Close',
+            title: t('settings.twoFactor.modal.enabledTitle'),
+            description: t('settings.twoFactor.modal.enabledDescription'),
+            buttonText: t('common.close'),
         };
     }
 
     if (showVerificationStep.value) {
         return {
-            title: 'Verify Authentication Code',
-            description: 'Enter the 6-digit code from your authenticator app',
-            buttonText: 'Continue',
+            title: t('settings.twoFactor.modal.verifyTitle'),
+            description: t('settings.twoFactor.modal.verifyDescription'),
+            buttonText: t('settings.twoFactor.modal.continue'),
         };
     }
 
     return {
-        title: 'Enable Two-Factor Authentication',
-        description:
-            'To finish enabling two-factor authentication, scan the QR code or enter the setup key in your authenticator app',
-        buttonText: 'Continue',
+        title: t('settings.twoFactor.modal.setupTitle'),
+        description: t('settings.twoFactor.modal.setupDescription'),
+        buttonText: t('settings.twoFactor.modal.continue'),
     };
 });
 
@@ -190,7 +191,7 @@ watch(
                                 class="absolute inset-0 top-1/2 h-px w-full bg-border"
                             />
                             <span class="relative bg-card px-2 py-1"
-                                >or, enter the code manually</span
+                                >{{ $t('settings.twoFactor.modal.orEnterManually') }}</span
                             >
                         </div>
 
@@ -278,7 +279,7 @@ watch(
                                     @click="showVerificationStep = false"
                                     :disabled="processing"
                                 >
-                                    Back
+                                    {{ $t('common.back') }}
                                 </Button>
                                 <Button
                                     type="submit"
@@ -287,7 +288,7 @@ watch(
                                         processing || codeValue.length < 6
                                     "
                                 >
-                                    Confirm
+                                    {{ $t('settings.twoFactor.modal.confirm') }}
                                 </Button>
                             </div>
                         </div>

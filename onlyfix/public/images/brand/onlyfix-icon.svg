@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" fill="none">
+    <!-- Gear Background - Vibrant Blue -->
+    <circle cx="24" cy="24" r="22" fill="#3b82f6"/>
+    <circle cx="24" cy="24" r="20" fill="#2563eb"/>
+    <!-- Highlight -->
+    <ellipse cx="18" cy="16" rx="8" ry="6" fill="#60a5fa" opacity="0.4"/>
+    <!-- Wrench Icon -->
+    <path
+        d="M32.5 15.5C30.5 13.5 27.5 13 25 14L20 19L17.5 16.5C17 16 16 16 15.5 16.5L14.5 17.5C14 18 14 19 14.5 19.5L17 22L14 25C13 27.5 13.5 30.5 15.5 32.5C17.5 34.5 20.5 35 23 34L34 23C35 20.5 34.5 17.5 32.5 15.5Z"
+        fill="white"
+        stroke-width="1.5"
+    />
+    <!-- Inner Circle -->
+    <circle cx="18" cy="30" r="3" fill="#1d4ed8"/>
+    <!-- Accent dot -->
+    <circle cx="30" cy="18" r="2" fill="#f97316"/>
+</svg>
