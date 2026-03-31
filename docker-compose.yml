@@ -46,7 +46,7 @@ services:
     volumes:
       - ./onlyfix:/app
       - node_modules:/app/node_modules
-    command: sh -c "mkdir -p /app/public/swagger-ui && npm install && npm run build"
+    command: sh -c "npm install && npm run build"
     environment:
       - DOCKER=1
     networks:
