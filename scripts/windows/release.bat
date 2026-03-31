@@ -239,7 +239,7 @@ echo [  OK] Database migrated.
 
 REM -- Step 15: NPM install + production build (inside container)
 echo [STEP] Building frontend assets (production)...
-%COMPOSE_CMD% exec -T node sh -c "npm install && npm run build"
+%COMPOSE_CMD% run --rm node sh -c "npm install && npm run build"
 if %errorlevel% neq 0 (
     echo [ERROR] Frontend build failed.
     popd

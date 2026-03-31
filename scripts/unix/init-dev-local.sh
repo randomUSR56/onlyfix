@@ -7,95 +7,162 @@ cd "$PROJECT_DIR"
 
 source "$SCRIPT_DIR/helpers.sh"
 
+# ── Rollback tracking flags ─────────────────────────────────────
+CONTAINERS_STARTED=0
+IMAGES_BUILT=0
+ENV_CREATED=0
+
+# ── Compose file flags ──────────────────────────────────────────
+COMPOSE_FILES="-f docker-compose.yml"
+
+# Override set -e: use trap to trigger rollback on any unhandled error
+trap 'rollback "$COMPOSE_FILES"' ERR
+
 echo ""
 echo -e "${GREEN}╔══════════════════════════════════════════╗${NC}"
-echo -e "${GREEN}║   OnlyFix – Fejlesztői inicializálás     ║${NC}"
+echo -e "${GREEN}║   OnlyFix – Fejlesztoi inicializalas     ║${NC}"
 echo -e "${GREEN}║   (localhost, nincs sudo)                ║${NC}"
 echo -e "${GREEN}╚══════════════════════════════════════════╝${NC}"
+echo ""
+echo "   Project root: $PROJECT_DIR"
 echo ""
 
 # ── 1. Docker ellenőrzés ──────────────────────────────────────────
 check_docker
 detect_compose
 
-# ── 2. .env fájl ellenőrzés ──────────────────────────────────────
+# ── 2. Verify project files exist ──────────────────────────────────
+print_step "Projekt fájlok ellenőrzése..."
+if [ ! -f "docker-compose.yml" ]; then
+    print_error "docker-compose.yml nem található: $PROJECT_DIR/docker-compose.yml"
+    exit 1
+fi
+if [ ! -f "onlyfix/.env.example" ]; then
+    print_error ".env.example nem található: $PROJECT_DIR/onlyfix/.env.example"
+    exit 1
+fi
+print_success "Projekt fájlok megtalálva"
+
+# ── 3. .env fájl ellenőrzés ──────────────────────────────────────
 print_step ".env fájl ellenőrzése..."
 if [ ! -f "onlyfix/.env" ]; then
-    if [ -f "onlyfix/.env.example" ]; then
-        cp "onlyfix/.env.example" "onlyfix/.env"
-        print_success ".env fájl létrehozva (.env.example alapján)"
-    else
-        echo -e "${YELLOW}⚠️  .env.example nem található!${NC}"
+    cp "onlyfix/.env.example" "onlyfix/.env"
+    if [ $? -ne 0 ]; then
+        print_error ".env fájl létrehozása sikertelen."
+        rollback "$COMPOSE_FILES"
     fi
+    ENV_CREATED=1
+    print_success ".env fájl létrehozva (.env.example alapján)"
 else
     print_success ".env fájl már létezik"
 fi
 
-# ── 3. Docker images build ───────────────────────────────────────
-print_step "Docker image-ek építése..."
-
-COMPOSE_FILES="-f docker-compose.yml"
+# ── 4. Docker compose fájlok meghatározása ─────────────────────
 if [ -f "docker-compose.local.yml" ]; then
     COMPOSE_FILES="$COMPOSE_FILES -f docker-compose.local.yml"
     print_success "Lokális override fájl megtalálva (docker-compose.local.yml)"
 fi
 
+# ── 5. Docker images build ───────────────────────────────────────
+print_step "Docker image-ek építése..."
 $COMPOSE_CMD $COMPOSE_FILES build
+if [ $? -ne 0 ]; then
+    print_error "Docker build sikertelen."
+    rollback "$COMPOSE_FILES"
+fi
+IMAGES_BUILT=1
 print_success "Docker image-ek elkészültek"
 
-# ── 4. Konténerek indítása ───────────────────────────────────────
+# ── 6. Konténerek indítása ───────────────────────────────────────
 print_step "Konténerek indítása..."
 $COMPOSE_CMD $COMPOSE_FILES up -d
+if [ $? -ne 0 ]; then
+    print_error "Konténerek indítása sikertelen."
+    rollback "$COMPOSE_FILES"
+fi
+CONTAINERS_STARTED=1
 print_success "Konténerek elindultak"
 
-# ── 5. Composer install ──────────────────────────────────────────
+# ── 7. Wait for MySQL readiness ──────────────────────────────────
+wait_for_mysql "$COMPOSE_FILES" || rollback "$COMPOSE_FILES"
+
+# ── 8. Composer install ──────────────────────────────────────────
 print_step "Composer függőségek telepítése..."
-$COMPOSE_CMD $COMPOSE_FILES exec -it app composer install
+$COMPOSE_CMD $COMPOSE_FILES exec -T app composer install --no-interaction --optimize-autoloader
+if [ $? -ne 0 ]; then
+    print_error "Composer install sikertelen."
+    rollback "$COMPOSE_FILES"
+fi
 print_success "Composer függőségek telepítve"
 
-# ── 6. NPM install (node konténer újraindítás) ──────────────────
-print_step "NPM függőségek telepítése..."
-$COMPOSE_CMD $COMPOSE_FILES restart node
-print_success "Node konténer újraindítva (npm install automatikusan fut)"
-
-# ── 7. Laravel app key generálás ─────────────────────────────────
+# ── 9. Laravel app key generálás ─────────────────────────────────
 print_step "Laravel alkalmazáskulcs generálása..."
-$COMPOSE_CMD $COMPOSE_FILES exec -it app php artisan key:generate
+$COMPOSE_CMD $COMPOSE_FILES exec -T app php artisan key:generate --force --no-interaction
+if [ $? -ne 0 ]; then
+    print_error "Alkalmazáskulcs generálás sikertelen."
+    rollback "$COMPOSE_FILES"
+fi
 print_success "Alkalmazáskulcs generálva"
 
-# ── 8. Migrate fresh + seed ─────────────────────────────────────
+# ── 10. Migrate fresh + seed ─────────────────────────────────────
 print_step "Adatbázis migrálása és seedelése..."
-$COMPOSE_CMD $COMPOSE_FILES exec -it app php artisan migrate:fresh --seed
+$COMPOSE_CMD $COMPOSE_FILES exec -T app php artisan migrate:fresh --seed --force --no-interaction
+if [ $? -ne 0 ]; then
+    print_error "Adatbázis migrálás sikertelen."
+    rollback "$COMPOSE_FILES"
+fi
 print_success "Adatbázis migrálva és seedelve"
 
-# ── 9. Storage link ─────────────────────────────────────────────
+# ── 11. Storage link ─────────────────────────────────────────────
 print_step "Storage link létrehozása..."
-$COMPOSE_CMD $COMPOSE_FILES exec app php artisan storage:link
+$COMPOSE_CMD $COMPOSE_FILES exec -T app php artisan storage:link --force --no-interaction
+if [ $? -ne 0 ]; then
+    print_error "Storage link létrehozása sikertelen."
+    rollback "$COMPOSE_FILES"
+fi
 print_success "Storage link létrehozva"
 
-# ── 10. Wayfinder route generálás ────────────────────────────────
+# ── 12. Wayfinder route generálás ────────────────────────────────
 print_step "Wayfinder útvonalak generálása..."
-$COMPOSE_CMD $COMPOSE_FILES exec app php artisan wayfinder:generate --with-form
+$COMPOSE_CMD $COMPOSE_FILES exec -T app php artisan wayfinder:generate --with-form --no-interaction
+if [ $? -ne 0 ]; then
+    print_error "Wayfinder generálás sikertelen."
+    rollback "$COMPOSE_FILES"
+fi
 print_success "Wayfinder útvonalak generálva"
 
-# ── 11. Laravel Boost telepítés ──────────────────────────────────
-print_step "Laravel Boost MCP telepítése..."
-$COMPOSE_CMD $COMPOSE_FILES exec -it app php artisan boost:install
-print_success "Laravel Boost telepítve"
+# ── 13. NPM install + Vite build (fresh node container) ──────────
+print_step "Frontend assets építése (npm install + vite build)..."
+$COMPOSE_CMD $COMPOSE_FILES run --rm node sh -c "npm install && npm run build"
+if [ $? -ne 0 ]; then
+    print_error "Frontend build sikertelen."
+    rollback "$COMPOSE_FILES"
+fi
+print_success "Frontend assets elkészültek"
 
 # ── Befejezés ────────────────────────────────────────────────────
+# Disable ERR trap for successful completion
+trap - ERR
+
 echo ""
 echo -e "${GREEN}╔══════════════════════════════════════════╗${NC}"
-echo -e "${GREEN}║   ✅ OnlyFix sikeresen inicializálva!    ║${NC}"
+echo -e "${GREEN}║   [OK] OnlyFix sikeresen inicializálva!  ║${NC}"
 echo -e "${GREEN}╚══════════════════════════════════════════╝${NC}"
 echo ""
-echo -e "🌐 Elérhetőségek:"
+echo -e "Elérhetőségek:"
 echo -e "   App:        ${CYAN}http://localhost${NC}"
 echo -e "   Mailpit:    ${CYAN}http://localhost:8025${NC}"
 echo -e "   phpMyAdmin: ${CYAN}http://localhost:8080${NC}"
 echo ""
-echo -e "🔑 Teszt fiókok:"
+echo -e "Teszt fiókok:"
 echo -e "   Admin:    admin@example.com / password"
 echo -e "   Mechanic: mechanic@example.com / password"
 echo -e "   User:     test@example.com / password"
+echo ""
+echo "  --------------------------------------------------------"
+echo "  UNDO / eltávolítás:"
+echo "    1. cd $PROJECT_DIR"
+echo "    2. $COMPOSE_CMD $COMPOSE_FILES down -v --rmi local"
+echo "    3. Töröld az onlyfix/.env fájlt ha tiszta újrakezdést akarsz"
+echo "  --------------------------------------------------------"
 echo ""

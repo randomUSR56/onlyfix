@@ -251,13 +251,13 @@ if %errorlevel% neq 0 (
 )
 echo [  OK] Wayfinder routes generated.
 
-REM -- Step 16: Restart node container (triggers npm install + vite)
-echo [STEP] Restarting Node container for npm install and Vite dev...
-%COMPOSE_CMD% restart node
+REM -- Step 16: Run frontend build (fresh node container)
+echo [STEP] Building frontend assets (npm install + vite build)...
+%COMPOSE_CMD% run --rm node sh -c "npm install && npm run build"
 if %errorlevel% neq 0 (
-    echo [WARN] Node container restart had issues, but continuing.
+    echo [WARN] Frontend build had issues, but continuing.
 )
-echo [  OK] Node container restarted.
+echo [  OK] Frontend assets built.
 
 REM -- Done
 popd
